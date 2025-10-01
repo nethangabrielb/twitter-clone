@@ -1,0 +1,16 @@
+{
+  "name": "next-express-template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "pnpm --parallel --filter frontend --filter backend dev",
+    "frontend": "pnpm --filter frontend dev",
+    "backend": "pnpm --filter backend dev"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.17.1"
+}
