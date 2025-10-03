@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 
 import '../src/config/passport';
 import followRouter from './routes/admin/followRoutes';
+import userRouter from './routes/admin/userRoutes';
 import authRouter from './routes/guest/authRoutes';
 
 dotenv.config();
@@ -15,7 +16,8 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/api/auth', authRouter);
-app.use('/api/follow', followRouter);
+app.use('/api/follows', followRouter);
+app.use('/api/users', userRouter);
 
 const PORT = process.env.PORT! || 5000;
 
