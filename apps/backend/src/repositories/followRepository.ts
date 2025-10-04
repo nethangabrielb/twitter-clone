@@ -35,6 +35,13 @@ const followRepository = {
         },
       },
     }),
+  deleteById: async (followId: number) => {
+    await prisma.follow.delete({
+      where: {
+        id: followId,
+      },
+    });
+  },
 };
 
 export default followRepository;

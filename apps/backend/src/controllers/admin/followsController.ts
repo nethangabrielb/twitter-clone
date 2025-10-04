@@ -52,7 +52,29 @@ const followsController = (() => {
     }
   };
 
-  return { createFollow, getFollows };
+  const deleteFollow = async (
+    req: Request<{ followId: string }, object, object>,
+    res: Response
+  ) => {
+    try {
+      await FollowService.deleteFollow(Number(req.params.followId));
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Remove follow success',
+      });
+    } catch (e: unknown) {
+      res.status(500).json({
+        status: 'error',
+        message:
+          e instanceof Error
+            ? e.message
+            : 'There was a problem with the server',
+      });
+    }
+  };
+
+  return { createFollow, getFollows, deleteFollow };
 })();
 
 export default followsController;

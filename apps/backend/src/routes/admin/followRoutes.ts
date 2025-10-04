@@ -9,6 +9,6 @@ followRouter.use(authMiddleware);
 
 followRouter.get('/:userId', followsController.getFollows);
 followRouter.post('/', followsController.createFollow);
-// followRouter.delete('/', followsController.deleteFollow);
+followRouter.delete('/:followId', followsController.deleteFollow);
 
 export default followRouter;

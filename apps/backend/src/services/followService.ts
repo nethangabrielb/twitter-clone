@@ -24,7 +24,9 @@ const FollowService = {
     }
     return { followers, followings };
   },
-  // deleteFollow: () => {},
+  deleteFollow: async (followId: number) => {
+    return followRepository.deleteById(followId);
+  },
 };
 
 export default FollowService;
