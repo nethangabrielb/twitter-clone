@@ -3,7 +3,10 @@ import type { RegistrationBody } from '../types/auth';
 
 const UserRepository = {
   createNewUser: (data: RegistrationBody) => prisma.user.create({ data }),
-  findById: (id: number) => prisma.user.findUnique({ where: { id } }),
+  findById: (id: number) =>
+    prisma.user.findUnique({
+      where: { id },
+    }),
   findByUsername: (username: string) =>
     prisma.user.findUnique({ where: { username } }),
   findAll: () => prisma.user.findMany(),

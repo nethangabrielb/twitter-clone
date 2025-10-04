@@ -27,7 +27,32 @@ const followsController = (() => {
     }
   };
 
-  return { createFollow };
+  const getFollows = async (
+    req: Request<{ userId: string }, object, object>,
+    res: Response
+  ) => {
+    try {
+      const follow = await FollowService.getUserFollows(
+        Number(req.params.userId)
+      );
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Follow success',
+        data: follow,
+      });
+    } catch (e: unknown) {
+      res.status(500).json({
+        status: 'error',
+        message:
+          e instanceof Error
+            ? e.message
+            : 'There was a problem with the server',
+      });
+    }
+  };
+
+  return { createFollow, getFollows };
 })();
 
 export default followsController;
