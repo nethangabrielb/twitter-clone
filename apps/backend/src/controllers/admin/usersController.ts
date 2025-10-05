@@ -2,8 +2,7 @@ import { Request, Response } from 'express';
 
 import UserService from '../../services/userService';
 import type { RegistrationBody } from '../../types/auth';
-
-const GENERIC_ERROR_MESSAGE = 'An unknown error occurred';
+import { GENERIC_ERROR_MESSAGE } from '../../utils/errorMessage';
 
 const userController = (() => {
   const getUser = async (req: Request<{ id: string }>, res: Response) => {

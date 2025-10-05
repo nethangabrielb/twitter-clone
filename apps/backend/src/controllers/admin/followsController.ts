@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 
 import FollowService from '../../services/followService';
 import type { Follow } from '../../types/follow';
+import { GENERIC_ERROR_MESSAGE } from '../../utils/errorMessage';
 
 const followsController = (() => {
   const createFollow = async (
@@ -11,18 +12,15 @@ const followsController = (() => {
     try {
       const follow = await FollowService.createNewFollow(req.body);
 
-      res.status(200).json({
+      res.json({
         status: 'success',
         message: 'Follow success',
         data: follow,
       });
     } catch (e: unknown) {
-      res.status(500).json({
+      res.json({
         status: 'error',
-        message:
-          e instanceof Error
-            ? e.message
-            : 'There was a problem with the server',
+        message: e instanceof Error ? e.message : GENERIC_ERROR_MESSAGE,
       });
     }
   };
@@ -42,12 +40,9 @@ const followsController = (() => {
         data: follow,
       });
     } catch (e: unknown) {
-      res.status(500).json({
+      res.json({
         status: 'error',
-        message:
-          e instanceof Error
-            ? e.message
-            : 'There was a problem with the server',
+        message: e instanceof Error ? e.message : GENERIC_ERROR_MESSAGE,
       });
     }
   };
@@ -59,17 +54,14 @@ const followsController = (() => {
     try {
       await FollowService.deleteFollow(Number(req.params.followId));
 
-      res.status(200).json({
+      res.json({
         status: 'success',
         message: 'Remove follow success',
       });
     } catch (e: unknown) {
-      res.status(500).json({
+      res.json({
         status: 'error',
-        message:
-          e instanceof Error
-            ? e.message
-            : 'There was a problem with the server',
+        message: e instanceof Error ? e.message : GENERIC_ERROR_MESSAGE,
       });
     }
   };
