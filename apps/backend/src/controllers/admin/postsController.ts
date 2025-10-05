@@ -5,7 +5,10 @@ import { Post } from '../../types/post';
 import { GENERIC_ERROR_MESSAGE } from '../../utils/errorMessage';
 
 const postsController = (() => {
-  const create = async (req: Request<object, object, Post>, res: Response) => {
+  const createPost = async (
+    req: Request<object, object, Post>,
+    res: Response
+  ) => {
     try {
       const newPost = await postService.createPost(req.body);
 
@@ -22,7 +25,7 @@ const postsController = (() => {
     }
   };
 
-  const get = async (req: Request<{ postId: string }>, res: Response) => {
+  const getPost = async (req: Request<{ postId: string }>, res: Response) => {
     try {
       const post = await postService.getPost(Number(req.params.postId));
 
@@ -39,7 +42,7 @@ const postsController = (() => {
     }
   };
 
-  return { get, create };
+  return { getPost, createPost };
 })();
 
 export default postsController;
