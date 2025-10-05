@@ -8,5 +8,6 @@ const postRouter = Router();
 postRouter.use(authMiddleware);
 
 postRouter.post('/', postsController.create);
+postRouter.get('/:postId', postsController.get);
 
 export default postRouter;

@@ -22,7 +22,24 @@ const postsController = (() => {
     }
   };
 
-  return { create };
+  const get = async (req: Request<{ postId: string }>, res: Response) => {
+    try {
+      const post = await postService.getPost(Number(req.params.postId));
+
+      res.json({
+        status: 'success',
+        message: 'Post fetched success',
+        data: post,
+      });
+    } catch (err: unknown) {
+      res.json({
+        status: 'error',
+        message: err instanceof Error ? err.message : GENERIC_ERROR_MESSAGE,
+      });
+    }
+  };
+
+  return { get, create };
 })();
 
 export default postsController;

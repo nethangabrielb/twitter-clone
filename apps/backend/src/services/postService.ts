@@ -9,6 +9,13 @@ const postService = {
     }
     return newPost;
   },
+  getPost: async (postId: number) => {
+    const post = await postRepository.get(postId);
+    if (!post) {
+      throw new Error('There was a problem fetching the post');
+    }
+    return post;
+  },
 };
 
 export default postService;
