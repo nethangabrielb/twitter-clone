@@ -23,6 +23,8 @@ model User {
   avatar     String?
   Followings Follow[] @relation("Followings")
   Followers  Follow[] @relation("Followers")
+  Post       Post[]
+  createdAt  DateTime @default(now())
 }
 
 model Follow {
@@ -31,6 +33,14 @@ model Follow {
   followerId  Int
   following   User @relation("Followings", fields: [followingId], references: [id])
   follower    User @relation("Followers", fields: [followerId], references: [id])
+}
+
+model Post {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  content   String   @db.VarChar(280)
+  createdAt DateTime @default(now())
 }
 
 model FederatedCredentials {
