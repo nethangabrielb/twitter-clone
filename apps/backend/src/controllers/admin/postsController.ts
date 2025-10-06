@@ -42,7 +42,24 @@ const postsController = (() => {
     }
   };
 
-  return { getPost, createPost };
+  const getPosts = async (req: Request, res: Response) => {
+    try {
+      const posts = await postService.getPosts();
+
+      res.json({
+        status: 'success',
+        message: 'Posts fetched success',
+        data: posts,
+      });
+    } catch (err: unknown) {
+      res.json({
+        status: 'error',
+        message: err instanceof Error ? err.message : GENERIC_ERROR_MESSAGE,
+      });
+    }
+  };
+
+  return { createPost, getPost, getPosts };
 })();
 
 export default postsController;
