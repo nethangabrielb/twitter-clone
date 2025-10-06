@@ -10,5 +10,6 @@ postRouter.use(authMiddleware);
 postRouter.get('/', postsController.getPosts);
 postRouter.get('/:postId', postsController.getPost);
 postRouter.post('/', postsController.createPost);
+postRouter.delete('/:postId', postsController.deletePost);
 
 export default postRouter;

@@ -49,6 +49,9 @@ const postService = {
 
     return sortedPosts;
   },
+  deletePost: async (postId: number) => {
+    return postRepository.deleteById(postId);
+  },
 };
 
 export default postService;

@@ -60,7 +60,26 @@ const postsController = (() => {
     }
   };
 
-  return { createPost, getPost, getPosts };
+  const deletePost = async (
+    req: Request<{ postId: string }>,
+    res: Response
+  ) => {
+    try {
+      await postService.deletePost(Number(req.params.postId));
+
+      res.json({
+        status: 'success',
+        message: 'Post deleted successfully!',
+      });
+    } catch (err: unknown) {
+      res.json({
+        status: 'error',
+        message: err instanceof Error ? err.message : GENERIC_ERROR_MESSAGE,
+      });
+    }
+  };
+
+  return { createPost, getPost, getPosts, deletePost };
 })();
 
 export default postsController;
