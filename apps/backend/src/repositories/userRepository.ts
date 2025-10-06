@@ -6,9 +6,10 @@ const UserRepository = {
   findById: (id: number) =>
     prisma.user.findUnique({
       where: { id },
+      include: { Post: true },
     }),
   findByUsername: (username: string) =>
-    prisma.user.findUnique({ where: { username } }),
+    prisma.user.findUnique({ where: { username }, include: { Post: true } }),
   findAll: () => prisma.user.findMany(),
   updateById: (id: number, data: Partial<RegistrationBody>) =>
     prisma.user.update({ where: { id }, data }),
