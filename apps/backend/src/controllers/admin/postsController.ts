@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 
 import postService from '../../services/postService';
 import { Post } from '../../types/post';
+import { User } from '../../types/user';
 import { GENERIC_ERROR_MESSAGE } from '../../utils/errorMessage';
 
 const postsController = (() => {
@@ -44,7 +45,7 @@ const postsController = (() => {
 
   const getPosts = async (req: Request, res: Response) => {
     try {
-      const posts = await postService.getPosts();
+      const posts = await postService.getPosts(req.user as User);
 
       res.json({
         status: 'success',
