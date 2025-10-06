@@ -12,10 +12,10 @@ const FollowService = {
   },
   getUserFollows: async (userId: number) => {
     const followings: Array<{ following: Partial<User> }> =
-      await followRepository.getFollowings(userId);
+      await followRepository.findFollowings(userId);
 
     const followers: Array<{ follower: Partial<User> }> =
-      await followRepository.getFollowers(userId);
+      await followRepository.findFollowers(userId);
 
     if (!followings || !followers) {
       throw new Error(
