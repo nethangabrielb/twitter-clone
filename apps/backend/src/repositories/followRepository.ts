@@ -3,7 +3,7 @@ import type { Follow } from '../types/follow';
 
 const followRepository = {
   create: (data: Follow) => prisma.follow.create({ data }),
-  getFollowings: async (userId: number) =>
+  findFollowings: async (userId: number) =>
     await prisma.follow.findMany({
       where: {
         followerId: userId,
@@ -19,7 +19,7 @@ const followRepository = {
         },
       },
     }),
-  getFollowers: async (userId: number) =>
+  findFollowers: async (userId: number) =>
     await prisma.follow.findMany({
       where: {
         followingId: userId,

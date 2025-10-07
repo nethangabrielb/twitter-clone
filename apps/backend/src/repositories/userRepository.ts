@@ -1,14 +1,47 @@
 import { prisma } from '../prisma/client';
 import type { RegistrationBody } from '../types/auth';
 
+/*
+  In this case, because of how the schema is designed:
+
+  Followers = quantity of follow records where the user is following someone (i.e, qty where the user is a follower)
+  Followings = quantity of follow records where others have the user in their following 
+  (i.e, qty where the user is in other's following)
+
+  I know it sounds confusing but if you look at the schema, it should make sense
+*/
+
 const UserRepository = {
   createNewUser: (data: RegistrationBody) => prisma.user.create({ data }),
   findById: (id: number) =>
     prisma.user.findUnique({
       where: { id },
+      select: {
+        id: true,
+        name: true,
+        username: true,
+        createdAt: true,
+        avatar: true,
+        _count: {
+          select: {
+            Followers: true,
+            Followings: true,
+          },
+        },
+      },
     }),
   findByUsername: (username: string) =>
-    prisma.user.findUnique({ where: { username } }),
+    prisma.user.findUnique({
+      where: { username },
+      include: {
+        _count: {
+          select: {
+            Followers: true,
+            Followings: true,
+          },
+        },
+      },
+    }),
   findAll: () => prisma.user.findMany(),
   updateById: (id: number, data: Partial<RegistrationBody>) =>
     prisma.user.update({ where: { id }, data }),
