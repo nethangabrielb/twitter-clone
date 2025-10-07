@@ -1,17 +1,19 @@
 import { Request, Response } from 'express';
 
 import likeService from '../../services/likeService';
-import { Like } from '../../types/like';
 import { User } from '../../types/user';
 import { GENERIC_ERROR_MESSAGE } from '../../utils/errorMessage';
 
 const likesController = (() => {
   const createLike = async (
-    req: Request<object, object, Like>,
+    req: Request<{ postId: number }, object, object>,
     res: Response
   ) => {
     try {
-      const like = await likeService.createLike(req.body);
+      const like = await likeService.createLike(
+        Number(req.params.postId),
+        req.user as User
+      );
 
       res.json({
         status: 'success',

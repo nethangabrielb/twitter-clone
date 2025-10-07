@@ -7,7 +7,7 @@ const likesRouter = Router();
 
 likesRouter.use(authMiddleware);
 
-likesRouter.post('/', likesController.createLike);
+likesRouter.post('/:postId', likesController.createLike);
 likesRouter.delete('/:postId', likesController.deleteLike);
 
 export default likesRouter;

@@ -1,10 +1,9 @@
 import likeRepository from '../repositories/likeRepository';
-import { Like } from '../types/like';
 import { User } from '../types/user';
 
 const likeService = {
-  createLike: async (data: Like) => {
-    const like = await likeRepository.create(data);
+  createLike: async (postId: number, user: User) => {
+    const like = await likeRepository.create({ postId, userId: user.id });
     if (!like) throw new Error('There was an issue liking post.');
     return like;
   },
