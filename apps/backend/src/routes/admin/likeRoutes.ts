@@ -8,5 +8,6 @@ const likesRouter = Router();
 likesRouter.use(authMiddleware);
 
 likesRouter.post('/', likesController.createLike);
+likesRouter.delete('/:postId', likesController.deleteLike);
 
 export default likesRouter;

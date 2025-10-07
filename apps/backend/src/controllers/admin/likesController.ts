@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 
 import likeService from '../../services/likeService';
 import { Like } from '../../types/like';
+import { User } from '../../types/user';
 import { GENERIC_ERROR_MESSAGE } from '../../utils/errorMessage';
 
 const likesController = (() => {
@@ -25,7 +26,26 @@ const likesController = (() => {
     }
   };
 
-  return { createLike };
+  const deleteLike = async (
+    req: Request<{ postId: number }, object, object>,
+    res: Response
+  ) => {
+    try {
+      await likeService.deleteLike(Number(req.params.postId), req.user as User);
+
+      res.json({
+        status: 'success',
+        message: 'Unlike success',
+      });
+    } catch (err: unknown) {
+      res.json({
+        status: 'error',
+        message: err instanceof Error ? err.message : GENERIC_ERROR_MESSAGE,
+      });
+    }
+  };
+
+  return { createLike, deleteLike };
 })();
 
 export default likesController;
