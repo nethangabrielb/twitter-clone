@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 
 import '../src/config/passport';
 import followRouter from './routes/admin/followRoutes';
+import likesRouter from './routes/admin/likeRoutes';
 import postRouter from './routes/admin/postRoutes';
 import userRouter from './routes/admin/userRoutes';
 import authRouter from './routes/guest/authRoutes';
@@ -17,9 +18,10 @@ app.use(express.json());
 app.use(cors());
 
 app.use('/api/auth', authRouter);
-app.use('/api/follows', followRouter);
 app.use('/api/users', userRouter);
 app.use('/api/posts', postRouter);
+app.use('/api/follows', followRouter);
+app.use('/api/likes', likesRouter);
 
 const PORT = process.env.PORT! || 5000;
 
