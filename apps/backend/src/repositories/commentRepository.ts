@@ -14,6 +14,8 @@ const commentRepository = {
         },
       },
     }),
+  deleteById: (id: number) =>
+    prisma.comment.update({ where: { id }, data: { deleted: true } }),
 };
 
 export default commentRepository;

@@ -53,7 +53,26 @@ const commentsController = (() => {
     }
   };
 
-  return { createComment, getComment };
+  const deleteComment = async (
+    req: Request<{ commentId: string }, object, object>,
+    res: Response
+  ) => {
+    try {
+      await commentService.deleteComment(Number(req.params.commentId));
+
+      res.json({
+        status: 'success',
+        message: 'Comment deleted successfully',
+      });
+    } catch (err: unknown) {
+      res.json({
+        status: 'error',
+        message: err instanceof Error ? err.message : GENERIC_ERROR_MESSAGE,
+      });
+    }
+  };
+
+  return { createComment, getComment, deleteComment };
 })();
 
 export default commentsController;

@@ -12,6 +12,9 @@ const commentService = {
     if (!comment) throw new Error('Comment not found');
     return comment;
   },
+  deleteComment: async (commentId: number) => {
+    return commentRepository.deleteById(commentId);
+  },
 };
 
 export default commentService;
