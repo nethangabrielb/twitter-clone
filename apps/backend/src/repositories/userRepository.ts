@@ -28,6 +28,19 @@ const UserRepository = {
             Followings: true,
           },
         },
+        Post: {
+          where: {
+            deleted: false,
+          },
+          include: {
+            _count: {
+              select: {
+                Like: true,
+                Comment: true,
+              },
+            },
+          },
+        },
       },
     }),
   findByUsername: (username: string) =>
