@@ -3,7 +3,17 @@ import { CommentBody } from '../types/comment';
 
 const commentRepository = {
   create: (data: CommentBody) => prisma.comment.create({ data }),
-  findById: (id: number) => prisma.comment.findUnique({ where: { id } }),
+  findById: (id: number) =>
+    prisma.comment.findUnique({
+      where: { id },
+      include: {
+        _count: {
+          select: {
+            Like: true,
+          },
+        },
+      },
+    }),
 };
 
 export default commentRepository;
