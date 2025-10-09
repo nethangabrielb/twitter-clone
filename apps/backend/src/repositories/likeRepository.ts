@@ -1,10 +1,10 @@
 import { prisma } from '../prisma/client';
-import { Like } from '../types/like';
+import { CommentLike, PostLike } from '../types/like';
 
-const likeRepository = {
-  create: (data: Like) => prisma.like.create({ data }),
-  deleteByIds: (data: Like) =>
-    prisma.like.delete({
+const postLikeRepository = {
+  create: (data: PostLike) => prisma.postLike.create({ data }),
+  deleteByIds: (data: PostLike) =>
+    prisma.postLike.delete({
       where: {
         userId_postId: {
           userId: data.userId,
@@ -14,4 +14,17 @@ const likeRepository = {
     }),
 };
 
-export default likeRepository;
+const commentLikeRepository = {
+  create: (data: CommentLike) => prisma.commentLike.create({ data }),
+  deleteByIds: (data: CommentLike) =>
+    prisma.commentLike.delete({
+      where: {
+        userId_commentId: {
+          userId: data.userId,
+          commentId: data.commentId,
+        },
+      },
+    }),
+};
+
+export { postLikeRepository, commentLikeRepository };
