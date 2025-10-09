@@ -30,7 +30,6 @@ const postService = {
     // fetch posts
     const posts = await postRepository.findAll();
 
-    // sort the posts by the new added property
     if (!posts) {
       throw new Error('There was a problem fetching posts');
     }

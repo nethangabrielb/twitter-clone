@@ -44,6 +44,7 @@ model Post {
   userId    Int
   content   String     @db.VarChar(280)
   createdAt DateTime   @default(now())
+  deleted   Boolean    @default(false)
   Comment   Comment[]
   Like      PostLike[]
 }

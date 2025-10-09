@@ -25,6 +25,9 @@ const postRepository = {
     }),
   findAll: () =>
     prisma.post.findMany({
+      where: {
+        deleted: false,
+      },
       include: {
         _count: {
           select: {
@@ -33,7 +36,8 @@ const postRepository = {
         },
       },
     }),
-  deleteById: (id: number) => prisma.post.delete({ where: { id } }),
+  deleteById: (id: number) =>
+    prisma.post.update({ where: { id }, data: { deleted: true } }),
 };
 
 export default postRepository;
