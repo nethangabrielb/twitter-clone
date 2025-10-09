@@ -7,6 +7,7 @@ const commentRouter = Router();
 
 commentRouter.use(authMiddleware);
 
+commentRouter.get('/:commentId', commentsController.getComment);
 commentRouter.post('/', commentsController.createComment);
 
 export default commentRouter;

@@ -32,7 +32,28 @@ const commentsController = (() => {
     }
   };
 
-  return { createComment };
+  const getComment = async (
+    req: Request<{ commentId: string }, object, object>,
+    res: Response
+  ) => {
+    try {
+      const comment = await commentService.getComment(
+        Number(req.params.commentId)
+      );
+
+      res.json({
+        status: 'success',
+        data: comment,
+      });
+    } catch (err: unknown) {
+      res.json({
+        status: 'error',
+        message: err instanceof Error ? err.message : GENERIC_ERROR_MESSAGE,
+      });
+    }
+  };
+
+  return { createComment, getComment };
 })();
 
 export default commentsController;

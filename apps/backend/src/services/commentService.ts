@@ -7,6 +7,11 @@ const commentService = {
     if (!comment) throw new Error('There was an issue creating comment');
     return comment;
   },
+  getComment: async (commentId: number) => {
+    const comment = await commentRepository.findById(commentId);
+    if (!comment) throw new Error('Comment not found');
+    return comment;
+  },
 };
 
 export default commentService;
