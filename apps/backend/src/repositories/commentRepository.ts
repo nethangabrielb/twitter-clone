@@ -1,0 +1,8 @@
+import { prisma } from '../prisma/client';
+import { CommentBody } from '../types/comment';
+
+const commentRepository = {
+  create: (data: CommentBody) => prisma.comment.create({ data }),
+};
+
+export default commentRepository;

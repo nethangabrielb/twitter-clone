@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 
 import '../src/config/passport';
+import commentRouter from './routes/admin/commentRoutes';
 import followRouter from './routes/admin/followRoutes';
 import likesRouter from './routes/admin/likeRoutes';
 import postRouter from './routes/admin/postRoutes';
@@ -20,6 +21,7 @@ app.use(cors());
 app.use('/api/auth', authRouter);
 app.use('/api/users', userRouter);
 app.use('/api/posts', postRouter);
+app.use('/api/comments', commentRouter);
 app.use('/api/follows', followRouter);
 app.use('/api/likes', likesRouter);
 
