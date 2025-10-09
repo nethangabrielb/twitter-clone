@@ -46,14 +46,6 @@ const UserRepository = {
   findByUsername: (username: string) =>
     prisma.user.findUnique({
       where: { username },
-      include: {
-        _count: {
-          select: {
-            Followers: true,
-            Followings: true,
-          },
-        },
-      },
     }),
   findAll: () => prisma.user.findMany(),
   updateById: (id: number, data: Partial<RegistrationBody>) =>
