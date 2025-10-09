@@ -1,0 +1,14 @@
+import { Router } from 'express';
+
+import commentsController from '../../controllers/admin/commentsController';
+import { authMiddleware } from '../../middlewares/authMiddleware';
+
+const commentRouter = Router();
+
+commentRouter.use(authMiddleware);
+
+commentRouter.get('/:commentId', commentsController.getComment);
+commentRouter.post('/', commentsController.createComment);
+commentRouter.delete('/:commentId', commentsController.deleteComment);
+
+export default commentRouter;

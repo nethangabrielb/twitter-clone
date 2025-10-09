@@ -1,15 +1,32 @@
-import likeRepository from '../repositories/likeRepository';
+import {
+  commentLikeRepository,
+  postLikeRepository,
+} from '../repositories/likeRepository';
 import { User } from '../types/user';
 
-const likeService = {
+const postLikeService = {
   createLike: async (postId: number, user: User) => {
-    const like = await likeRepository.create({ postId, userId: user.id });
+    const like = await postLikeRepository.create({ postId, userId: user.id });
     if (!like) throw new Error('There was an issue liking post.');
     return like;
   },
   deleteLike: async (postId: number, user: User) => {
-    return likeRepository.deleteByIds({ postId, userId: user.id });
+    return postLikeRepository.deleteByIds({ postId, userId: user.id });
   },
 };
 
-export default likeService;
+const commentLikeService = {
+  createLike: async (commentId: number, user: User) => {
+    const like = await commentLikeRepository.create({
+      commentId,
+      userId: user.id,
+    });
+    if (!like) throw new Error('There was an issue liking post.');
+    return like;
+  },
+  deleteLike: async (commentId: number, user: User) => {
+    return commentLikeRepository.deleteByIds({ commentId, userId: user.id });
+  },
+};
+
+export { postLikeService, commentLikeService };

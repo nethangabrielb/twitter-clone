@@ -1,13 +1,19 @@
 import { Router } from 'express';
 
-import likesController from '../../controllers/admin/likesController';
+import {
+  commentLikesController,
+  postLikesController,
+} from '../../controllers/admin/likesController';
 import { authMiddleware } from '../../middlewares/authMiddleware';
 
 const likesRouter = Router();
 
 likesRouter.use(authMiddleware);
 
-likesRouter.post('/:postId', likesController.createLike);
-likesRouter.delete('/:postId', likesController.deleteLike);
+likesRouter.post('/posts/:postId', postLikesController.createLike);
+likesRouter.delete('/posts/:postId', postLikesController.deleteLike);
+
+likesRouter.post('/comments/:commentId', commentLikesController.createLike);
+likesRouter.delete('/comments/:commentId', commentLikesController.deleteLike);
 
 export default likesRouter;

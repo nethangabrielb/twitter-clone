@@ -12,6 +12,15 @@ const postRepository = {
             Like: true,
           },
         },
+        Comment: {
+          include: {
+            _count: {
+              select: {
+                Like: true,
+              },
+            },
+          },
+        },
       },
     }),
   findAll: () =>

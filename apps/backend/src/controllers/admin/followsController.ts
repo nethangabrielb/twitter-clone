@@ -17,10 +17,10 @@ const followsController = (() => {
         message: 'Follow success',
         data: follow,
       });
-    } catch (e: unknown) {
+    } catch (err: unknown) {
       res.json({
         status: 'error',
-        message: e instanceof Error ? e.message : GENERIC_ERROR_MESSAGE,
+        message: err instanceof Error ? err.message : GENERIC_ERROR_MESSAGE,
       });
     }
   };
@@ -39,10 +39,10 @@ const followsController = (() => {
         message: 'Follow success',
         data: follow,
       });
-    } catch (e: unknown) {
+    } catch (err: unknown) {
       res.json({
         status: 'error',
-        message: e instanceof Error ? e.message : GENERIC_ERROR_MESSAGE,
+        message: err instanceof Error ? err.message : GENERIC_ERROR_MESSAGE,
       });
     }
   };
@@ -58,10 +58,10 @@ const followsController = (() => {
         status: 'success',
         message: 'Remove follow success',
       });
-    } catch (e: unknown) {
+    } catch (err: unknown) {
       res.json({
         status: 'error',
-        message: e instanceof Error ? e.message : GENERIC_ERROR_MESSAGE,
+        message: err instanceof Error ? err.message : GENERIC_ERROR_MESSAGE,
       });
     }
   };
