@@ -2,6 +2,8 @@ import express from 'express';
 
 import cors from 'cors';
 import dotenv from 'dotenv';
+import session from 'express-session';
+import passport from 'passport';
 
 import '../src/config/passport';
 import commentRouter from './routes/admin/commentRoutes';
@@ -11,12 +13,21 @@ import postRouter from './routes/admin/postRoutes';
 import userRouter from './routes/admin/userRoutes';
 import authRouter from './routes/guest/authRoutes';
 
-dotenv.config();
-
 const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.use(
+  session({
+    secret: process.env.JWT_SECRET!,
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+
+dotenv.config();
 
 app.use('/api/auth', authRouter);
 app.use('/api/users', userRouter);
