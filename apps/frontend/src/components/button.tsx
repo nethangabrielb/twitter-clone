@@ -8,17 +8,17 @@ type Props = {
   icon: string | null;
   children: string;
   outline: boolean;
+  light: boolean;
 };
 
-const FormButton = ({ icon, children, outline }: Props) => {
+const FormButton = ({ icon, children, outline, light }: Props) => {
   return (
     <Button
       className={cn(
-        !outline
-          ? "bg-foreground text-background hover:bg-foreground"
-          : "bg-background text-foreground border-borde border hover:bg-background",
-        `rounded-3xl hover:brightness-90`,
+        !outline && "hover:!bg-foreground bg-foreground text-background",
+        "rounded-3xl border-muted-foreground",
       )}
+      variant={outline ? "outline" : "default"}
     >
       {icon && (
         <Image src={icon} width={18} height={18} alt="Google Icon"></Image>

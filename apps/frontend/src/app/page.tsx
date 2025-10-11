@@ -16,26 +16,27 @@ export default function Home() {
           </h3>
           <FormButton
             icon="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/google/google-original.svg"
-            outline={false}
+            outline={true}
+            light={true}
           >
             Sign up with Google
           </FormButton>
           <div className="flex items-center gap-2">
-            <div className="h-[1px] bg-card flex-1"></div>
+            <div className="h-[1px] bg-border flex-1"></div>
             <p className="w-fit">OR</p>
-            <div className="h-[1px] bg-card flex-1"></div>
+            <div className="h-[1px] bg-border flex-1"></div>
           </div>
-          <FormButton icon={null} outline={false}>
+          <FormButton icon={null} outline={false} light={false}>
             Create an account
           </FormButton>
-          <p className="text-[10px] font-light tracking-wide">
+          <p className="text-[10px] font-medium text-muted-foreground tracking-wide">
             By signing up, you agree to the{" "}
             <span className="text-primary">Terms of Service</span> and{" "}
             <span className="text-primary">Privacy Policy</span>, including{" "}
             <span className="text-primary">Cookie Use</span>.
           </p>
-          <h4 className="font-bold mt-10">Already have an account?</h4>
-          <FormButton icon={null} outline={true}>
+          <h4 className="font-semibold mt-10">Already have an account?</h4>
+          <FormButton icon={null} outline={true} light={false}>
             Sign in
           </FormButton>
         </div>
