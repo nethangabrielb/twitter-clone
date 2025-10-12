@@ -1,9 +1,18 @@
 import { Request, Response } from 'express';
 
+import jwt from 'jsonwebtoken';
+import path, { dirname, join } from 'path';
+import { fileURLToPath } from 'url';
+
 import UserService from '../../services/userService';
 import type { LoginBody, RegistrationBody } from '../../types/auth';
 
 const GENERIC_ERROR_MESSAGE = 'An unknown error occurred';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export const ROOT_DIR = join(__dirname, '../../../');
 
 const authController = (() => {
   const register = async (
@@ -46,7 +55,17 @@ const authController = (() => {
     }
   };
 
-  const redirect = (req: Request, res: Response) => {};
+  const redirect = (req: Request, res: Response) => {
+    // create a token for the user
+    if (req.user) {
+      const token = jwt.sign(req.user, process.env.JWT_SECRET!);
+
+      console.log(token);
+
+      res.setHeader('Set-Cookie', `token=${token}; HttpOnly; Secure; Path=/`);
+      res.sendFile(path.join(ROOT_DIR, 'public', 'redirect.html'));
+    }
+  };
 
   return { register, login, redirect };
 })();

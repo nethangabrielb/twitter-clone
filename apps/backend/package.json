@@ -25,7 +25,8 @@
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "passport": "^0.7.0",
-    "passport-google-oidc": "^0.1.0"
+    "passport-google-oidc": "^0.1.0",
+    "unique-username-generator": "^1.5.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
