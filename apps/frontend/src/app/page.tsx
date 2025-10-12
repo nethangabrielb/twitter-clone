@@ -1,7 +1,7 @@
 import FormButton from "@/components/button";
 import Icon from "@/components/icon";
 
-export default function Home() {
+const LandingPage = () => {
   return (
     <div className="flex gap-4 h-full justify-evenly items-center">
       <Icon width={350} height={350} alt="Twitter Icon"></Icon>
@@ -10,7 +10,7 @@ export default function Home() {
         <h1 className="font-extrabold text-7xl tracking-tighter rotate-x-[35deg]">
           Happening now
         </h1>
-        <div className="flex flex-col w-[250px] gap-4">
+        <div className="flex flex-col w-[300px] gap-4">
           <h3 className="font-bold text-4xl tracking-tighter rotate-x-[35deg]">
             Join today.
           </h3>
@@ -18,6 +18,7 @@ export default function Home() {
             icon="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/google/google-original.svg"
             outline={true}
             light={true}
+            type="google"
           >
             Sign up with Google
           </FormButton>
@@ -26,7 +27,7 @@ export default function Home() {
             <p className="w-fit">OR</p>
             <div className="h-[1px] bg-border flex-1"></div>
           </div>
-          <FormButton icon={null} outline={false} light={false}>
+          <FormButton icon={null} outline={false} light={false} type="register">
             Create an account
           </FormButton>
           <p className="text-[10px] font-medium text-muted-foreground tracking-wide">
@@ -36,11 +37,13 @@ export default function Home() {
             <span className="text-primary">Cookie Use</span>.
           </p>
           <h4 className="font-semibold mt-10">Already have an account?</h4>
-          <FormButton icon={null} outline={true} light={false}>
+          <FormButton icon={null} outline={true} light={false} type="login">
             Sign in
           </FormButton>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default LandingPage;

@@ -4,6 +4,7 @@ interface RegistrationBody {
   email: string;
   password: string;
   confirmPassword?: string;
+  avatar?: string;
 }
 
 interface LoginBody {

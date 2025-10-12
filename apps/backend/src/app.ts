@@ -15,6 +15,7 @@ import authRouter from './routes/guest/authRoutes';
 
 const app = express();
 
+app.use(express.static('public'));
 app.use(express.json());
 app.use(cors());
 app.use(
@@ -25,7 +26,6 @@ app.use(
   })
 );
 app.use(passport.initialize());
-app.use(passport.session());
 
 dotenv.config();
 
