@@ -1,9 +1,11 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oidc';
+import { generateUsername } from 'unique-username-generator';
 
 import { prisma } from '../prisma/client';
 import UserRepository from '../repositories/userRepository';
 import type { GoogleProfile, VerifyCallback } from '../types/auth';
+import { User } from '../types/user';
 
 // your Prisma client
 
@@ -12,7 +14,8 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      callbackURL: `${process.env.SERVER_URL!}/oauth2/redirect/google`,
+      callbackURL: `${process.env.SERVER_URL!}/api/auth/oauth2/redirect/google`,
+      scope: ['openid', 'email', 'profile'],
     },
     async (issuer: string, profile: GoogleProfile, cb: VerifyCallback) => {
       try {
@@ -33,8 +36,9 @@ passport.use(
           const user = await UserRepository.createNewUser({
             name: profile.displayName,
             email: profile.emails?.[0]?.value,
-            username: '',
+            username: generateUsername(),
             password: '',
+            avatar: profile.photos?.[0]?.value,
           });
 
           await prisma.federatedCredentials.create({
@@ -45,7 +49,7 @@ passport.use(
             },
           });
 
-          return cb(null, user);
+          return cb(null, user, { new: true });
         } else {
           // Existing user
           const user = await prisma.user.findUnique({
@@ -53,7 +57,7 @@ passport.use(
           });
 
           if (!user) return cb(null, false);
-          return cb(null, user);
+          return cb(null, user, { new: false });
         }
       } catch (err) {
         return cb(err);
@@ -61,3 +65,11 @@ passport.use(
     }
   )
 );
+
+passport.serializeUser(function (user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function (user: User, done) {
+  done(null, user);
+});
