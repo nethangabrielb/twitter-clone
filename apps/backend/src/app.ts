@@ -1,5 +1,6 @@
 import express from 'express';
 
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import session from 'express-session';
@@ -18,6 +19,7 @@ const app = express();
 app.use(express.static('public'));
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser());
 app.use(
   session({
     secret: process.env.JWT_SECRET!,

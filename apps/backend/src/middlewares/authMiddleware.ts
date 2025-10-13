@@ -9,8 +9,8 @@ export const authMiddleware = async (
   res: Response,
   next: NextFunction
 ) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader?.split(' ')[1]; // Bearer TOKEN
+  const cookies = req.cookies;
+  const token = cookies.token; // Bearer TOKEN
 
   if (!token)
     return res
