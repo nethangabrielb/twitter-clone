@@ -15,7 +15,6 @@ const userApi = (() => {
       },
     );
     if (!res.ok) {
-      console.error(res);
       throw new Error("Error fetching from the server.");
     }
     const data = await res.json();
