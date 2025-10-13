@@ -19,8 +19,12 @@ const userController = (() => {
 
   const getAllUsers = async (_req: Request, res: Response) => {
     try {
-      const users = await UserService.getAllUsers();
-      res.json({ status: 'success', data: users });
+      if (_req.query.current) {
+        res.json({ status: 'success', data: _req.user });
+      } else {
+        const users = await UserService.getAllUsers();
+        res.json({ status: 'success', data: users });
+      }
     } catch (err: unknown) {
       res.json({
         status: 'error',
