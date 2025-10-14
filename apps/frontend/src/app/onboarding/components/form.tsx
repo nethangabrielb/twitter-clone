@@ -27,7 +27,7 @@ const ConfirmForm = ({ user }: Props) => {
       <h1 className="font-extrabold text-2xl rotate-x-[20deg]">
         Confirm profile
       </h1>
-      <div className="flex flex-col gap-4 w-[20%]">
+      <div className="flex flex-col gap-4 w-[350px]">
         <InputSharp label="Name" register={register}>
           {user.name}
         </InputSharp>
