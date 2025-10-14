@@ -13,14 +13,24 @@ type Props = {
   outline: boolean;
   light: boolean;
   type: "google" | "login" | "register";
+  padding: "large" | "small" | undefined;
 };
 
-const FormButton = ({ icon, children, outline, light, type }: Props) => {
+const FormButton = ({
+  icon,
+  children,
+  outline,
+  light,
+  type,
+  padding,
+}: Props) => {
   return (
     <Button
       className={cn(
         !outline && "hover:!bg-foreground bg-foreground text-background",
-        "rounded-3xl border-muted-foreground p-[8px] h-fit",
+        padding === "large" && "p-3",
+        padding === "small" && "p-[8px]",
+        "rounded-3xl border-muted-foreground  h-fit",
       )}
       variant={outline ? "outline" : "default"}
       onClick={type === "google" ? googleAuth : undefined}

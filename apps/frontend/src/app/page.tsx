@@ -19,6 +19,7 @@ const LandingPage = () => {
             outline={true}
             light={true}
             type="google"
+            padding="small"
           >
             Sign up with Google
           </FormButton>
@@ -27,7 +28,13 @@ const LandingPage = () => {
             <p className="w-fit">OR</p>
             <div className="h-[1px] bg-border flex-1"></div>
           </div>
-          <FormButton icon={null} outline={false} light={false} type="register">
+          <FormButton
+            icon={null}
+            outline={false}
+            light={false}
+            type="register"
+            padding="small"
+          >
             Create an account
           </FormButton>
           <p className="text-[10px] font-medium text-muted-foreground tracking-wide">
@@ -37,7 +44,13 @@ const LandingPage = () => {
             <span className="text-primary">Cookie Use</span>.
           </p>
           <h4 className="font-semibold mt-10">Already have an account?</h4>
-          <FormButton icon={null} outline={true} light={false} type="login">
+          <FormButton
+            icon={null}
+            outline={true}
+            light={false}
+            type="login"
+            padding="small"
+          >
             Sign in
           </FormButton>
         </div>
