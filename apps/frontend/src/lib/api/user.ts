@@ -14,6 +14,7 @@ const userApi = (() => {
         },
       },
     );
+
     if (!res.ok) {
       throw new Error("Error fetching from the server.");
     }
