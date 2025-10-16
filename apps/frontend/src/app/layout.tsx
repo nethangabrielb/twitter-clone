@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Toaster } from "sonner";
 
 import { Inter } from "next/font/google";
 
@@ -25,6 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={inter.className} suppressHydrationWarning>
       <body className={`antialiased h-svh bg-background`}>
+        <Toaster position="top-center" richColors />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
