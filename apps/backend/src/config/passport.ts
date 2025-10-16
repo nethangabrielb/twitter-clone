@@ -38,7 +38,9 @@ passport.use(
             email: profile.emails?.[0]?.value,
             username: generateUsername(),
             password: '',
-            avatar: profile.photos?.[0]?.value,
+            avatar:
+              profile.photos?.[0]?.value ??
+              'https://bcezmxfxuctgrkiavycl.supabase.co/storage/v1/object/public/images/default.svg',
           });
 
           await prisma.federatedCredentials.create({
