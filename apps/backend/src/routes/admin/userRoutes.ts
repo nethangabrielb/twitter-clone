@@ -1,7 +1,11 @@
 import { Router } from 'express';
 
+import multer from 'multer';
+
 import userController from '../../controllers/admin/usersController';
 import { authMiddleware } from '../../middlewares/authMiddleware';
+
+const upload = multer();
 
 const userRouter = Router();
 
@@ -9,7 +13,7 @@ userRouter.use(authMiddleware);
 
 userRouter.get('/', userController.getAllUsers);
 userRouter.get('/:id', userController.getUser);
-userRouter.put('/:id', userController.updateUser);
+userRouter.put('/:id', upload.single('avatar'), userController.updateUser);
 userRouter.delete('/:id', userController.deleteUser);
 
 export default userRouter;

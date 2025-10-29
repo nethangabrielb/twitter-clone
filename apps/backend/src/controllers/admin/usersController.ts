@@ -37,6 +37,9 @@ const userController = (() => {
     req: Request<{ id: string }, object, Partial<RegistrationBody>>,
     res: Response
   ) => {
+    console.log(req.body);
+    console.log(req.file);
+
     try {
       const updatedUser = await UserService.updateUser(
         Number(req.params.id),
