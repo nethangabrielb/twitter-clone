@@ -25,9 +25,19 @@ const UserSchema = z.object({
   username: z.string().refine((val) => val.trim().length >= 1, {
     message: "Username can't be empty",
   }),
-  avatar: z.file().refine((file) => file.size <= 5 * 1024 * 1024, {
-    error: "Image exceeds the 5MB limit.",
-  }),
+  avatar: z
+    .file()
+    .refine((file) => {
+      if (file) {
+        return (
+          file.size <= 5 * 1024 * 1024,
+          {
+            error: "Image exceeds the 5MB limit.",
+          }
+        );
+      }
+    })
+    .nullable(),
 });
 
 export type ConfirmUser = z.infer<typeof UserSchema>;
@@ -37,15 +47,20 @@ type Props = {
 };
 
 const ConfirmForm = ({ user }: Props) => {
-  console.log(user);
   const [mouseEnter, setMouseEnter] = useState<boolean>(false);
   const [filePreview, setFilePreview] = useState<File | null>(null);
   const {
     register,
     setValue,
     watch,
+    handleSubmit,
     formState: { errors },
-  } = useForm<ConfirmUser>({ resolver: zodResolver(UserSchema) });
+  } = useForm<ConfirmUser>({
+    resolver: zodResolver(UserSchema),
+    defaultValues: {
+      avatar: null,
+    },
+  });
   const fileInput = useRef<null | HTMLInputElement>(null);
 
   const uploadHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -64,10 +79,18 @@ const ConfirmForm = ({ user }: Props) => {
     }
   };
 
+  const submitForm = () => {
+    alert("Form success!");
+  };
+
   console.log(watch());
+  console.log(errors);
 
   return (
-    <form className="w-full m-auto h-full flex flex-col justify-center items-center gap-8">
+    <form
+      className="w-full m-auto h-full flex flex-col justify-center items-center gap-8"
+      onSubmit={handleSubmit(submitForm)}
+    >
       <div className="flex flex-col gap-4 items-center bg-card border border-border p-8 rounded-md">
         <Icon width={48} height={48} alt="Twitter Icon"></Icon>
         <h1 className="font-extrabold text-2xl rotate-x-[20deg] mb-4">
@@ -99,7 +122,9 @@ const ConfirmForm = ({ user }: Props) => {
             ></Pencil>
           </button>
           {errors.avatar?.message && (
-            <p className="text-red-500 font-medium">{errors.avatar?.message}</p>
+            <p className="text-red-600 font-medium text-center">
+              {errors.avatar?.message}
+            </p>
           )}
           <input
             type="file"
@@ -110,10 +135,18 @@ const ConfirmForm = ({ user }: Props) => {
             accept="image/*"
             onChange={uploadAvatar}
           />
-          <InputSharp label="name" register={register}>
+          <InputSharp
+            label="name"
+            register={register}
+            errorMessage={errors.name?.message}
+          >
             {user.name}
           </InputSharp>
-          <InputSharp label="username" register={register}>
+          <InputSharp
+            label="username"
+            register={register}
+            errorMessage={errors.username?.message}
+          >
             {user.username}
           </InputSharp>
           <div className="mt-2"></div>
