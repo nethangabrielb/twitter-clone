@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
@@ -24,6 +26,19 @@ const FormButton = ({
   type,
   padding,
 }: Props) => {
+  useEffect(() => {
+    window.addEventListener("message", (event) => {
+      console.log(event.data);
+      if (event.data) {
+        if (event.data.success) {
+          globalThis.location.href = `/onboarding`;
+        } else if (event.data.success === false) {
+          globalThis.location.href = `/`;
+        }
+      }
+    });
+  }, []);
+
   return (
     <Button
       className={cn(

@@ -7,8 +7,6 @@ import UserRepository from '../repositories/userRepository';
 import type { GoogleProfile, VerifyCallback } from '../types/auth';
 import { User } from '../types/user';
 
-// your Prisma client
-
 passport.use(
   new GoogleStrategy(
     {

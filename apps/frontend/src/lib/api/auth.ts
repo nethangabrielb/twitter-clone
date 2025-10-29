@@ -9,14 +9,6 @@ const googleAuth = () => {
     "googleAuthPopup",
     `width=${width},height=${height},left=${left},top=${top},resizable=no,scrollbars=no,status=no`,
   );
-
-  window.addEventListener("message", (event) => {
-    if (event.data.success) {
-      window.location.href = `/onboarding`;
-    } else {
-      window.location.href = `/`;
-    }
-  });
 };
 
 export { googleAuth };

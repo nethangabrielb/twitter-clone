@@ -37,6 +37,7 @@ type Props = {
 };
 
 const ConfirmForm = ({ user }: Props) => {
+  console.log(user);
   const [mouseEnter, setMouseEnter] = useState<boolean>(false);
   const [filePreview, setFilePreview] = useState<File | null>(null);
   const {
@@ -88,6 +89,7 @@ const ConfirmForm = ({ user }: Props) => {
                 "rounded-full border h-full object-cover",
                 mouseEnter && "opacity-30",
               )}
+              priority
             ></Image>
             <Pencil
               className={cn(
