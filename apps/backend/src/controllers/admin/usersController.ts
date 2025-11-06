@@ -40,6 +40,8 @@ const userController = (() => {
     req: Request<{ id: string }, object, Partial<RegistrationBody>>,
     res: Response
   ) => {
+    console.log(req.user);
+    console.log(req.params.id);
     try {
       // check if there is file
       if (req.file) {
