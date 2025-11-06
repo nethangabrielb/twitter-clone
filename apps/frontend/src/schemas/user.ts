@@ -7,6 +7,7 @@ const userSchema = z.object({
   email: z.email(),
   password: z.string(),
   avatar: z.string(),
+  onboarded: z.boolean(),
 });
 
 export { userSchema };

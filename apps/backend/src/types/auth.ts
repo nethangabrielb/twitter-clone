@@ -5,6 +5,7 @@ interface RegistrationBody {
   password: string;
   confirmPassword?: string;
   avatar?: string;
+  onboarded: boolean;
 }
 
 interface LoginBody {

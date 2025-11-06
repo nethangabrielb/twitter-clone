@@ -53,6 +53,9 @@ const UserService = {
     if (data.password) {
       data.password = await bcrypt.hash(data.password, 10);
     }
+    if (data.onboarded) {
+      data.onboarded = data.onboarded === 'true';
+    }
     return UserRepository.updateById(id, data);
   },
 
