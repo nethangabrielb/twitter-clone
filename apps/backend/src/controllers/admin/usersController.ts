@@ -1,6 +1,9 @@
 import { Request, Response } from 'express';
 
+import { decode } from 'base64-arraybuffer';
+
 import UserService from '../../services/userService';
+import { client } from '../../supabase/client';
 import type { RegistrationBody } from '../../types/auth';
 import { GENERIC_ERROR_MESSAGE } from '../../utils/errorMessage';
 
@@ -37,10 +40,37 @@ const userController = (() => {
     req: Request<{ id: string }, object, Partial<RegistrationBody>>,
     res: Response
   ) => {
-    console.log(req.body);
-    console.log(req.file);
-
     try {
+      // check if there is file
+      if (req.file) {
+        // decode buffer to base64 string
+        const base64 = req.file.buffer.toString('base64');
+
+        // upload file
+        const { data, error } = await client.storage
+          .from('images')
+          .upload(
+            `${req.body.username}-avatar-${Date.now().toString()}`,
+            decode(base64),
+            {
+              cacheControl: '3600',
+              contentType: req.file.mimetype,
+              upsert: false,
+            }
+          );
+
+        if (error) {
+          throw new Error('There was an error processing the form.');
+        }
+
+        // get the file public link
+        const { data: image } = client.storage
+          .from('images')
+          .getPublicUrl(data.path);
+
+        req.body = { ...req.body, avatar: image.publicUrl };
+      }
+
       const updatedUser = await UserService.updateUser(
         Number(req.params.id),
         req.body

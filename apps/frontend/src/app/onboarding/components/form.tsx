@@ -9,7 +9,7 @@ import * as z from "zod";
 
 import { useRef, useState } from "react";
 
-import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import FormButton from "@/components/button";
 import Icon from "@/components/icon";
@@ -48,6 +48,7 @@ type Props = {
 };
 
 const ConfirmForm = ({ user }: Props) => {
+  const router = useRouter();
   const [mouseEnter, setMouseEnter] = useState<boolean>(false);
   const [filePreview, setFilePreview] = useState<File | null>(null);
   const fileInput = useRef<null | HTMLInputElement>(null);
@@ -72,7 +73,9 @@ const ConfirmForm = ({ user }: Props) => {
       for (const key in values) {
         if (values.hasOwnProperty(key)) {
           const value = values[key as keyof typeof values];
-          userData.append(key, value as any);
+          if (value !== null) {
+            userData.append(key, value as any);
+          }
         }
       }
 
@@ -81,6 +84,14 @@ const ConfirmForm = ({ user }: Props) => {
         body: userData,
         credentials: "include",
       });
+    },
+    onSuccess: async (res) => {
+      const data = await res.json();
+      if (data.status === "error") {
+        toast.error(data.message);
+      } else {
+        router.push("/home");
+      }
     },
   });
 
@@ -122,17 +133,14 @@ const ConfirmForm = ({ user }: Props) => {
             onMouseLeave={() => setMouseEnter(false)}
             onClick={uploadHandler}
           >
-            <Image
+            <img
               src={filePreview ? URL.createObjectURL(filePreview) : user.avatar}
-              width={130}
-              height={130}
               alt="User Icon"
               className={cn(
-                "rounded-full border h-full object-cover",
+                "rounded-full border h-full object-cover size-[130px]",
                 mouseEnter && "opacity-30",
               )}
-              priority
-            ></Image>
+            ></img>
             <Pencil
               className={cn(
                 "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
