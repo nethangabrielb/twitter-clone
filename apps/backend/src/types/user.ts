@@ -5,6 +5,7 @@ interface User {
   email: string;
   password: string;
   avatar?: string | null;
+  onboarded: boolean;
 }
 
 export type { User };
