@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 
 import Image from "next/image";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 
@@ -11,27 +11,17 @@ import { authApi } from "@/lib/api/auth";
 import { cn } from "@/lib/utils";
 
 type Props = {
-  icon: string | null;
+  icon?: string;
   children: string;
-  outline: boolean;
-  light: boolean;
-  type: "google" | "login" | "register";
-  padding: "large" | "small" | undefined;
+  outline?: boolean;
+  type?: "google" | "login" | "register";
   className?: string;
 };
 
-const FormButton = ({
-  icon,
-  children,
-  outline,
-  light,
-  type,
-  padding,
-  className,
-}: Props) => {
+const FormButton = ({ icon, children, outline, type, className }: Props) => {
+  const router = useRouter();
   useEffect(() => {
     window.addEventListener("message", (event) => {
-      console.log(event.data);
       if (event.data) {
         if (event.data.success) {
           globalThis.location.href = `/onboarding`;
@@ -42,16 +32,16 @@ const FormButton = ({
     });
   }, []);
 
-  const clickHandler = (path: string) => {
+  const clickHandler = (path: string | undefined) => {
     switch (path) {
       case "google":
         authApi.googleAuth();
         break;
       case "register":
-        redirect("/register");
+        router.push("/register");
         break;
       case "login":
-        redirect("/login");
+        router.push("/login");
         break;
     }
   };
@@ -60,10 +50,7 @@ const FormButton = ({
     <Button
       className={cn(
         !outline && "hover:!bg-foreground bg-foreground text-background",
-        padding === "large" && "p-3",
-        padding === "small" && "p-[8px]",
-        "rounded-3xl border-muted-foreground  h-fit",
-        { className },
+        `${className} rounded-3xl border-muted-foreground  h-fit`,
       )}
       variant={outline ? "outline" : "default"}
       onClick={() => clickHandler(type)}
