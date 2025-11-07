@@ -3,10 +3,11 @@
 import { useEffect } from "react";
 
 import Image from "next/image";
+import { redirect } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
 
-import { googleAuth } from "@/lib/api/auth";
+import { authApi } from "@/lib/api/auth";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -16,6 +17,7 @@ type Props = {
   light: boolean;
   type: "google" | "login" | "register";
   padding: "large" | "small" | undefined;
+  className?: string;
 };
 
 const FormButton = ({
@@ -25,6 +27,7 @@ const FormButton = ({
   light,
   type,
   padding,
+  className,
 }: Props) => {
   useEffect(() => {
     window.addEventListener("message", (event) => {
@@ -39,6 +42,20 @@ const FormButton = ({
     });
   }, []);
 
+  const clickHandler = (path: string) => {
+    switch (path) {
+      case "google":
+        authApi.googleAuth();
+        break;
+      case "register":
+        redirect("/register");
+        break;
+      case "login":
+        redirect("/login");
+        break;
+    }
+  };
+
   return (
     <Button
       className={cn(
@@ -46,9 +63,10 @@ const FormButton = ({
         padding === "large" && "p-3",
         padding === "small" && "p-[8px]",
         "rounded-3xl border-muted-foreground  h-fit",
+        { className },
       )}
       variant={outline ? "outline" : "default"}
-      onClick={type === "google" ? googleAuth : undefined}
+      onClick={() => clickHandler(type)}
     >
       {icon && (
         <Image src={icon} width={18} height={18} alt="Google Icon"></Image>
