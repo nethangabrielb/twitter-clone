@@ -44,9 +44,8 @@ const UserRepository = {
       },
     }),
   findByUsername: (username: string) =>
-    prisma.user.findUnique({
-      where: { username },
-    }),
+    prisma.user.findUnique({ where: { username } }),
+  findByEmail: (email: string) => prisma.user.findUnique({ where: { email } }),
   findAll: () => prisma.user.findMany(),
   updateById: (id: number, data: Partial<RegistrationBody>) =>
     prisma.user.update({ where: { id }, data }),

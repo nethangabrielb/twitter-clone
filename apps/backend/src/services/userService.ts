@@ -62,6 +62,16 @@ const UserService = {
   deleteUser: async (id: number) => {
     return UserRepository.deleteById(id);
   },
+
+  getUserByUsername: async (username: string) => {
+    const user = await UserRepository.findByUsername(username);
+    return user;
+  },
+
+  getUserByEmail: async (email: string) => {
+    const user = await UserRepository.findByEmail(email);
+    return user;
+  },
 };
 
 export default UserService;

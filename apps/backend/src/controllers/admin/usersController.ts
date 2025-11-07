@@ -5,6 +5,7 @@ import { decode } from 'base64-arraybuffer';
 import UserService from '../../services/userService';
 import { client } from '../../supabase/client';
 import type { RegistrationBody } from '../../types/auth';
+import { User } from '../../types/user';
 import { GENERIC_ERROR_MESSAGE } from '../../utils/errorMessage';
 
 const userController = (() => {
@@ -98,7 +99,49 @@ const userController = (() => {
     }
   };
 
-  return { getUser, getAllUsers, updateUser, deleteUser };
+  const getAvailability = async (
+    req: Request<
+      { username: string },
+      object,
+      object,
+      { property: 'username' | 'email'; value: string }
+    >,
+    res: Response
+  ) => {
+    try {
+      let user: null | User = null;
+      const propertyToCheck = req.query.property;
+      const value = req.query.value;
+
+      // check either username or email of it is taken
+      if (propertyToCheck === 'username') {
+        user = await UserService.getUserByUsername(value);
+      } else if (propertyToCheck === 'email') {
+        user = await UserService.getUserByEmail(value);
+      }
+
+      console.log(user);
+
+      if (user) {
+        res.json({ status: 'error', message: 'already taken' });
+      } else {
+        res.status(404).json({ status: 'success', message: 'not taken' });
+      }
+    } catch (err: unknown) {
+      res.json({
+        status: 'error',
+        message: err instanceof Error ? err.message : GENERIC_ERROR_MESSAGE,
+      });
+    }
+  };
+
+  return {
+    getUser,
+    getAllUsers,
+    updateUser,
+    deleteUser,
+    getAvailability,
+  };
 })();
 
 export default userController;

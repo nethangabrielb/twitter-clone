@@ -9,6 +9,9 @@ const upload = multer();
 
 const userRouter = Router();
 
+// check for availability here
+userRouter.get('/availability', userController.getAvailability);
+
 userRouter.use(authMiddleware);
 
 userRouter.get('/', userController.getAllUsers);
