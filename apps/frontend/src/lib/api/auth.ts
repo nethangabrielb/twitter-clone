@@ -14,9 +14,19 @@ const authApi = (() => {
     );
   };
 
-  const checkUsernameUnique = () => {};
+  const checkPropertyUnique = async (value: string, type: string) => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API}/api/users/availability?property=${type}&value=${value}`,
+    );
+    const data = await res.json();
+    if (data.status === "success") {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
-  return { googleAuth };
+  return { googleAuth, checkPropertyUnique };
 })();
 
 export { authApi };
