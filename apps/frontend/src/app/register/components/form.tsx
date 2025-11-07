@@ -47,6 +47,19 @@ const registerSchema = z
       })
       .min(12)
       .refine((val) => /(?=.*[A-Z])(?=.*[^A-Za-z0-9])/.test(val)),
+    avatar: z
+      .file()
+      .refine((file) => {
+        if (file) {
+          return (
+            file.size <= 5 * 1024 * 1024,
+            {
+              error: "Image exceeds the 5MB limit.",
+            }
+          );
+        }
+      })
+      .nullable(),
   })
   .refine(({ password, confirmPassword }) => password === confirmPassword, {
     path: ["confirmPassword"],
