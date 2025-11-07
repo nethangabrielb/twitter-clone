@@ -179,13 +179,7 @@ const ConfirmForm = ({ user }: Props) => {
             {user.username}
           </InputSharp>
           <div className="mt-2"></div>
-          <FormButton
-            outline={false}
-            light={true}
-            type="register"
-            icon={null}
-            padding="large"
-          >
+          <FormButton outline={false} type="register" className="p-3">
             Confirm details
           </FormButton>
         </div>
