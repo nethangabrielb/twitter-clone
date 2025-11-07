@@ -14,6 +14,8 @@ const authApi = (() => {
     );
   };
 
+  const checkUsernameUnique = () => {};
+
   return { googleAuth };
 })();
 
