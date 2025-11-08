@@ -14,6 +14,7 @@ type Props<T extends Register | ConfirmUser> = {
   register: UseFormRegister<T>;
   errorMessage?: string;
   displayErrMessage?: boolean;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 const InputSharp = <T extends Register | ConfirmUser>({
@@ -22,6 +23,7 @@ const InputSharp = <T extends Register | ConfirmUser>({
   register,
   errorMessage,
   displayErrMessage = true,
+  onChange,
 }: Props<T>) => {
   return (
     <div className="flex flex-col gap-2 relative">
@@ -37,6 +39,7 @@ const InputSharp = <T extends Register | ConfirmUser>({
             errorMessage &&
               "border-red-400  focus:border-red-400! focus-visible:ring-red-500",
           )}
+          onChange={onChange}
           required
         ></Input>
       ) : (
@@ -47,6 +50,7 @@ const InputSharp = <T extends Register | ConfirmUser>({
             errorMessage &&
               "border-red-400  focus:border-red-400! focus-visible:ring-red-500",
           )}
+          onChange={onChange}
           required
         ></Input>
       )}
