@@ -43,19 +43,11 @@ export const RegisterSchema = z
       .refine((val) => /[^A-Za-z0-9]/.test(val), {
         error: "special char",
       }),
-    confirmPassword: z
-      .string()
-      .refine((val) => val.trim().length >= 1, {
-        error: "Password is required",
-      })
-      .min(12, { error: " " })
-      .refine((val) => /[A-Z]/.test(val), {
-        error: "one capital",
-      })
-      .refine((val) => /[^A-Za-z0-9]/.test(val), {
-        error: "special char",
-      }),
+    confirmPassword: z.string().refine((val) => val.trim().length >= 1, {
+      error: "Password is required",
+    }),
   })
   .refine(({ password, confirmPassword }) => password === confirmPassword, {
     path: ["confirmPassword"],
+    error: "Password does not match",
   });
