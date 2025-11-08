@@ -15,6 +15,7 @@ type Props<T extends Register | ConfirmUser> = {
   errorMessage?: string;
   displayErrMessage?: boolean;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  type?: string;
 };
 
 const InputSharp = <T extends Register | ConfirmUser>({
@@ -24,6 +25,7 @@ const InputSharp = <T extends Register | ConfirmUser>({
   errorMessage,
   displayErrMessage = true,
   onChange,
+  type = "text",
 }: Props<T>) => {
   return (
     <div className="flex flex-col gap-2 relative">
@@ -41,6 +43,7 @@ const InputSharp = <T extends Register | ConfirmUser>({
           )}
           onChange={onChange}
           required
+          type={type}
         ></Input>
       ) : (
         <Input
@@ -52,6 +55,7 @@ const InputSharp = <T extends Register | ConfirmUser>({
           )}
           onChange={onChange}
           required
+          type={type}
         ></Input>
       )}
       <p className="text-red-600 font-medium text-xs absolute top-0 right-0 mt-4">

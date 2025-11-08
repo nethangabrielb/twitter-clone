@@ -125,12 +125,14 @@ const RegisterForm = () => {
           errorMessage={errors.password?.message}
           displayErrMessage={false}
           onChange={passwordChangeHandler}
+          type="password"
         ></InputSharp>
         <InputSharp
           label="confirmPassword"
           register={register}
           errorMessage={errors.confirmPassword?.message}
           displayErrMessage={true}
+          type="password"
         ></InputSharp>
         <div className="flex flex-col gap-[1px] text-sm font-light text-neutral-300 -translate-y-4">
           <p
