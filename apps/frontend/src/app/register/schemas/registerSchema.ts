@@ -12,6 +12,10 @@ export const RegisterSchema = z
       .refine((val) => val.trim().length >= 1, {
         message: "Username is required",
       })
+      .max(15, { error: "Username must not exceed 15 characters" })
+      .refine((val) => /\s/.test(val) === false, {
+        error: "Username must not have spaces",
+      })
       .refine(
         async (val) => {
           const isUnique = await authApi.checkPropertyUnique(val, "username");
