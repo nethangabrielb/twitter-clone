@@ -40,7 +40,7 @@ export const RegisterSchema = z
       .refine((val) => val.trim().length >= 1, {
         error: "Password is required",
       })
-      .min(12, { error: " " })
+      .min(8, { error: " " })
       .refine((val) => /[A-Z]/.test(val), {
         error: "one capital",
       })
