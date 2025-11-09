@@ -179,8 +179,13 @@ const ConfirmForm = ({ user }: Props) => {
             {user.username}
           </InputSharp>
           <div className="mt-2"></div>
-          <FormButton outline={false} type="register" className="p-3">
-            Confirm details
+          <FormButton
+            outline={false}
+            type="register"
+            className="p-3"
+            disabled={mutation.isPending}
+          >
+            {mutation.isPending ? "Processing..." : "Confirm details"}
           </FormButton>
         </div>
       </div>

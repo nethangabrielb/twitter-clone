@@ -16,9 +16,17 @@ type Props = {
   outline?: boolean;
   type?: "google" | "login" | "register";
   className?: string;
+  disabled?: boolean;
 };
 
-const FormButton = ({ icon, children, outline, type, className }: Props) => {
+const FormButton = ({
+  icon,
+  children,
+  outline,
+  type,
+  className,
+  disabled,
+}: Props) => {
   const router = useRouter();
   useEffect(() => {
     window.addEventListener("message", (event) => {
@@ -54,6 +62,7 @@ const FormButton = ({ icon, children, outline, type, className }: Props) => {
       )}
       variant={outline ? "outline" : "default"}
       onClick={() => clickHandler(type)}
+      disabled={disabled}
     >
       {icon && (
         <Image src={icon} width={18} height={18} alt="Google Icon"></Image>

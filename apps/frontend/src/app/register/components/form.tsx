@@ -222,7 +222,9 @@ const RegisterForm = () => {
             Password must have at least 1 capital letter
           </p>
         </div>
-        <FormButton className="p-3! text-lg">Register</FormButton>
+        <FormButton className="p-3! text-lg" disabled={mutation.isPending}>
+          {mutation.isPending ? "Processing..." : "Register"}
+        </FormButton>
       </form>
     </>
   );
