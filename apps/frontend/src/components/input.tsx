@@ -30,7 +30,9 @@ const InputSharp = <T extends Register | ConfirmUser>({
   return (
     <div className="flex flex-col gap-2 relative">
       <Label className="font-bold text-lg tracking-tighter">
-        {_.upperFirst(label as string)}
+        {label === "confirmPassword"
+          ? "Confirm password"
+          : _.upperFirst(label as string)}
       </Label>
       {children ? (
         <Input
