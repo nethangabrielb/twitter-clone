@@ -21,7 +21,7 @@ const LandingPage = () => {
               icon="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/google/google-original.svg"
               outline={false}
               type="google"
-              className="p-[8px] bg-white text-neutral-700 font-medium"
+              className="p-[10px] bg-white text-neutral-700 font-medium"
             >
               Sign up with Google
             </FormButton>
@@ -33,7 +33,7 @@ const LandingPage = () => {
             <FormButton
               outline={false}
               type="register"
-              className="p-[8px] font-bold"
+              className="p-[10px] font-bold"
             >
               Create an account
             </FormButton>
@@ -44,7 +44,7 @@ const LandingPage = () => {
               <span className="text-primary">Cookie Use</span>.
             </p>
             <h4 className="font-semibold mt-10">Already have an account?</h4>
-            <FormButton outline={true} type="login" className="p-[8px]">
+            <FormButton outline={true} type="login" className="p-[10px]">
               Sign in
             </FormButton>
           </div>
