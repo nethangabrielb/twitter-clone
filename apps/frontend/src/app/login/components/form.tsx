@@ -64,9 +64,9 @@ const LoginForm = () => {
         </h1>
         <Link
           href="/"
-          className="flex gap-1 items-end underline underline-offset-4"
+          className="text-sm text-neutral-400 hover:underline underline-offset-4"
         >
-          Return
+          ← Return
         </Link>
       </div>
       <form

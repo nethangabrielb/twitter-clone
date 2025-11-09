@@ -10,6 +10,7 @@ import * as z from "zod";
 
 import { useState } from "react";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import FormButton from "@/components/button";
@@ -119,9 +120,17 @@ const RegisterForm = () => {
 
   return (
     <>
-      <h1 className="font-extrabold text-7xl tracking-tighter rotate-x-[35deg]">
-        Create your account
-      </h1>
+      <div>
+        <h1 className="font-extrabold text-7xl tracking-tighter rotate-x-[35deg]">
+          Create your account
+        </h1>
+        <Link
+          href="/"
+          className="text-sm text-neutral-400 hover:underline underline-offset-4"
+        >
+          ← Return
+        </Link>
+      </div>
       <form
         onSubmit={handleSubmit(submitForm)}
         className="flex flex-col gap-8 w-[70%]"
