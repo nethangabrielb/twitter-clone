@@ -2,11 +2,15 @@
 
 import { RegisterSchema } from "@/app/register/schemas/registerSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { Check, X } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import * as z from "zod";
 
 import { useState } from "react";
+
+import { useRouter } from "next/navigation";
 
 import FormButton from "@/components/button";
 import { InputSharp } from "@/components/input";
@@ -26,27 +30,51 @@ const RegisterForm = () => {
     capital: null,
     special: null,
   });
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     getValues,
-    setError,
     formState: { errors },
   } = useForm<Register>({
     resolver: zodResolver(RegisterSchema),
     reValidateMode: "onBlur",
   });
+  const mutation = useMutation({
+    mutationFn: async (data: Register) => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API}/api/auth/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        },
+      );
+      if (res) {
+        const data = await res.json();
+        if (data.status === "success") {
+          router.push("/login");
+        }
+      } else {
+        toast.error(
+          "There was a problem sending a request to the server. Please try again",
+        );
+      }
+    },
+  });
 
   const passwordChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target?.value;
 
-    if (val.length < 12) {
+    if (val.length < 8) {
       setPasswordFormatStatus((prevFormat) => ({
         ...prevFormat,
         length: false,
       }));
     }
-    if (val.length >= 12) {
+    if (val.length >= 8) {
       setPasswordFormatStatus((prevFormat) => ({
         ...prevFormat,
         length: true,
@@ -54,14 +82,12 @@ const RegisterForm = () => {
     }
 
     if (/[A-Z]/.test(val) === false) {
-      console.log("capital1");
       setPasswordFormatStatus((prevFormat) => ({
         ...prevFormat,
         capital: false,
       }));
     }
     if (/[A-Z]/.test(val) === true) {
-      console.log("capital2");
       setPasswordFormatStatus((prevFormat) => ({
         ...prevFormat,
         capital: true,
@@ -84,10 +110,9 @@ const RegisterForm = () => {
   };
 
   const submitForm = () => {
-    console.log(getValues());
+    const values = getValues();
+    mutation.mutate(values);
   };
-
-  console.log(passwordFormatStatus);
 
   return (
     <>
@@ -152,7 +177,7 @@ const RegisterForm = () => {
             {passwordFormatStatus.length && (
               <Check size={18} color="green"></Check>
             )}
-            Password must have at least 12 characters (e.g. "StrongPass123!")
+            Password must have at least 8 characters (e.g. "Strong2!")
           </p>
           <p
             className={cn(
