@@ -120,8 +120,6 @@ const userController = (() => {
         user = await UserService.getUserByEmail(value);
       }
 
-      console.log(user);
-
       if (user) {
         res.json({ status: 'error', message: 'already taken' });
       } else {

@@ -1,3 +1,4 @@
+import { Login } from "@/app/login/components/form";
 import { ConfirmUser } from "@/app/onboarding/components/form";
 import { Register } from "@/app/register/components/form";
 import _ from "lodash";
@@ -8,7 +9,7 @@ import { Label } from "@/components/ui/label";
 
 import { cn } from "@/lib/utils";
 
-type Props<T extends Register | ConfirmUser> = {
+type Props<T extends Register | ConfirmUser | Login> = {
   children?: string;
   label: keyof T;
   register: UseFormRegister<T>;
@@ -18,7 +19,7 @@ type Props<T extends Register | ConfirmUser> = {
   type?: string;
 };
 
-const InputSharp = <T extends Register | ConfirmUser>({
+const InputSharp = <T extends Register | ConfirmUser | Login>({
   children,
   label,
   register,
