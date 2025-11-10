@@ -10,13 +10,19 @@ import { Button } from "@/components/ui/button";
 import { authApi } from "@/lib/api/auth";
 import { cn } from "@/lib/utils";
 
-type Props = {
+type FormButtonProps = {
   icon?: string;
   children: string;
   outline?: boolean;
   type?: "google" | "login" | "register";
   className?: string;
   disabled?: boolean;
+};
+
+type ActionButtonProps = {
+  children: string;
+  className?: string;
+  onClick?: () => void;
 };
 
 const FormButton = ({
@@ -26,7 +32,7 @@ const FormButton = ({
   type,
   className,
   disabled,
-}: Props) => {
+}: FormButtonProps) => {
   const router = useRouter();
   useEffect(() => {
     window.addEventListener("message", (event) => {
@@ -72,4 +78,16 @@ const FormButton = ({
   );
 };
 
-export default FormButton;
+const ActionButton = ({ className, children, onClick }: ActionButtonProps) => {
+  return (
+    <Button
+      className={`hover:!bg-foreground bg-foreground text-background
+        ${className} rounded-3xl border-muted-foreground  h-fit`}
+      onClick={onClick}
+    >
+      {children}
+    </Button>
+  );
+};
+
+export { FormButton, ActionButton };

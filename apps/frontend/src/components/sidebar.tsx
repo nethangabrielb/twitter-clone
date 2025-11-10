@@ -5,7 +5,9 @@ import { Activity, ReactNode, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { ActionButton } from "@/components/button";
 import Icon from "@/components/icon";
+import NavIcon from "@/components/navIcon";
 
 import { cn } from "@/lib/utils";
 
@@ -39,7 +41,7 @@ const data = [
     url: "",
   },
   {
-    title: "Settings and Privacy",
+    title: "Settings",
     url: "/settings/account",
   },
 ];
@@ -74,15 +76,25 @@ const Sidebar = ({ children }: Props) => {
   return (
     <div className={cn(visible && "flex justify-center", "h-full")}>
       <Activity mode={visible ? "visible" : "hidden"}>
-        <div className="flex flex-col gap-6 lg:w-[275px] h-full pt-4">
-          <Icon width={36} height={36} alt="Twitter Icon"></Icon>
+        <div className="flex flex-col gap-[8px] lg:w-[300px] h-full pt-4 px-8">
+          <div className="pl-3 pb-3">
+            <Icon width={36} height={36} alt="Twitter Icon"></Icon>
+          </div>
           {data.map((link) => {
             return (
-              <Link href={link.url} key={crypto.randomUUID()}>
+              <Link
+                href={link.url}
+                key={crypto.randomUUID()}
+                className="text-lg flex items-center gap-6 w-fit hover:bg-muted transition-all p-3 rounded-4xl"
+              >
+                <NavIcon title={link.title}></NavIcon>
                 {link.title}
               </Link>
             );
           })}
+          <ActionButton className="bg-primary text-white p-3!">
+            Tweet
+          </ActionButton>
         </div>
       </Activity>
       {children}
