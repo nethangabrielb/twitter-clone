@@ -11,7 +11,7 @@ import { useRef, useState } from "react";
 
 import { useRouter } from "next/navigation";
 
-import FormButton from "@/components/button";
+import { FormButton } from "@/components/button";
 import Icon from "@/components/icon";
 import { InputSharp } from "@/components/input";
 

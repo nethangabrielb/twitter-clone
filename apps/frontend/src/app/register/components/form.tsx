@@ -13,7 +13,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import FormButton from "@/components/button";
+import { FormButton } from "@/components/button";
 import { InputSharp } from "@/components/input";
 
 import { cn } from "@/lib/utils";

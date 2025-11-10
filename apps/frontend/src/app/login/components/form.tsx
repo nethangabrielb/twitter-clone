@@ -10,7 +10,7 @@ import * as z from "zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import FormButton from "@/components/button";
+import { FormButton } from "@/components/button";
 import { InputSharp } from "@/components/input";
 
 export type Login = z.infer<typeof LoginSchema>;
