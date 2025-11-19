@@ -39,6 +39,7 @@ passport.use(
             avatar:
               profile.photos?.[0]?.value ??
               'https://bcezmxfxuctgrkiavycl.supabase.co/storage/v1/object/public/images/default.svg',
+            onboarded: false
           });
 
           await prisma.federatedCredentials.create({
