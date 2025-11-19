@@ -1,7 +1,22 @@
-const Home = () => {
+import FeedPost from "@/app/home/components/feed-post";
+
+import postApi from "@/lib/api/post";
+
+import { Post } from "@/types/post";
+
+const Home = async () => {
+  const posts: Post[] = await postApi.getPosts();
+
+  console.log(posts);
+
   return (
-    <div className="lg:w-[600px] border-l border-r border-l-border border-r-border p-4 h-full">
-      Welcome home!
+    <div className="lg:w-[600px] border-l border-r border-l-border border-r-border h-full">
+      {/* RENDER POSTS */}
+      <div className="w-full">
+        {posts.map((post: Post) => {
+          return <FeedPost post={post} key={post.id}></FeedPost>;
+        })}
+      </div>
     </div>
   );
 };
