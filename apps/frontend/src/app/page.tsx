@@ -1,4 +1,4 @@
-import FormButton from "@/components/button";
+import {FormButton} from "@/components/button";
 import Icon from "@/components/icon";
 
 const LandingPage = () => {
