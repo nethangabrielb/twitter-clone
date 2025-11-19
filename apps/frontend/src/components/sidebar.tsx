@@ -92,7 +92,7 @@ const Sidebar = ({ children }: Props) => {
               </Link>
             );
           })}
-          <ActionButton className="bg-primary text-white p-3!">
+          <ActionButton className="bg-primary text-white p-3! hover:brightness-90 hover:bg-primary!">
             Tweet
           </ActionButton>
         </div>
