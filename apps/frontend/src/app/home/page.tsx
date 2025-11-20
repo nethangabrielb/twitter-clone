@@ -7,8 +7,6 @@ import { Post } from "@/types/post";
 const Home = async () => {
   const posts: Post[] = await postApi.getPosts();
 
-  console.log(posts);
-
   return (
     <div className="lg:w-[600px] border-l border-r border-l-border border-r-border h-full">
       {/* RENDER POSTS */}

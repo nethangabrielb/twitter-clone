@@ -9,8 +9,11 @@ const postSchema = z.object({
   user: z.object({
     avatar: z.string(),
     username: z.string(),
-    name: z.string()
-  })
+    name: z.string(),
+  }),
+  _count: z.object({
+    Like: z.number(),
+  }),
 });
 
 export { postSchema };
