@@ -32,15 +32,16 @@ const postRepository = {
         _count: {
           select: {
             Like: true,
+            Comment: true,
           },
         },
         user: {
           select: {
             avatar: true,
             username: true,
-            name: true
-          }
-        }
+            name: true,
+          },
+        },
       },
     }),
   deleteById: (id: number) =>

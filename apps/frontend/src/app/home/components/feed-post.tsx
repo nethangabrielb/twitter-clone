@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart } from "lucide-react";
+import { Heart, MessageCircle } from "lucide-react";
 
 import { Post } from "@/types/post";
 
@@ -28,10 +28,26 @@ const FeedPost = ({ post }: Props) => {
         </div>
         <p className="text-text text-[15px]">{post.content}</p>
         <div className="flex justify-start">
+          {/* render comments */}
+          <div className="flex items-center gap-2 flex-1">
+            <MessageCircle
+              size={20}
+              className="stroke-darker text-darker font-light stroke-[1.2px]"
+            ></MessageCircle>
+            <p className="text-darker text-[14px] font-light">
+              {post._count.Comment}
+            </p>
+          </div>
+
           {/* render likes */}
-          <div className="flex items-center gap-2">
-            <Heart size={20} className="text-darker"></Heart>
-            <p className="text-darker text-[13px]">{post._count.Like}</p>
+          <div className="flex items-center gap-2 flex-1 ">
+            <Heart
+              size={20}
+              className="stroke-darker text-darker font-light stroke-[1.2px]"
+            ></Heart>
+            <p className="text-darker text-[14px] font-light ">
+              {post._count.Like}
+            </p>
           </div>
         </div>
       </div>

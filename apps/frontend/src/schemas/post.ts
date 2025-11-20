@@ -13,6 +13,7 @@ const postSchema = z.object({
   }),
   _count: z.object({
     Like: z.number(),
+    Comment: z.number(),
   }),
 });
 
