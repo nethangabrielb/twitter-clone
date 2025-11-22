@@ -42,10 +42,14 @@ const authController = (() => {
     try {
       const token = await UserService.loginUser(req.body);
 
+      res.cookie('token', token, {
+        httpOnly: true,
+        path: '/',
+        maxAge: 60 * 60 * 24 * 14,
+      });
       res.status(200).json({
         status: 'success',
         message: 'Log in success!',
-        data: token,
       });
     } catch (err: unknown) {
       res.status(err instanceof Error ? 400 : 500).json({
