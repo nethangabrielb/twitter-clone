@@ -5,7 +5,6 @@ type Props = {
 };
 
 const NavIcon = ({ title }: Props) => {
-  console.log(title);
   switch (title) {
     case "Home":
       return (
