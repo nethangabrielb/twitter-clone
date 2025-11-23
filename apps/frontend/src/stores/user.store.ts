@@ -3,7 +3,7 @@ import { create } from "zustand";
 import type { User } from "@/types/user";
 
 type UserState = {
-  user: object | User;
+  user: User | {};
   setUser: (arg0: User) => void;
   removeUser: () => void;
 };
