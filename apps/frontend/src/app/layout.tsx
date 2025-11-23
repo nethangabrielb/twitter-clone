@@ -15,9 +15,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Twitter Clone",
-  description:
-    "Simple, modern opinionated monorepo template with Next.js and Express.js using TypeScript",
+  title: "Twitter",
+  description: "A twitter clone I made for learning purposes",
 };
 
 export default function RootLayout({

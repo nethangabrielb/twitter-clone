@@ -1,15 +1,9 @@
-import getCookie from "@/lib/cookies";
-
 import { Post } from "@/types/post";
 
 const postApi = (() => {
   const getPosts = async () => {
-    const token = await getCookie("token");
-
     const res = await fetch(`${process.env.NEXT_PUBLIC_API}/api/posts`, {
-      headers: {
-        Cookie: `token=${token}`,
-      },
+      credentials: "include",
     });
 
     if (!res.ok) {
