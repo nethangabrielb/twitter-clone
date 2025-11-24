@@ -21,6 +21,10 @@ const Home = () => {
     },
   });
 
+  useEffect(() => {
+    document.title = "Home / Twitter";
+  }, []);
+
   return (
     <>
       <Head>
@@ -31,7 +35,6 @@ const Home = () => {
         />
       </Head>
       <div className="lg:w-[600px] border-l border-r border-l-border border-r-border h-full relative">
-        <title>Home / Twitter</title>
         <div className="flex backdrop-blur-lg absolute top-0 w-full">
           <FeedControlBtn>For you</FeedControlBtn>
           <FeedControlBtn>Following</FeedControlBtn>
