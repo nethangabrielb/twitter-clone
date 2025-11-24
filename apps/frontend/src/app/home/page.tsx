@@ -8,6 +8,8 @@ import { useEffect } from "react";
 
 import Head from "next/head";
 
+import { Spinner } from "@/components/ui/spinner";
+
 import postApi from "@/lib/api/post";
 
 import { Post } from "@/types/post";
@@ -43,6 +45,11 @@ const Home = () => {
         <CreatePost></CreatePost>
         {/* RENDER POSTS */}
         <div className="w-full">
+          {isPending && (
+            <div className="flex justify-center items-center w-full h-full py-4">
+              <Spinner className="size-7 text-primary"></Spinner>
+            </div>
+          )}
           {posts &&
             posts.map((post: Post) => {
               return <FeedPost post={post} key={post.id}></FeedPost>;
