@@ -26,9 +26,12 @@ const userController = (() => {
       if (_req.query.current) {
         const user: User = _req.user!;
         const modifiedUser = {
+          id: user.id,
           name: user.name,
           username: user.username,
+          email: user.email,
           avatar: user.avatar,
+          onboarded: user.onboarded,
         };
         res.json({ status: 'success', data: modifiedUser });
       } else {
