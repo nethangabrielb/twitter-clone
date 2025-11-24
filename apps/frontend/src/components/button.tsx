@@ -22,6 +22,7 @@ type FormButtonProps = {
 type ActionButtonProps = {
   children: string;
   className?: string;
+  disabled?: boolean;
   onClick?: () => void;
 };
 
@@ -78,12 +79,18 @@ const FormButton = ({
   );
 };
 
-const ActionButton = ({ className, children, onClick }: ActionButtonProps) => {
+const ActionButton = ({
+  className,
+  children,
+  onClick,
+  disabled,
+}: ActionButtonProps) => {
   return (
     <Button
       className={`hover:!bg-foreground bg-foreground text-background
         ${className} rounded-3xl border-muted-foreground  h-fit`}
       onClick={onClick}
+      disabled={disabled}
     >
       {children}
     </Button>
