@@ -1,3 +1,5 @@
+import { NewPost } from "@/app/home/types/create-post.type";
+
 import { Post } from "@/types/post";
 
 const postApi = (() => {
@@ -13,7 +15,20 @@ const postApi = (() => {
     return data.data as Post[];
   };
 
-  return { getPosts };
+  const createPost = async (values: NewPost) => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API}/api/posts`, {
+      credentials: "include",
+      method: "POST",
+    });
+
+    if (!res.ok) {
+      throw new Error("There was an error processing the request.");
+    }
+    const data = await res.json();
+    return data;
+  };
+
+  return { getPosts, createPost };
 })();
 
 export default postApi;
