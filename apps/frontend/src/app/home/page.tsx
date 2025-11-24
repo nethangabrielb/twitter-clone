@@ -2,7 +2,7 @@
 
 import CreatePost from "@/app/home/components/create-post";
 import FeedPost from "@/app/home/components/feed-post";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { useEffect } from "react";
 
@@ -15,6 +15,7 @@ import postApi from "@/lib/api/post";
 import { Post } from "@/types/post";
 
 const Home = () => {
+  // POSTS FEED CONTENT QUERY
   const { data: posts, isPending } = useQuery<Post[]>({
     queryKey: ["posts"],
     queryFn: async () => {
@@ -37,19 +38,25 @@ const Home = () => {
         />
       </Head>
       <div className="lg:w-[600px] border-l border-r border-l-border border-r-border h-full relative">
+        {/* FEED CONTROL UI */}
         <div className="flex backdrop-blur-lg absolute top-0 w-full">
           <FeedControlBtn>For you</FeedControlBtn>
           <FeedControlBtn>Following</FeedControlBtn>
         </div>
         <div className="mt-[57.1px]"></div>
+
+        {/* CREATE POST SECTION */}
         <CreatePost></CreatePost>
+
         {/* RENDER POSTS */}
         <div className="w-full">
+          {/* PENDING STATE */}
           {isPending && (
             <div className="flex justify-center items-center w-full h-full py-4">
               <Spinner className="size-7 text-primary"></Spinner>
             </div>
           )}
+          {/* POSTS */}
           {posts &&
             posts.map((post: Post) => {
               return <FeedPost post={post} key={post.id}></FeedPost>;
