@@ -28,6 +28,9 @@ const postRepository = {
       where: {
         deleted: false,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
       include: {
         _count: {
           select: {
