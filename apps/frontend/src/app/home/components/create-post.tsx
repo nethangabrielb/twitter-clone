@@ -9,10 +9,11 @@ import { Image, Smile } from "lucide-react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import { useState } from "react";
+import { Activity, useState } from "react";
 
 import { ActionButton } from "@/components/button";
 import { TooltipIcon } from "@/components/tool-tip-icon";
+import { Progress } from "@/components/ui/progress";
 
 import postApi from "@/lib/api/post";
 import { cn } from "@/lib/utils";
@@ -22,6 +23,7 @@ import { User } from "@/types/user";
 const CreatePost = () => {
   const [displayIndicator, setDisplayIndicator] = useState(false);
   const [dashOffset, setDashOffset] = useState(565.48);
+  const [progressValue, setProgressValue] = useState(0);
   const [inputDisabled, setInputDisabled] = useState(true);
   const user = useUser((state) => state.user) as User;
 
@@ -29,6 +31,7 @@ const CreatePost = () => {
     getValues,
     handleSubmit,
     register,
+    resetField,
     formState: { errors },
   } = useForm<NewPost>({
     resolver: zodResolver(PostSchema),
@@ -40,15 +43,23 @@ const CreatePost = () => {
   // CREATE POSTS MUTATION
   const mutation = useMutation({
     mutationFn: async (values: NewPost) => {
+      setProgressValue(80);
       const res = await postApi.createPost(values);
       return res;
     },
     onSuccess: (data) => {
-      if (data.status === "success") {
-        toast.success(data.message);
-      } else {
-        toast.error(data.message);
-      }
+      setTimeout(() => {
+        if (data.status === "success") {
+          resetField("content");
+          toast.success(data.message, { position: "bottom-center" });
+        } else {
+          toast.error(data.message);
+        }
+        mutation.isSuccess = false;
+      }, 50);
+    },
+    onSettled: () => {
+      setProgressValue(0);
     },
   });
 
@@ -73,7 +84,19 @@ const CreatePost = () => {
   };
 
   return (
-    <div className="flex gap-4 p-4 border-b border-b-border w-full">
+    <div
+      className={cn(
+        mutation.isPending && "brightness-110",
+        "flex gap-4 p-4 border-b border-b-border w-full relative",
+      )}
+    >
+      <Activity mode={mutation.isPending ? "visible" : "hidden"}>
+        <Progress
+          value={progressValue}
+          className="absolute top-0 w-full left-0 rounded-none! h-[4px] duration-500 bg-transparent"
+        ></Progress>
+      </Activity>
+
       <img
         src={`${user?.avatar}`}
         alt={`${user?.username}'s icon`}
@@ -86,7 +109,10 @@ const CreatePost = () => {
         <textarea
           {...register("content")}
           placeholder="What's happening?"
-          className="bg-transparent pt-3 pb-8 border-b border-b-border outline-0 placeholder:text-gray field-sizing-content placeholder:text-lg w-full max-w-full resize-none text-lg"
+          className={cn(
+            `transition-all bg-transparent pt-3 pb-8 border-b border-b-border outline-0 placeholder:text-gray field-sizing-content placeholder:text-lg w-full max-w-full resize-none text-lg`,
+            mutation.isPending && "brightness-50 border-b-0 pb-0",
+          )}
           onChange={(e) => {
             const length = e.target.value.length;
 
@@ -103,8 +129,14 @@ const CreatePost = () => {
             checkLengthExceed(length);
           }}
           maxLength={250}
+          disabled={mutation.isPending}
         />
-        <div className="flex items-center justify-between w-[95%] max-w-[95%]">
+        <div
+          className={cn(
+            "flex items-center justify-between w-[95%] max-w-[95%] transition-all ",
+            mutation.isPending && "h-0! hidden",
+          )}
+        >
           <div className="flex items-center">
             <TooltipIcon content="Upload image">
               <Image size={20} className="text-primary" />
