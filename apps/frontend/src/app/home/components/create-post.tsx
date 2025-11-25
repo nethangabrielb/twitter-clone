@@ -61,7 +61,14 @@ const CreatePost = ({ refetch }: Props) => {
     onSuccess: (data) => {
       if (data.status === "success") {
         resetField("content");
-        toast.success(data.message, { position: "bottom-center" });
+        toast.success(data.message, {
+          position: "top-center",
+          style: {
+            background: "#1d9bf0",
+            color: "white",
+            width: "fit-content",
+          },
+        });
       } else {
         toast.error(data.message);
       }

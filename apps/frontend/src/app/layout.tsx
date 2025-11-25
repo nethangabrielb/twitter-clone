@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Toaster } from "sonner";
 
 import { Inter } from "next/font/google";
 
 import Sidebar from "@/components/sidebar";
+import { Toaster } from "@/components/ui/sonner";
 
 import QueryProvider from "@/providers/query-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
