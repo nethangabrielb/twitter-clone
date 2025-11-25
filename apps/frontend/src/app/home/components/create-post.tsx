@@ -6,7 +6,7 @@ import useUser from "@/stores/user.store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { Image, Smile } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { useState } from "react";
@@ -22,7 +22,7 @@ import { User } from "@/types/user";
 const CreatePost = () => {
   const [displayIndicator, setDisplayIndicator] = useState(false);
   const [dashOffset, setDashOffset] = useState(565.48);
-  const [inputDisabled, setInputDisabled] = useState(false);
+  const [inputDisabled, setInputDisabled] = useState(true);
   const user = useUser((state) => state.user) as User;
 
   const {
@@ -41,19 +41,26 @@ const CreatePost = () => {
   const mutation = useMutation({
     mutationFn: async (values: NewPost) => {
       const res = await postApi.createPost(values);
-      if (res) {
-        toast.success(res.message);
+      return res;
+    },
+    onSuccess: (data) => {
+      if (data.status === "success") {
+        toast.success(data.message);
+      } else {
+        toast.error(data.message);
       }
     },
   });
 
-  const createPost = () => {
+  const createPost: SubmitHandler<NewPost> = () => {
     const values = getValues();
-    mutation.mutate(values);
+    const updatedValues = { ...values, userId: user.id };
+
+    mutation.mutate(updatedValues);
   };
 
   const checkLengthExceed = (length: number) => {
-    if (length >= 250) {
+    if (length >= 250 || length < 1) {
       setInputDisabled(true);
     } else {
       setInputDisabled(false);
@@ -122,7 +129,7 @@ const CreatePost = () => {
                   cx="100"
                   cy="100"
                   fill="transparent"
-                  stroke="#e0e0e0"
+                  className="stroke-neutral-700"
                   strokeWidth="16px"
                 ></circle>
                 <circle
@@ -145,6 +152,7 @@ const CreatePost = () => {
             <ActionButton
               className="bg-primary text-white hover:bg-primary! hover:brightness-90!"
               disabled={inputDisabled}
+              type="submit"
             >
               Tweet
             </ActionButton>

@@ -17,14 +17,19 @@ const postApi = (() => {
 
   const createPost = async (values: NewPost) => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API}/api/posts`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
       credentials: "include",
       method: "POST",
+      body: JSON.stringify(values),
     });
 
     if (!res.ok) {
       throw new Error("There was an error processing the request.");
     }
     const data = await res.json();
+
     return data;
   };
 

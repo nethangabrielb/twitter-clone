@@ -23,6 +23,7 @@ type ActionButtonProps = {
   children: string;
   className?: string;
   disabled?: boolean;
+  type?: "submit";
   onClick?: () => void;
 };
 
@@ -84,6 +85,7 @@ const ActionButton = ({
   children,
   onClick,
   disabled,
+  type,
 }: ActionButtonProps) => {
   return (
     <Button
@@ -91,6 +93,7 @@ const ActionButton = ({
         ${className} rounded-3xl border-muted-foreground  h-fit`}
       onClick={onClick}
       disabled={disabled}
+      type={type}
     >
       {children}
     </Button>

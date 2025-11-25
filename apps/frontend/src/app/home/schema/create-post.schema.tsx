@@ -4,7 +4,7 @@ const PostSchema = z.object({
   content: z
     .string()
     .max(250, { error: "You have exceeded the allowed length of characters." }),
-  userId: z.number(),
+  userId: z.number().optional(),
 });
 
 export default PostSchema;
