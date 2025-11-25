@@ -9,12 +9,13 @@ import { Image, Smile } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { ActionButton } from "@/components/button";
 import { TooltipIcon } from "@/components/tool-tip-icon";
 
 import postApi from "@/lib/api/post";
+import { cn } from "@/lib/utils";
 
 import { User } from "@/types/user";
 
@@ -73,12 +74,12 @@ const CreatePost = () => {
       />
       <form
         onSubmit={handleSubmit(createPost)}
-        className="w-[95%] max-w-[95%] flex flex-col gap-4"
+        className="w-full max-w-full flex flex-col gap-4 overflow-hidden"
       >
         <textarea
           {...register("content")}
           placeholder="What's happening?"
-          className="bg-transparent pt-3 pb-8 border-b border-b-border outline-0 placeholder:text-gray field-sizing-content placeholder:text-lg w-[95%] max-w-[95%] resize-none overflow-auto text-lg"
+          className="bg-transparent pt-3 pb-8 border-b border-b-border outline-0 placeholder:text-gray field-sizing-content placeholder:text-lg w-full max-w-full resize-none text-lg"
           onChange={(e) => {
             const length = e.target.value.length;
 
@@ -108,8 +109,8 @@ const CreatePost = () => {
           <div className="flex items-center gap-4">
             {displayIndicator && (
               <svg
-                width="26"
-                height="26"
+                width="32"
+                height="32"
                 viewBox="-25 -25 250 250"
                 version="1.1"
                 xmlns="http://www.w3.org/2000/svg"
@@ -128,7 +129,10 @@ const CreatePost = () => {
                   r="90"
                   cx="100"
                   cy="100"
-                  className="stroke-primary"
+                  className={cn(
+                    inputDisabled ? "stroke-red-500" : "stroke-primary",
+                    "transition-all duration-400",
+                  )}
                   strokeWidth="15"
                   strokeLinecap="round"
                   strokeDashoffset={`${dashOffset}`}
