@@ -1,5 +1,7 @@
 "use client";
 
+import { CurrentUserPostDropdown } from "@/app/home/components/post-controls";
+import useUser from "@/stores/user.store";
 import { Heart, MessageCircle } from "lucide-react";
 
 import { formatDate } from "@/lib/utils";
@@ -11,8 +13,11 @@ type Props = {
 };
 
 const FeedPost = ({ post }: Props) => {
+  const user = useUser((state) => state.user);
+
   return (
-    <div className="flex gap-4 p-4 border-b border-b-border">
+    <div className="flex gap-4 p-4 border-b border-b-border relative">
+      <CurrentUserPostDropdown></CurrentUserPostDropdown>
       <img
         src={post.user.avatar}
         alt="User icon"
