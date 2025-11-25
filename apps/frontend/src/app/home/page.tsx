@@ -2,7 +2,7 @@
 
 import CreatePost from "@/app/home/components/create-post";
 import FeedPost from "@/app/home/components/feed-post";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { useEffect } from "react";
 
@@ -16,7 +16,11 @@ import { Post } from "@/types/post";
 
 const Home = () => {
   // POSTS FEED CONTENT QUERY
-  const { data: posts, isPending } = useQuery<Post[]>({
+  const {
+    data: posts,
+    isPending,
+    refetch,
+  } = useQuery<Post[]>({
     queryKey: ["posts"],
     queryFn: async () => {
       const posts = await postApi.getPosts();
@@ -46,7 +50,7 @@ const Home = () => {
         <div className="mt-[57.1px]"></div>
 
         {/* CREATE POST SECTION */}
-        <CreatePost></CreatePost>
+        <CreatePost refetch={refetch}></CreatePost>
 
         {/* RENDER POSTS */}
         <div className="w-full">

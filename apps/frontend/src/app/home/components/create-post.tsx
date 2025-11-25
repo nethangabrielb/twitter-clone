@@ -4,7 +4,11 @@ import PostSchema from "@/app/home/schema/create-post.schema";
 import { NewPost } from "@/app/home/types/create-post.type";
 import useUser from "@/stores/user.store";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import {
+  QueryObserverResult,
+  RefetchOptions,
+  useMutation,
+} from "@tanstack/react-query";
 import { Image, Smile } from "lucide-react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -18,9 +22,16 @@ import { Progress } from "@/components/ui/progress";
 import postApi from "@/lib/api/post";
 import { cn } from "@/lib/utils";
 
+import { Post } from "@/types/post";
 import { User } from "@/types/user";
 
-const CreatePost = () => {
+type Props = {
+  refetch: (
+    options?: RefetchOptions,
+  ) => Promise<QueryObserverResult<Post[], Error>>;
+};
+
+const CreatePost = ({ refetch }: Props) => {
   const [displayIndicator, setDisplayIndicator] = useState(false);
   const [dashOffset, setDashOffset] = useState(565.48);
   const [progressValue, setProgressValue] = useState(0);
@@ -48,15 +59,13 @@ const CreatePost = () => {
       return res;
     },
     onSuccess: (data) => {
-      setTimeout(() => {
-        if (data.status === "success") {
-          resetField("content");
-          toast.success(data.message, { position: "bottom-center" });
-        } else {
-          toast.error(data.message);
-        }
-        mutation.isSuccess = false;
-      }, 50);
+      if (data.status === "success") {
+        resetField("content");
+        toast.success(data.message, { position: "bottom-center" });
+      } else {
+        toast.error(data.message);
+      }
+      refetch();
     },
     onSettled: () => {
       setProgressValue(0);
