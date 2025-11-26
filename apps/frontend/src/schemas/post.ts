@@ -15,6 +15,11 @@ const postSchema = z.object({
     Like: z.number(),
     Comment: z.number(),
   }),
+  Like: z.array(
+    z.object({
+      userId: z.number(),
+    }),
+  ),
 });
 
 export { postSchema };

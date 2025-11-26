@@ -10,7 +10,7 @@ import {
 import { Heart, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 
-import { Activity } from "react";
+import { Activity, startTransition, useOptimistic, useState } from "react";
 
 import postApi from "@/lib/api/post";
 import { formatDate } from "@/lib/utils";
@@ -27,8 +27,16 @@ type Props = {
 
 const FeedPost = ({ post, refetch }: Props) => {
   const user = useUser((state) => state.user) as User;
+  const [likes, setLikes] = useState(post?._count.Like);
+  const [userHasLiked, setUserHasLiked] = useState(
+    post?.Like[0]?.userId === user?.id,
+  );
+  const [optimisticLikes, addOptimisticLikes] = useOptimistic(
+    likes,
+    (currentLike: number, updatedLike: number) => currentLike + updatedLike,
+  );
 
-  const mutation = useMutation({
+  const postMutation = useMutation({
     mutationFn: async () => {
       const res = await postApi.deletePost(post.id);
       return res;
@@ -50,8 +58,35 @@ const FeedPost = ({ post, refetch }: Props) => {
     },
   });
 
+  const likeMutation = useMutation({
+    mutationFn: async () => {
+      if (userHasLiked) {
+        startTransition(() => {
+          addOptimisticLikes(-1);
+        });
+        const res = await postApi.unlikePost(post.id);
+        return res;
+      } else {
+        startTransition(() => {
+          addOptimisticLikes(1);
+        });
+        const res = await postApi.likePost(post.id);
+        return res;
+      }
+    },
+    onSuccess: (res) => {
+      if (res.message === "Post liked successfully") {
+        setLikes((prev) => prev + 1);
+        setUserHasLiked(true);
+      } else if (res.message === "Unlike success") {
+        setLikes((prev) => prev - 1);
+        setUserHasLiked(false);
+      }
+    },
+  });
+
   const handleDelete = () => {
-    mutation.mutate();
+    postMutation.mutate();
   };
 
   return (
@@ -66,7 +101,7 @@ const FeedPost = ({ post, refetch }: Props) => {
         alt="User icon"
         className="rounded-full object-cover size-12"
       />
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 w-full">
         <div className="flex gap-1 items-center">
           <p className="font-bold text-text space tracking-[0.2px] text-[18px]">
             {post.user.name}
@@ -84,26 +119,33 @@ const FeedPost = ({ post, refetch }: Props) => {
           </div>
         </div>
         <p className="text-text text-[15px]">{post.content}</p>
-        <div className="flex justify-start">
+        <div className="flex justify-start w-full">
           {/* render comments */}
-          <div className="flex items-center gap-2 flex-1">
-            <MessageCircle
-              size={20}
-              className="stroke-darker text-darker font-light stroke-[1.2px]"
-            ></MessageCircle>
-            <p className="text-darker text-[14px] font-light">
+          <div className="flex items-center flex-1 group cursor-pointer">
+            <div className="p-2 rounded-full group-hover:bg-primary/20 transition-all">
+              <MessageCircle
+                size={20}
+                className="stroke-darker text-darker font-light stroke-[1.2px] group-hover:stroke-primary! transition-all"
+              ></MessageCircle>
+            </div>
+            <p className="text-darker text-[14px] font-light group-hover:text-primary transition-all">
               {post._count.Comment}
             </p>
           </div>
 
           {/* render likes */}
-          <div className="flex items-center gap-2 flex-1 ">
-            <Heart
-              size={20}
-              className="stroke-darker text-darker font-light stroke-[1.2px]"
-            ></Heart>
-            <p className="text-darker text-[14px] font-light ">
-              {post._count.Like}
+          <div className="flex items-center flex-1 group cursor-pointer">
+            <button
+              className="p-2 rounded-full group-hover:bg-red-500/20 transition-all bg-transparent"
+              onClick={() => likeMutation.mutate()}
+            >
+              <Heart
+                size={20}
+                className="stroke-darker text-darker font-light stroke-[1.2px] group-hover:stroke-red-500! "
+              ></Heart>
+            </button>
+            <p className="text-darker text-[14px] font-light group-hover:text-red-500 transition-all">
+              {optimisticLikes}
             </p>
           </div>
         </div>

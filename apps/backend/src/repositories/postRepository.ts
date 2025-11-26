@@ -45,6 +45,11 @@ const postRepository = {
             name: true,
           },
         },
+        Like: {
+          select: {
+            userId: true,
+          },
+        },
       },
     }),
   deleteById: (id: number) =>
