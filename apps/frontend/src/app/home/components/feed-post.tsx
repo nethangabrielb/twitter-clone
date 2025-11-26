@@ -27,7 +27,13 @@ type Props = {
 
 const FeedPost = ({ post, refetch }: Props) => {
   const user = useUser((state) => state.user) as User;
+
+  // put likes in a state to use as source of truth
+  // for useOptimistic hooks
   const [likes, setLikes] = useState(post?._count.Like);
+
+  // source of truth to determine if clicking the like button should either
+  // like or unlike a tweet by determining if current user has alr liked a post
   const [userHasLiked, setUserHasLiked] = useState(
     post?.Like[0]?.userId === user?.id,
   );
@@ -36,6 +42,7 @@ const FeedPost = ({ post, refetch }: Props) => {
     (currentLike: number, updatedLike: number) => currentLike + updatedLike,
   );
 
+  // CREATE POST API INTERFACE
   const postMutation = useMutation({
     mutationFn: async () => {
       const res = await postApi.deletePost(post.id);
@@ -58,6 +65,7 @@ const FeedPost = ({ post, refetch }: Props) => {
     },
   });
 
+  // LIKE/UNLIKE POST API INTERFACE
   const likeMutation = useMutation({
     mutationFn: async () => {
       if (userHasLiked) {
