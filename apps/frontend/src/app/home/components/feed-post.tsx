@@ -13,7 +13,7 @@ import { toast } from "sonner";
 import { Activity, startTransition, useOptimistic, useState } from "react";
 
 import postApi from "@/lib/api/post";
-import { formatDate } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 
 import { Post } from "@/types/post";
 import { User } from "@/types/user";
@@ -142,20 +142,25 @@ const FeedPost = ({ post, refetch }: Props) => {
           </div>
 
           {/* render likes */}
-          <div className="flex items-center flex-1 group cursor-pointer">
-            <button
-              className="p-2 rounded-full group-hover:bg-red-500/20 transition-all bg-transparent"
-              onClick={() => likeMutation.mutate()}
-            >
+          <button
+            className="flex items-center flex-1 group cursor-pointer"
+            onClick={() => likeMutation.mutate()}
+          >
+            <div className="p-2 rounded-full group-hover:bg-red-500/20 transition-all bg-transparent group">
               <Heart
                 size={20}
-                className="stroke-darker text-darker font-light stroke-[1.2px] group-hover:stroke-red-500! "
+                className={cn(
+                  "text-darker font-light stroke-[1.2px] group-hover:stroke-red-500! group-active:scale-150 duration-500",
+                  userHasLiked
+                    ? "fill-red-500 stroke-red-500!"
+                    : "stroke-darker",
+                )}
               ></Heart>
-            </button>
+            </div>
             <p className="text-darker text-[14px] font-light group-hover:text-red-500 transition-all">
               {optimisticLikes}
             </p>
-          </div>
+          </button>
         </div>
       </div>
     </div>
