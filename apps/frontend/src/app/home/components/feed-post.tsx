@@ -2,22 +2,65 @@
 
 import { CurrentUserPostDropdown } from "@/app/home/components/post-controls";
 import useUser from "@/stores/user.store";
+import {
+  QueryObserverResult,
+  RefetchOptions,
+  useMutation,
+} from "@tanstack/react-query";
 import { Heart, MessageCircle } from "lucide-react";
+import { toast } from "sonner";
 
+import { Activity } from "react";
+
+import postApi from "@/lib/api/post";
 import { formatDate } from "@/lib/utils";
 
 import { Post } from "@/types/post";
+import { User } from "@/types/user";
 
 type Props = {
   post: Post;
+  refetch: (
+    options?: RefetchOptions,
+  ) => Promise<QueryObserverResult<Post[], Error>>;
 };
 
-const FeedPost = ({ post }: Props) => {
-  const user = useUser((state) => state.user);
+const FeedPost = ({ post, refetch }: Props) => {
+  const user = useUser((state) => state.user) as User;
+
+  const mutation = useMutation({
+    mutationFn: async () => {
+      const res = await postApi.deletePost(post.id);
+      return res;
+    },
+    onSuccess: (res) => {
+      if (res.status === "success") {
+        refetch();
+        toast.success(res.message, {
+          position: "top-center",
+          style: {
+            background: "#1d9bf0",
+            color: "white",
+            width: "fit-content",
+          },
+        });
+      } else {
+        toast.error(res.message);
+      }
+    },
+  });
+
+  const handleDelete = () => {
+    mutation.mutate();
+  };
 
   return (
     <div className="flex gap-4 p-4 border-b border-b-border relative">
-      <CurrentUserPostDropdown></CurrentUserPostDropdown>
+      <Activity mode={user.id === post.userId ? "visible" : "hidden"}>
+        <CurrentUserPostDropdown
+          handleDelete={handleDelete}
+        ></CurrentUserPostDropdown>
+      </Activity>
       <img
         src={post.user.avatar}
         alt="User icon"

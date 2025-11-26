@@ -1,7 +1,8 @@
 "use client";
 
-import { MoreHorizontalIcon, Pin, Trash2 } from "lucide-react";
+import { MoreHorizontalIcon, Pin } from "lucide-react";
 
+import DeleteDialog from "@/components/delete-dialog";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,7 +11,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export function CurrentUserPostDropdown() {
+type Props = {
+  handleDelete: () => void;
+};
+
+export function CurrentUserPostDropdown({ handleDelete }: Readonly<Props>) {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild className="absolute top-0 right-0 m-3">
@@ -23,20 +28,20 @@ export function CurrentUserPostDropdown() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="w-40 bg-background shadow-sm shadow-neutral-600"
+        className="w-50 bg-background shadow-sm shadow-neutral-600"
         align="start"
         side="top"
       >
-        <DropdownMenuItem className="hover:bg-secondary/60!">
-          <div className="flex items-center gap-2 text-text">
-            <Trash2 className="text-red-600"></Trash2>
-            <p className="text-red-600">Delete</p>
-          </div>
+        <DropdownMenuItem
+          className="hover:bg-secondary/60! w-full"
+          onSelect={(e) => e.preventDefault()}
+        >
+          <DeleteDialog deleteHandler={handleDelete}></DeleteDialog>
         </DropdownMenuItem>
         <DropdownMenuItem className="hover:bg-secondary/60!">
           <div className="flex items-center gap-2 text-text">
             <Pin className="flex items-center gap-2 text-text"></Pin>
-            <p>Pin</p>
+            <p className="font-bold">Pin</p>
           </div>
         </DropdownMenuItem>
       </DropdownMenuContent>

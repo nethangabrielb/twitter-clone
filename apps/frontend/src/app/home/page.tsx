@@ -63,7 +63,13 @@ const Home = () => {
           {/* POSTS */}
           {posts &&
             posts.map((post: Post) => {
-              return <FeedPost post={post} key={post.id}></FeedPost>;
+              return (
+                <FeedPost
+                  post={post}
+                  key={post.id}
+                  refetch={refetch}
+                ></FeedPost>
+              );
             })}
         </div>
       </div>

@@ -33,7 +33,24 @@ const postApi = (() => {
     return data;
   };
 
-  return { getPosts, createPost };
+  const deletePost = async (postId: number) => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API}/api/posts/${postId}`,
+      {
+        credentials: "include",
+        method: "DELETE",
+      },
+    );
+
+    if (!res.ok) {
+      throw new Error("There was an error processing the request.");
+    }
+    const data = await res.json();
+
+    return data;
+  };
+
+  return { getPosts, createPost, deletePost };
 })();
 
 export default postApi;
