@@ -7,5 +7,5 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatDate(date: Date) {
-  return format(date, "PP");
+  return format(date, "h:mm b . PP");
 }

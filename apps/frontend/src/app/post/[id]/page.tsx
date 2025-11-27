@@ -1,6 +1,7 @@
 "use client";
 
 import PostSingle from "@/app/post/components/post";
+import CreateReply from "@/app/post/components/reply-form";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { useEffect } from "react";
@@ -17,7 +18,7 @@ const Post = () => {
   const params = useParams();
   const queryClient = useQueryClient();
 
-  const { data: post } = useQuery<PostType>({
+  const { data: post, refetch } = useQuery<PostType>({
     queryKey: ["post", params.id],
     queryFn: async () => {
       const posts = await postApi.getPost(params.id);
@@ -73,6 +74,7 @@ const Post = () => {
         {post && (
           <PostSingle post={post} refetchPosts={refetchPosts}></PostSingle>
         )}
+        <CreateReply refetch={refetch}></CreateReply>
       </div>
     </>
   );
