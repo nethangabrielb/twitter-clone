@@ -6,18 +6,24 @@ import { useMutation } from "@tanstack/react-query";
 import { Heart, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 
-import { Activity, startTransition, useOptimistic, useState } from "react";
+import {
+  Activity,
+  startTransition,
+  useEffect,
+  useOptimistic,
+  useState,
+} from "react";
 
 import { useRouter } from "next/navigation";
 
 import postApi from "@/lib/api/post";
 import { cn, formatDate } from "@/lib/utils";
 
-import { Post } from "@/types/post";
+import { PostType } from "@/types/post";
 import { User } from "@/types/user";
 
 type Props = {
-  post: Post;
+  post: PostType;
 };
 
 const PostSingle = ({ post }: Props) => {
@@ -88,6 +94,10 @@ const PostSingle = ({ post }: Props) => {
       }
     },
   });
+
+  useEffect(() => {
+    setUserHasLiked(post?.Like[0]?.userId === user?.id);
+  }, [user]);
 
   const handleDelete = () => {
     postMutation.mutate();
