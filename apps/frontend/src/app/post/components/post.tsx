@@ -2,17 +2,13 @@
 
 import { CurrentUserPostDropdown } from "@/app/home/components/post-controls";
 import useUser from "@/stores/user.store";
-import {
-  QueryObserverResult,
-  RefetchOptions,
-  useMutation,
-} from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { Heart, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 
 import { Activity, startTransition, useOptimistic, useState } from "react";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import postApi from "@/lib/api/post";
 import { cn, formatDate } from "@/lib/utils";
@@ -22,12 +18,10 @@ import { User } from "@/types/user";
 
 type Props = {
   post: Post;
-  refetch: (
-    options?: RefetchOptions,
-  ) => Promise<QueryObserverResult<Post[], Error>>;
 };
 
-const FeedPost = ({ post, refetch }: Props) => {
+const PostSingle = ({ post }: Props) => {
+  const router = useRouter();
   const user = useUser((state) => state.user) as User;
 
   // put likes in a state to use as source of truth
@@ -52,7 +46,6 @@ const FeedPost = ({ post, refetch }: Props) => {
     },
     onSuccess: (res) => {
       if (res.status === "success") {
-        refetch();
         toast.success(res.message, {
           position: "top-center",
           style: {
@@ -61,6 +54,7 @@ const FeedPost = ({ post, refetch }: Props) => {
             width: "fit-content",
           },
         });
+        router.push("/home");
       } else {
         toast.error(res.message);
       }
@@ -100,10 +94,7 @@ const FeedPost = ({ post, refetch }: Props) => {
   };
 
   return (
-    <Link
-      className="flex gap-4 p-4 border-b border-b-border relative hover:bg-secondary/40 transition-all"
-      href={`/post/${post.id}`}
-    >
+    <div className="flex gap-4 p-4 border-b border-b-border relative hover:bg-secondary/40 transition-all">
       <Activity mode={user.id === post.userId ? "visible" : "hidden"}>
         <CurrentUserPostDropdown
           handleDelete={handleDelete}
@@ -168,8 +159,8 @@ const FeedPost = ({ post, refetch }: Props) => {
           </button>
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 
-export default FeedPost;
+export default PostSingle;

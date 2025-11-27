@@ -77,7 +77,7 @@ const Home = () => {
   );
 };
 
-const FeedControlBtn = ({ children }: { children: string }) => {
+export const FeedControlBtn = ({ children }: { children: string }) => {
   return (
     <button className="bg-transparent flex-1 p-4 hover:bg-neutral-900 border-b border-b-border ">
       {children}

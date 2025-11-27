@@ -10,6 +10,14 @@ const postRepository = {
         _count: {
           select: {
             Like: true,
+            Comment: true,
+          },
+        },
+        user: {
+          select: {
+            avatar: true,
+            username: true,
+            name: true,
           },
         },
         Comment: {
@@ -19,6 +27,11 @@ const postRepository = {
                 Like: true,
               },
             },
+          },
+        },
+        Like: {
+          select: {
+            userId: true,
           },
         },
       },
