@@ -17,7 +17,6 @@ const Post = () => {
   const params = useParams();
   const queryClient = useQueryClient();
 
-  // POSTS FEED CONTENT QUERY
   const { data: post } = useQuery<PostType>({
     queryKey: ["post", params.id],
     queryFn: async () => {
@@ -33,7 +32,7 @@ const Post = () => {
 
   useEffect(() => {
     document.title = `${post?.user?.username} on Twitter: ${post?.content}`;
-  }, []);
+  }, [post]);
 
   return (
     <>
