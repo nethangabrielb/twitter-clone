@@ -15,7 +15,7 @@ import { Activity, startTransition, useOptimistic, useState } from "react";
 import Link from "next/link";
 
 import postApi from "@/lib/api/post";
-import { cn, formatDate } from "@/lib/utils";
+import { cn, formatDateFeedPost } from "@/lib/utils";
 
 import { PostType } from "@/types/post";
 import { User } from "@/types/user";
@@ -129,7 +129,7 @@ const FeedPost = ({ post, refetch, refetchPosts }: Props) => {
               .
             </div>
             <p className="text-darker font-light text-[14px]">
-              {formatDate(post.createdAt)}
+              {formatDateFeedPost(post.createdAt)}
             </p>
           </div>
         </div>

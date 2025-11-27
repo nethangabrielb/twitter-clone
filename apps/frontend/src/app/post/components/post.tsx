@@ -17,7 +17,7 @@ import {
 import { useRouter } from "next/navigation";
 
 import postApi from "@/lib/api/post";
-import { cn, formatDate } from "@/lib/utils";
+import { cn, formatDateSlugPost } from "@/lib/utils";
 
 import { PostType } from "@/types/post";
 import { User } from "@/types/user";
@@ -130,7 +130,7 @@ const PostSingle = ({ post, refetchPosts }: Props) => {
         </div>
         <p className="text-text text-[15px] py-2">{post.content}</p>
         <p className="border-b border-b-border pb-1 text-darker font-light text-[14px]">
-          {formatDate(post.createdAt)}
+          {formatDateSlugPost(post.createdAt)}
         </p>
 
         <div className="flex justify-start w-full border-b border-b-border pb-2">
