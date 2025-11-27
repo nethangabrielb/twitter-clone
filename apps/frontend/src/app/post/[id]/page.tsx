@@ -1,10 +1,36 @@
 import PostSingle from "@/app/post/components/post";
+import type { Metadata } from "next";
 
 import { cookies } from "next/headers";
+
+import { PostType } from "@/types/post";
 
 type Props = {
   params: Promise<{ id: string }>;
 };
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token");
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API}/api/posts/${id}`, {
+    headers: {
+      Cookie: `token=${token?.value}`,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error("Error fetching from the server.");
+  }
+
+  const data = await res.json();
+  const post = data.data as PostType;
+
+  const title = `${post.user.username} on Twitter: ${post.content}`;
+  const description = "A twitter clone made by @nethangabrielb on Github";
+
+  return { title, description };
+}
 
 const Post = async ({ params }: Props) => {
   const { id } = await params;
