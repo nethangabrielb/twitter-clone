@@ -12,9 +12,10 @@ const commentsController = (() => {
   ) => {
     try {
       const user = req.user as User;
+
       const data = {
         userId: user.id,
-        postId: Number(req.body.postId),
+        replyId: Number(req.body.replyId),
         content: req.body.content,
       };
       const comment = await commentService.createComment(data);

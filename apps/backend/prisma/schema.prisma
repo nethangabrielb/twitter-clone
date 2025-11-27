@@ -15,20 +15,18 @@ datasource db {
 }
 
 model User {
-  id          Int           @id @default(autoincrement())
-  name        String
-  username    String        @unique
-  email       String        @unique
-  password    String
-  avatar      String?
-  onboarded   Boolean       @default(false)
-  Followings  Follow[]      @relation("Followings")
-  Followers   Follow[]      @relation("Followers")
-  Post        Post[]
-  createdAt   DateTime      @default(now())
-  Comment     Comment[]
-  PostLike    PostLike[]
-  CommentLike CommentLike[]
+  id         Int        @id @default(autoincrement())
+  name       String
+  username   String     @unique
+  email      String     @unique
+  password   String
+  avatar     String?
+  onboarded  Boolean    @default(false)
+  Followings Follow[]   @relation("Followings")
+  Followers  Follow[]   @relation("Followers")
+  Post       Post[]
+  createdAt  DateTime   @default(now())
+  PostLike   PostLike[]
 }
 
 model Follow {
@@ -40,26 +38,19 @@ model Follow {
 }
 
 model Post {
-  id        Int        @id @default(autoincrement())
-  user      User       @relation(fields: [userId], references: [id])
-  userId    Int
-  content   String     @db.VarChar(280)
-  createdAt DateTime   @default(now())
-  deleted   Boolean    @default(false)
-  Comment   Comment[]
-  Like      PostLike[]
-}
+  id        Int      @id @default(autoincrement())
+  content   String   @db.VarChar(280)
+  createdAt DateTime @default(now())
+  deleted   Boolean  @default(false)
 
-model Comment {
-  id        Int           @id @default(autoincrement())
-  user      User          @relation(fields: [userId], references: [id])
-  userId    Int
-  post      Post          @relation(fields: [postId], references: [id])
-  postId    Int
-  content   String        @db.VarChar(280)
-  createdAt DateTime      @default(now())
-  deleted   Boolean       @default(false)
-  Like      CommentLike[]
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  replies Post[] @relation("PostReplies")
+  reply   Post?  @relation("PostReplies", fields: [replyId], references: [id])
+  replyId Int?
+
+  Like PostLike[]
 }
 
 model PostLike {
@@ -71,17 +62,6 @@ model PostLike {
   createdAt DateTime @default(now())
 
   @@unique([userId, postId])
-}
-
-model CommentLike {
-  id        Int      @id @default(autoincrement())
-  user      User     @relation(fields: [userId], references: [id])
-  userId    Int
-  comment   Comment  @relation(fields: [commentId], references: [id])
-  commentId Int
-  createdAt DateTime @default(now())
-
-  @@unique([userId, commentId])
 }
 
 model FederatedCredentials {

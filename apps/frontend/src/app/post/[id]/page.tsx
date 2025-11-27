@@ -47,7 +47,7 @@ const Post = () => {
       <div className="lg:w-[600px] border-l border-r border-l-border border-r-border h-full relative">
         {/* FEED CONTROL UI */}
         <div className="flex backdrop-blur-lg absolute top-0 w-full">
-          <div className="bg-transparent flex-1 p-2 border-b border-b-border font-bold flex items-center gap-12">
+          <div className="bg-transparent flex-1 p-2 border-b border-b-border font-bold flex items-center gap-8">
             <Link
               className="p-2 rounded-full hover:bg-neutral-500/20 transition-all cursor-pointer"
               href={"/home"}
@@ -67,7 +67,7 @@ const Post = () => {
                 <path d="M19 12H5" />
               </svg>
             </Link>
-            <h1>Following</h1>
+            <h1>Post</h1>
           </div>
         </div>
         <div className="mt-[57.1px]"></div>

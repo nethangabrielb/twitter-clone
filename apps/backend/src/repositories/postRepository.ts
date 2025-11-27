@@ -10,7 +10,11 @@ const postRepository = {
         _count: {
           select: {
             Like: true,
-            Comment: true,
+            replies: {
+              where: {
+                deleted: false,
+              },
+            },
           },
         },
         user: {
@@ -20,20 +24,12 @@ const postRepository = {
             name: true,
           },
         },
-        Comment: {
-          include: {
-            _count: {
-              select: {
-                Like: true,
-              },
-            },
-          },
-        },
         Like: {
           select: {
             userId: true,
           },
         },
+        replies: true,
       },
     }),
   findAll: () =>
@@ -48,7 +44,11 @@ const postRepository = {
         _count: {
           select: {
             Like: true,
-            Comment: true,
+            replies: {
+              where: {
+                deleted: false,
+              },
+            },
           },
         },
         user: {
@@ -63,6 +63,7 @@ const postRepository = {
             userId: true,
           },
         },
+        replies: true,
       },
     }),
   deleteById: (id: number) =>
