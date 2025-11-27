@@ -22,13 +22,13 @@ import { Progress } from "@/components/ui/progress";
 import postApi from "@/lib/api/post";
 import { cn } from "@/lib/utils";
 
-import { Post } from "@/types/post";
+import { PostType } from "@/types/post";
 import { User } from "@/types/user";
 
 type Props = {
   refetch: (
     options?: RefetchOptions,
-  ) => Promise<QueryObserverResult<Post[], Error>>;
+  ) => Promise<QueryObserverResult<PostType[], Error>>;
 };
 
 const CreatePost = ({ refetch }: Props) => {
