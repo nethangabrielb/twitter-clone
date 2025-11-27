@@ -61,7 +61,7 @@ const PostSingle = ({ post, refetchPosts }: Props) => {
             width: "fit-content",
           },
         });
-        router.push("/home");
+        router.back();
       } else {
         toast.error(res.message);
       }

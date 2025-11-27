@@ -28,8 +28,6 @@ const Post = () => {
     await queryClient.refetchQueries({ queryKey: ["post"] });
   };
 
-  console.log(post);
-
   return (
     <div className="lg:w-[600px] border-l border-r border-l-border border-r-border h-full relative">
       {/* FEED CONTROL UI */}
