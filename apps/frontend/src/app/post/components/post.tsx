@@ -24,9 +24,10 @@ import { User } from "@/types/user";
 
 type Props = {
   post: PostType;
+  refetchPosts: () => void;
 };
 
-const PostSingle = ({ post }: Props) => {
+const PostSingle = ({ post, refetchPosts }: Props) => {
   const router = useRouter();
   const user = useUser((state) => state.user) as User;
 
@@ -85,6 +86,7 @@ const PostSingle = ({ post }: Props) => {
       }
     },
     onSuccess: (res) => {
+      refetchPosts();
       if (res.message === "Post liked successfully") {
         setLikes((prev) => prev + 1);
         setUserHasLiked(true);

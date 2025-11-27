@@ -17,17 +17,18 @@ import Link from "next/link";
 import postApi from "@/lib/api/post";
 import { cn, formatDate } from "@/lib/utils";
 
-import { Post } from "@/types/post";
+import { PostType } from "@/types/post";
 import { User } from "@/types/user";
 
 type Props = {
-  post: Post;
+  post: PostType;
   refetch: (
     options?: RefetchOptions,
-  ) => Promise<QueryObserverResult<Post[], Error>>;
+  ) => Promise<QueryObserverResult<PostType[], Error>>;
+  refetchPosts: () => void;
 };
 
-const FeedPost = ({ post, refetch }: Props) => {
+const FeedPost = ({ post, refetch, refetchPosts }: Props) => {
   const user = useUser((state) => state.user) as User;
 
   // put likes in a state to use as source of truth
@@ -85,6 +86,7 @@ const FeedPost = ({ post, refetch }: Props) => {
       }
     },
     onSuccess: (res) => {
+      refetchPosts();
       if (res.message === "Post liked successfully") {
         setLikes((prev) => prev + 1);
         setUserHasLiked(true);

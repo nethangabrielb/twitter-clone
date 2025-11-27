@@ -1,64 +1,66 @@
-import PostSingle from "@/app/post/components/post";
-import type { Metadata } from "next";
+"use client";
 
-import { cookies } from "next/headers";
+import PostSingle from "@/app/post/components/post";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+
+import Link from "next/link";
+import { useParams } from "next/navigation";
+
+import postApi from "@/lib/api/post";
 
 import { PostType } from "@/types/post";
 
-type Props = {
-  params: Promise<{ id: string }>;
-};
+const Post = () => {
+  const params = useParams();
+  const queryClient = useQueryClient();
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { id } = await params;
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token");
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API}/api/posts/${id}`, {
-    headers: {
-      Cookie: `token=${token?.value}`,
+  // POSTS FEED CONTENT QUERY
+  const { data: post } = useQuery<PostType>({
+    queryKey: ["post", params.id],
+    queryFn: async () => {
+      const posts = await postApi.getPost(params.id);
+      return posts;
     },
   });
 
-  if (!res.ok) {
-    throw new Error("Error fetching from the server.");
-  }
+  const refetchPosts = async () => {
+    await queryClient.refetchQueries({ queryKey: ["posts"] });
+    await queryClient.refetchQueries({ queryKey: ["post"] });
+  };
 
-  const data = await res.json();
-  const post = data.data as PostType;
-
-  const title = `${post.user.username} on Twitter: ${post.content}`;
-  const description = "A twitter clone made by @nethangabrielb on Github";
-
-  return { title, description };
-}
-
-const Post = async ({ params }: Props) => {
-  const { id } = await params;
-  const cookieStore = await cookies();
-  const token = cookieStore.get("token");
-
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API}/api/posts/${id}`, {
-    headers: {
-      Cookie: `token=${token?.value}`,
-    },
-  });
-
-  if (!res.ok) {
-    throw new Error("Error fetching from the server.");
-  }
-
-  const post = await res.json();
+  console.log(post);
 
   return (
     <div className="lg:w-[600px] border-l border-r border-l-border border-r-border h-full relative">
       {/* FEED CONTROL UI */}
       <div className="flex backdrop-blur-lg absolute top-0 w-full">
-        <h1 className="bg-transparent flex-1 p-4 border-b border-b-border font-bold">
-          Following
-        </h1>
+        <div className="bg-transparent flex-1 p-2 border-b border-b-border font-bold flex items-center gap-12">
+          <Link
+            className="p-2 rounded-full hover:bg-neutral-500/20 transition-all cursor-pointer"
+            href={"/home"}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="m12 19-7-7 7-7" />
+              <path d="M19 12H5" />
+            </svg>
+          </Link>
+          <h1>Following</h1>
+        </div>
       </div>
       <div className="mt-[57.1px]"></div>
-      <PostSingle post={post.data}></PostSingle>
+      {post && (
+        <PostSingle post={post} refetchPosts={refetchPosts}></PostSingle>
+      )}
     </div>
   );
 };

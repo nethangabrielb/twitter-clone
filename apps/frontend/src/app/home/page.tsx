@@ -2,7 +2,7 @@
 
 import CreatePost from "@/app/home/components/create-post";
 import FeedPost from "@/app/home/components/feed-post";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { useEffect } from "react";
 
@@ -12,7 +12,7 @@ import { Spinner } from "@/components/ui/spinner";
 
 import postApi from "@/lib/api/post";
 
-import { Post } from "@/types/post";
+import { PostType } from "@/types/post";
 
 const Home = () => {
   // POSTS FEED CONTENT QUERY
@@ -20,17 +20,23 @@ const Home = () => {
     data: posts,
     isPending,
     refetch,
-  } = useQuery<Post[]>({
+  } = useQuery<PostType[]>({
     queryKey: ["posts"],
     queryFn: async () => {
       const posts = await postApi.getPosts();
       return posts;
     },
   });
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     document.title = "Home / Twitter";
   }, []);
+
+  const refetchPosts = async () => {
+    await queryClient.refetchQueries({ queryKey: ["post"] });
+    await queryClient.refetchQueries({ queryKey: ["posts"] });
+  };
 
   return (
     <>
@@ -62,12 +68,13 @@ const Home = () => {
           )}
           {/* POSTS */}
           {posts &&
-            posts.map((post: Post) => {
+            posts.map((post: PostType) => {
               return (
                 <FeedPost
                   post={post}
                   key={post.id}
                   refetch={refetch}
+                  refetchPosts={refetchPosts}
                 ></FeedPost>
               );
             })}
