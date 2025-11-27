@@ -132,9 +132,9 @@ const FeedPost = ({ post, refetch }: Props) => {
           </div>
         </div>
         <p className="text-text text-[15px]">{post.content}</p>
-        <div className="flex justify-start w-full">
+        <div className="flex justify-between w-[60%] ">
           {/* render comments */}
-          <div className="flex items-center flex-1 group cursor-pointer">
+          <div className="flex items-center group cursor-pointer">
             <div className="p-2 rounded-full group-hover:bg-primary/20 transition-all">
               <MessageCircle
                 size={20}
@@ -148,8 +148,11 @@ const FeedPost = ({ post, refetch }: Props) => {
 
           {/* render likes */}
           <button
-            className="flex items-center flex-1 group cursor-pointer"
-            onClick={() => likeMutation.mutate()}
+            className="flex items-center group cursor-pointer"
+            onClick={(e) => {
+              e.preventDefault();
+              likeMutation.mutate();
+            }}
           >
             <div className="p-2 rounded-full group-hover:bg-red-500/20 transition-all bg-transparent group">
               <Heart
