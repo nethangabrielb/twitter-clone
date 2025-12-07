@@ -115,9 +115,9 @@ const CreateReply = ({ refetch }: Props) => {
       </Activity>
 
       <img
-        src={`${user?.avatar}`}
+        src={user?.avatar}
         alt={`${user?.username}'s icon`}
-        className="size-[48px]"
+        className="size-[48px] min-w-[48px]! rounded-full object-cover"
       />
       <form
         onSubmit={handleSubmit(createPost)}

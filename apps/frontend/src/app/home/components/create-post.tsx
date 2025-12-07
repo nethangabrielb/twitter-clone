@@ -116,7 +116,8 @@ const CreatePost = ({ refetch }: Props) => {
       <img
         src={`${user?.avatar}`}
         alt={`${user?.username}'s icon`}
-        className="size-[48px]"
+        loading="eager"
+        className="size-[48px]! min-w-[48px]! rounded-full object-cover"
       />
       <form
         onSubmit={handleSubmit(createPost)}

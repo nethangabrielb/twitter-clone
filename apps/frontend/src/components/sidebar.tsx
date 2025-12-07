@@ -124,7 +124,7 @@ const Sidebar = ({ children }: Props) => {
               src={data?.avatar}
               alt="User avatar"
               loading="eager"
-              className="size-[40px] rounded-full"
+              className="size-[48px] min-w-[48px]! rounded-full object-cover"
             />
             <div className="flex flex-col">
               <p className="text-[15px] text-text font-bold">{data?.name}</p>

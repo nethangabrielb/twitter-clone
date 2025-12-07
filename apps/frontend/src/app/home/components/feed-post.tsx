@@ -114,7 +114,7 @@ const FeedPost = ({ post, refetch, refetchPosts }: Props) => {
       <img
         src={post.user.avatar}
         alt="User icon"
-        className="rounded-full object-cover size-12"
+        className="rounded-full object-cover size-12 min-w-[48px]!"
       />
       <div className="flex flex-col gap-2 w-full">
         <div className="flex gap-1">
