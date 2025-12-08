@@ -26,7 +26,7 @@ type Props = {
   refetch: (
     options?: RefetchOptions,
   ) => Promise<QueryObserverResult<any, Error>>;
-  refetchPosts?: () => void;
+  refetchPosts: () => void;
 };
 
 const FeedPost = ({ post, refetch, refetchPosts }: Props) => {
@@ -87,9 +87,7 @@ const FeedPost = ({ post, refetch, refetchPosts }: Props) => {
       }
     },
     onSuccess: (res) => {
-      if (refetchPosts) {
-        refetchPosts();
-      }
+      refetchPosts();
       if (res.message === "Post liked successfully") {
         setLikes((prev) => prev + 1);
         setUserHasLiked(true);

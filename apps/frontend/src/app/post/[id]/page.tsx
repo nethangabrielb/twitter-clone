@@ -5,7 +5,7 @@ import PostSingle from "@/app/post/components/post";
 import CreateReply from "@/app/post/components/reply-form";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import Head from "next/head";
 import Link from "next/link";
@@ -16,6 +16,7 @@ import postApi from "@/lib/api/post";
 import { PostType } from "@/types/post";
 
 const Post = () => {
+  const [isReply, setIsReply] = useState<boolean | null>(null);
   const params = useParams();
   const queryClient = useQueryClient();
 
@@ -34,6 +35,14 @@ const Post = () => {
 
   useEffect(() => {
     document.title = `${post?.user?.username} on Twitter: ${post?.content}`;
+  }, [post]);
+
+  useEffect(() => {
+    if (post?.replyId !== null) {
+      setIsReply(true);
+    } else {
+      setIsReply(false);
+    }
   }, [post]);
 
   return (
@@ -77,7 +86,13 @@ const Post = () => {
         )}
         <CreateReply refetch={refetch} postId={Number(params.id)}></CreateReply>
         {post?.replies.map((reply) => {
-          return <FeedPost post={reply} refetch={refetch}></FeedPost>;
+          return (
+            <FeedPost
+              post={reply}
+              refetch={refetch}
+              refetchPosts={refetchPosts}
+            ></FeedPost>
+          );
         })}
       </div>
     </>
