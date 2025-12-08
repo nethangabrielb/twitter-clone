@@ -29,7 +29,20 @@ const postRepository = {
             userId: true,
           },
         },
-        replies: true,
+        replies: {
+          include: {
+            _count: {
+              select: {
+                Like: true,
+                replies: {
+                  where: {
+                    deleted: false,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     }),
   findAll: () =>
@@ -63,7 +76,20 @@ const postRepository = {
             userId: true,
           },
         },
-        replies: true,
+        replies: {
+          include: {
+            _count: {
+              select: {
+                Like: true,
+                replies: {
+                  where: {
+                    deleted: false,
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     }),
   deleteById: (id: number) =>

@@ -74,7 +74,7 @@ const Post = () => {
         {post && (
           <PostSingle post={post} refetchPosts={refetchPosts}></PostSingle>
         )}
-        <CreateReply refetch={refetch}></CreateReply>
+        <CreateReply refetch={refetch} postId={Number(params.id)}></CreateReply>
       </div>
     </>
   );
