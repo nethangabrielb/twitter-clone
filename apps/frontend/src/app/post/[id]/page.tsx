@@ -2,6 +2,7 @@
 
 import FeedPost from "@/app/home/components/feed-post";
 import PostSingle from "@/app/post/components/post";
+import Reply from "@/app/post/components/reply";
 import CreateReply from "@/app/post/components/reply-form";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
@@ -14,13 +15,14 @@ import { useParams } from "next/navigation";
 import postApi from "@/lib/api/post";
 
 import { PostType } from "@/types/post";
+import { ReplyType } from "@/types/reply";
 
 const Post = () => {
   const [isReply, setIsReply] = useState<boolean | null>(null);
   const params = useParams();
   const queryClient = useQueryClient();
 
-  const { data: post, refetch } = useQuery<PostType>({
+  const { data: post, refetch } = useQuery<PostType | ReplyType>({
     queryKey: ["post", params.id],
     queryFn: async () => {
       const posts = await postApi.getPost(params.id);
@@ -44,6 +46,8 @@ const Post = () => {
       setIsReply(false);
     }
   }, [post]);
+
+  console.log(post);
 
   return (
     <>
@@ -81,19 +85,48 @@ const Post = () => {
           </div>
         </div>
         <div className="mt-[57.1px]"></div>
-        {post && (
-          <PostSingle post={post} refetchPosts={refetchPosts}></PostSingle>
-        )}
-        <CreateReply refetch={refetch} postId={Number(params.id)}></CreateReply>
-        {post?.replies.map((reply) => {
-          return (
-            <FeedPost
-              post={reply}
-              refetch={refetch}
-              refetchPosts={refetchPosts}
-            ></FeedPost>
-          );
-        })}
+        <>
+          {post && isReply ? (
+            <>
+              <Reply reply={post} refetchPosts={refetchPosts}></Reply>
+              <CreateReply postId={post.id} refetch={refetch}></CreateReply>
+              {post?.replies.map((reply) => {
+                return (
+                  <FeedPost
+                    post={reply as ReplyType}
+                    refetch={refetch}
+                    refetchPosts={refetchPosts}
+                    key={reply.id}
+                  ></FeedPost>
+                );
+              })}
+            </>
+          ) : (
+            post && (
+              <>
+                <PostSingle
+                  post={post}
+                  refetchPosts={refetchPosts}
+                ></PostSingle>
+
+                <CreateReply
+                  refetch={refetch}
+                  postId={Number(params.id)}
+                ></CreateReply>
+                {post?.replies.map((reply) => {
+                  return (
+                    <FeedPost
+                      post={reply as ReplyType}
+                      refetch={refetch}
+                      refetchPosts={refetchPosts}
+                      key={reply.id}
+                    ></FeedPost>
+                  );
+                })}
+              </>
+            )
+          )}
+        </>
       </div>
     </>
   );

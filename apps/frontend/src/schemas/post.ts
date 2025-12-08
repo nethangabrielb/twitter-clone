@@ -4,8 +4,8 @@ import { replySchema } from "@/schemas/reply";
 
 const postSchema = z.object({
   id: z.number(),
+  replyId: z.number(),
   userId: z.number(),
-  replyId: z.number().optional(),
   content: z.string(),
   createdAt: z.date(),
   deleted: z.boolean(),

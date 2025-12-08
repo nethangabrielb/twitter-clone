@@ -61,6 +61,7 @@ const postRepository = {
     prisma.post.findMany({
       where: {
         deleted: false,
+        replyId: null,
       },
       orderBy: {
         createdAt: 'desc',

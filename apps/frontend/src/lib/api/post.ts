@@ -17,7 +17,7 @@ const postApi = (() => {
     return data.data as PostType[];
   };
 
-  const getPost = async (id: ParamValue) => {
+  const getPost = async (id: ParamValue | Number) => {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API}/api/posts/${id}`, {
       credentials: "include",
     });

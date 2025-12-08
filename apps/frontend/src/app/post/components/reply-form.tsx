@@ -22,17 +22,17 @@ import { Progress } from "@/components/ui/progress";
 import commentApi from "@/lib/api/comment";
 import { cn } from "@/lib/utils";
 
-import { PostType } from "@/types/post";
 import { User } from "@/types/user";
 
 type Props = {
   refetch: (
     options?: RefetchOptions,
-  ) => Promise<QueryObserverResult<PostType, Error>>;
+  ) => Promise<QueryObserverResult<any, Error>>;
   postId: number;
+  className?: string;
 };
 
-const CreateReply = ({ refetch, postId }: Props) => {
+const CreateReply = ({ refetch, postId, className }: Props) => {
   const [displayIndicator, setDisplayIndicator] = useState(false);
   const [dashOffset, setDashOffset] = useState(565.48);
   const [progressValue, setProgressValue] = useState(0);
@@ -45,7 +45,6 @@ const CreateReply = ({ refetch, postId }: Props) => {
     handleSubmit,
     register,
     resetField,
-    watch,
     formState: { errors },
   } = useForm<Comment>({
     resolver: zodResolver(newComment),
@@ -108,6 +107,7 @@ const CreateReply = ({ refetch, postId }: Props) => {
       className={cn(
         mutation.isPending && "brightness-110",
         "flex gap-4 p-4 border-b border-b-border w-full relative",
+        className,
       )}
     >
       <Activity mode={mutation.isPending ? "visible" : "hidden"}>
@@ -128,7 +128,7 @@ const CreateReply = ({ refetch, postId }: Props) => {
       >
         <textarea
           {...register("content")}
-          placeholder="Post your relpy"
+          placeholder="Reply here"
           className={cn(
             `transition-all bg-transparent pt-3 pb-3 outline-0 placeholder:text-gray field-sizing-content placeholder:text-lg w-full max-w-full resize-none text-lg`,
             mutation.isPending && "brightness-50 border-b-0 pb-0",

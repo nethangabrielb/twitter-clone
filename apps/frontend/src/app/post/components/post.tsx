@@ -20,14 +20,24 @@ import postApi from "@/lib/api/post";
 import { cn, formatDateSlugPost } from "@/lib/utils";
 
 import { PostType } from "@/types/post";
+import { ReplyType } from "@/types/reply";
 import { User } from "@/types/user";
 
 type Props = {
-  post: PostType;
+  post: PostType | ReplyType;
   refetchPosts: () => void;
+  className?: string;
+  settingsCn?: string;
+  buttonCn?: string;
 };
 
-const PostSingle = ({ post, refetchPosts }: Props) => {
+const PostSingle = ({
+  post,
+  refetchPosts,
+  className,
+  settingsCn,
+  buttonCn,
+}: Props) => {
   const router = useRouter();
   const user = useUser((state) => state.user) as User;
 
@@ -106,10 +116,14 @@ const PostSingle = ({ post, refetchPosts }: Props) => {
   };
 
   return (
-    <div className="flex flex-col gap-4 p-4 border-b border-b-border relative transition-all">
+    <div
+      className={`flex flex-col gap-4 p-4 border-b border-b-border relative transition-all ${className}`}
+    >
       <Activity mode={user.id === post.userId ? "visible" : "hidden"}>
         <CurrentUserPostDropdown
           handleDelete={handleDelete}
+          settingsCn={settingsCn}
+          buttonCn={buttonCn}
         ></CurrentUserPostDropdown>
       </Activity>
       <div className="flex flex-col gap-2 w-full">
