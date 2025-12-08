@@ -14,7 +14,7 @@ export const replySchema = z.object({
   }),
   _count: z.object({
     Like: z.number(),
-    Comment: z.number(),
+    replies: z.number(),
   }),
   Like: z.array(
     z.object({
@@ -36,7 +36,7 @@ export const replySchema = z.object({
       }),
       _count: z.object({
         Like: z.number(),
-        Comment: z.number(),
+        replies: z.number(),
       }),
       Like: z.array(
         z.object({
