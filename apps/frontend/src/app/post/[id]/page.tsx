@@ -1,5 +1,6 @@
 "use client";
 
+import FeedPost from "@/app/home/components/feed-post";
 import PostSingle from "@/app/post/components/post";
 import CreateReply from "@/app/post/components/reply-form";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -75,6 +76,9 @@ const Post = () => {
           <PostSingle post={post} refetchPosts={refetchPosts}></PostSingle>
         )}
         <CreateReply refetch={refetch} postId={Number(params.id)}></CreateReply>
+        {post?.replies.map((reply) => {
+          return <FeedPost post={reply} refetch={refetch}></FeedPost>;
+        })}
       </div>
     </>
   );

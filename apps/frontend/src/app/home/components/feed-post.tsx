@@ -18,14 +18,15 @@ import postApi from "@/lib/api/post";
 import { cn, formatDateFeedPost } from "@/lib/utils";
 
 import { PostType } from "@/types/post";
+import { ReplyType } from "@/types/reply";
 import { User } from "@/types/user";
 
 type Props = {
-  post: PostType;
+  post: PostType | ReplyType;
   refetch: (
     options?: RefetchOptions,
-  ) => Promise<QueryObserverResult<PostType[], Error>>;
-  refetchPosts: () => void;
+  ) => Promise<QueryObserverResult<any, Error>>;
+  refetchPosts?: () => void;
 };
 
 const FeedPost = ({ post, refetch, refetchPosts }: Props) => {
@@ -86,7 +87,9 @@ const FeedPost = ({ post, refetch, refetchPosts }: Props) => {
       }
     },
     onSuccess: (res) => {
-      refetchPosts();
+      if (refetchPosts) {
+        refetchPosts();
+      }
       if (res.message === "Post liked successfully") {
         setLikes((prev) => prev + 1);
         setUserHasLiked(true);

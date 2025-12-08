@@ -1,8 +1,11 @@
 import { z } from "zod";
 
+import { replySchema } from "@/schemas/reply";
+
 const postSchema = z.object({
   id: z.number(),
   userId: z.number(),
+  replyId: z.number().optional(),
   content: z.string(),
   createdAt: z.date(),
   deleted: z.boolean(),
@@ -20,6 +23,7 @@ const postSchema = z.object({
       userId: z.number(),
     }),
   ),
+  replies: z.array(replySchema),
 });
 
 export { postSchema };

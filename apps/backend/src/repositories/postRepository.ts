@@ -41,6 +41,18 @@ const postRepository = {
                 },
               },
             },
+            user: {
+              select: {
+                avatar: true,
+                username: true,
+                name: true,
+              },
+            },
+            Like: {
+              select: {
+                userId: true,
+              },
+            },
           },
         },
       },
@@ -86,6 +98,18 @@ const postRepository = {
                     deleted: false,
                   },
                 },
+              },
+            },
+            user: {
+              select: {
+                avatar: true,
+                username: true,
+                name: true,
+              },
+            },
+            Like: {
+              select: {
+                userId: true,
               },
             },
           },
