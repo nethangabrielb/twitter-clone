@@ -157,7 +157,7 @@ const PostSingle = ({
               ></MessageCircle>
             </div>
             <p className="text-darker text-[14px] font-light group-hover:text-primary transition-all">
-              {post._count.Comment}
+              {post._count.replies}
             </p>
           </div>
 
