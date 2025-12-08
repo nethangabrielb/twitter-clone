@@ -9,8 +9,8 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 import Head from "next/head";
-import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import postApi from "@/lib/api/post";
 
@@ -21,6 +21,7 @@ const Post = () => {
   const [isReply, setIsReply] = useState<boolean | null>(null);
   const params = useParams();
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const { data: post, refetch } = useQuery<PostType | ReplyType>({
     queryKey: ["post", params.id],
@@ -32,7 +33,7 @@ const Post = () => {
 
   const refetchPosts = async () => {
     await queryClient.refetchQueries({ queryKey: ["posts"] });
-    await queryClient.refetchQueries({ queryKey: ["post"] });
+    await queryClient.refetchQueries({ queryKey: ["post", params.id] });
   };
 
   useEffect(() => {
@@ -47,8 +48,6 @@ const Post = () => {
     }
   }, [post]);
 
-  console.log(post);
-
   return (
     <>
       <Head>
@@ -62,9 +61,9 @@ const Post = () => {
         {/* FEED CONTROL UI */}
         <div className="flex backdrop-blur-lg absolute top-0 w-full">
           <div className="bg-transparent flex-1 p-2 border-b border-b-border font-bold flex items-center gap-8">
-            <Link
+            <button
               className="p-2 rounded-full hover:bg-neutral-500/20 transition-all cursor-pointer"
-              href={"/home"}
+              onClick={() => router.back()}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -80,7 +79,7 @@ const Post = () => {
                 <path d="m12 19-7-7 7-7" />
                 <path d="M19 12H5" />
               </svg>
-            </Link>
+            </button>
             <h1>Post</h1>
           </div>
         </div>
