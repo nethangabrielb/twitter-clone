@@ -54,6 +54,9 @@ const postRepository = {
               },
             },
           },
+          orderBy: {
+            createdAt: 'desc',
+          },
         },
       },
     }),
