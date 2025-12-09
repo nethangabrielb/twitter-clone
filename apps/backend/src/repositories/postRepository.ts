@@ -10,7 +10,11 @@ const postRepository = {
         _count: {
           select: {
             Like: true,
-            Comment: true,
+            replies: {
+              where: {
+                deleted: false,
+              },
+            },
           },
         },
         user: {
@@ -20,18 +24,38 @@ const postRepository = {
             name: true,
           },
         },
-        Comment: {
+        Like: {
+          select: {
+            userId: true,
+          },
+        },
+        replies: {
           include: {
             _count: {
               select: {
                 Like: true,
+                replies: {
+                  where: {
+                    deleted: false,
+                  },
+                },
+              },
+            },
+            user: {
+              select: {
+                avatar: true,
+                username: true,
+                name: true,
+              },
+            },
+            Like: {
+              select: {
+                userId: true,
               },
             },
           },
-        },
-        Like: {
-          select: {
-            userId: true,
+          orderBy: {
+            createdAt: 'desc',
           },
         },
       },
@@ -40,6 +64,7 @@ const postRepository = {
     prisma.post.findMany({
       where: {
         deleted: false,
+        replyId: null,
       },
       orderBy: {
         createdAt: 'desc',
@@ -48,7 +73,11 @@ const postRepository = {
         _count: {
           select: {
             Like: true,
-            Comment: true,
+            replies: {
+              where: {
+                deleted: false,
+              },
+            },
           },
         },
         user: {
@@ -61,6 +90,37 @@ const postRepository = {
         Like: {
           select: {
             userId: true,
+          },
+        },
+        replies: {
+          include: {
+            _count: {
+              select: {
+                Like: true,
+                replies: {
+                  where: {
+                    deleted: false,
+                  },
+                },
+              },
+            },
+            user: {
+              select: {
+                avatar: true,
+                username: true,
+                name: true,
+              },
+            },
+            Like: {
+              select: {
+                userId: true,
+              },
+            },
+          },
+          orderBy: {
+            Like: {
+              _count: 'desc',
+            },
           },
         },
       },

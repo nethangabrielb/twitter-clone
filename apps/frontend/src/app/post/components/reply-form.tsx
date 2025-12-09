@@ -1,7 +1,7 @@
 "use client";
 
-import PostSchema from "@/app/home/schema/create-post.schema";
-import { NewPost } from "@/app/home/types/create-post.type";
+import { newComment } from "@/app/post/schema/comment";
+import { Comment } from "@/app/post/types/coment";
 import useUser from "@/stores/user.store";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -19,23 +19,25 @@ import { ActionButton } from "@/components/button";
 import { TooltipIcon } from "@/components/tool-tip-icon";
 import { Progress } from "@/components/ui/progress";
 
-import postApi from "@/lib/api/post";
+import commentApi from "@/lib/api/comment";
 import { cn } from "@/lib/utils";
 
-import { PostType } from "@/types/post";
 import { User } from "@/types/user";
 
 type Props = {
   refetch: (
     options?: RefetchOptions,
-  ) => Promise<QueryObserverResult<PostType[], Error>>;
+  ) => Promise<QueryObserverResult<any, Error>>;
+  postId: number;
+  className?: string;
 };
 
-const CreatePost = ({ refetch }: Props) => {
+const CreateReply = ({ refetch, postId, className }: Props) => {
   const [displayIndicator, setDisplayIndicator] = useState(false);
   const [dashOffset, setDashOffset] = useState(565.48);
   const [progressValue, setProgressValue] = useState(0);
   const [inputDisabled, setInputDisabled] = useState(true);
+  const [openReplyControls, setOpenReplyControls] = useState(false);
   const user = useUser((state) => state.user) as User;
 
   const {
@@ -44,18 +46,19 @@ const CreatePost = ({ refetch }: Props) => {
     register,
     resetField,
     formState: { errors },
-  } = useForm<NewPost>({
-    resolver: zodResolver(PostSchema),
+  } = useForm<Comment>({
+    resolver: zodResolver(newComment),
     defaultValues: {
       userId: user.id,
+      replyId: postId,
     },
   });
 
-  // CREATE POSTS MUTATION
+  // CREATE REPLY MUTATION
   const mutation = useMutation({
-    mutationFn: async (values: NewPost) => {
+    mutationFn: async (values: Comment) => {
       setProgressValue(80);
-      const res = await postApi.createPost(values);
+      const res = await commentApi.createComment(values);
       return res;
     },
     onSuccess: (data) => {
@@ -79,9 +82,9 @@ const CreatePost = ({ refetch }: Props) => {
     },
   });
 
-  const createPost: SubmitHandler<NewPost> = () => {
+  const createReply: SubmitHandler<Comment> = () => {
     const values = getValues();
-    const updatedValues = { ...values, userId: user.id };
+    const updatedValues = { ...values, userId: user.id, replyId: postId };
 
     mutation.mutate(updatedValues);
   };
@@ -104,6 +107,7 @@ const CreatePost = ({ refetch }: Props) => {
       className={cn(
         mutation.isPending && "brightness-110",
         "flex gap-4 p-4 border-b border-b-border w-full relative",
+        className,
       )}
     >
       <Activity mode={mutation.isPending ? "visible" : "hidden"}>
@@ -114,20 +118,19 @@ const CreatePost = ({ refetch }: Props) => {
       </Activity>
 
       <img
-        src={`${user?.avatar}`}
+        src={user?.avatar}
         alt={`${user?.username}'s icon`}
-        loading="eager"
-        className="size-[48px]! min-w-[48px]! rounded-full object-cover"
+        className="size-[48px] min-w-[48px]! rounded-full object-cover"
       />
       <form
-        onSubmit={handleSubmit(createPost)}
-        className="w-full max-w-full flex flex-col gap-4 overflow-hidden"
+        onSubmit={handleSubmit(createReply)}
+        className="w-full max-w-full flex flex-col gap-1 overflow-hidden"
       >
         <textarea
           {...register("content")}
-          placeholder="What's happening?"
+          placeholder="Reply here"
           className={cn(
-            `transition-all bg-transparent pt-3 pb-8 border-b border-b-border outline-0 placeholder:text-gray field-sizing-content placeholder:text-lg w-full max-w-full resize-none text-lg`,
+            `transition-all bg-transparent pt-3 pb-3 outline-0 placeholder:text-gray field-sizing-content placeholder:text-lg w-full max-w-full resize-none text-lg`,
             mutation.isPending && "brightness-50 border-b-0 pb-0",
           )}
           onChange={(e) => {
@@ -147,14 +150,19 @@ const CreatePost = ({ refetch }: Props) => {
           }}
           maxLength={250}
           disabled={mutation.isPending}
+          onClick={() => {
+            setOpenReplyControls(true);
+          }}
         />
         <div
           className={cn(
-            "flex items-center justify-between w-[95%] max-w-[95%] transition-all ",
             mutation.isPending && "h-0! hidden",
+            openReplyControls
+              ? "items-center flex h-auto transition-all -translate-y-0 justify-between opacity-100"
+              : "w-[95%] max-w-[95%] transition-all -translate-y-5 h-0 invisible opacity-0",
           )}
         >
-          <div className="flex items-center">
+          <div className="flex items-center gap-2">
             <TooltipIcon content="Upload image">
               <Image size={20} className="text-primary" />
             </TooltipIcon>
@@ -203,7 +211,7 @@ const CreatePost = ({ refetch }: Props) => {
               disabled={inputDisabled}
               type="submit"
             >
-              Tweet
+              Reply
             </ActionButton>
           </div>
         </div>
@@ -212,4 +220,4 @@ const CreatePost = ({ refetch }: Props) => {
   );
 };
 
-export default CreatePost;
+export default CreateReply;

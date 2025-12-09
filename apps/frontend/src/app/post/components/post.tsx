@@ -17,17 +17,27 @@ import {
 import { useRouter } from "next/navigation";
 
 import postApi from "@/lib/api/post";
-import { cn, formatDate } from "@/lib/utils";
+import { cn, formatDateSlugPost } from "@/lib/utils";
 
 import { PostType } from "@/types/post";
+import { ReplyType } from "@/types/reply";
 import { User } from "@/types/user";
 
 type Props = {
-  post: PostType;
+  post: PostType | ReplyType;
   refetchPosts: () => void;
+  className?: string;
+  settingsCn?: string;
+  buttonCn?: string;
 };
 
-const PostSingle = ({ post, refetchPosts }: Props) => {
+const PostSingle = ({
+  post,
+  refetchPosts,
+  className,
+  settingsCn,
+  buttonCn,
+}: Props) => {
   const router = useRouter();
   const user = useUser((state) => state.user) as User;
 
@@ -106,36 +116,38 @@ const PostSingle = ({ post, refetchPosts }: Props) => {
   };
 
   return (
-    <div className="flex gap-4 p-4 border-b border-b-border relative hover:bg-secondary/40 transition-all">
+    <div
+      className={`flex flex-col gap-4 p-4 border-b border-b-border relative transition-all ${className}`}
+    >
       <Activity mode={user.id === post.userId ? "visible" : "hidden"}>
         <CurrentUserPostDropdown
           handleDelete={handleDelete}
+          settingsCn={settingsCn}
+          buttonCn={buttonCn}
         ></CurrentUserPostDropdown>
       </Activity>
-      <img
-        src={post.user.avatar}
-        alt="User icon"
-        className="rounded-full object-cover size-12"
-      />
       <div className="flex flex-col gap-2 w-full">
-        <div className="flex gap-1">
-          <p className="font-bold text-text space tracking-[0.2px] text-[18px]">
-            {post.user.name}
-          </p>
-          <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
+          <img
+            src={post.user.avatar}
+            alt="User icon"
+            className="rounded-full object-cover size-12"
+          />
+          <div className="flex flex-col">
+            <p className="font-bold text-text space tracking-[0.2px] text-[18px]">
+              {post.user.name}
+            </p>
             <p className="text-darker font-light text-[15px]">
               @{post.user.username}
             </p>
-            <div className="text-darker font-light w-0.8 my-auto flex justify-center text-a items-center">
-              .
-            </div>
-            <p className="text-darker font-light text-[14px]">
-              {formatDate(post.createdAt)}
-            </p>
           </div>
         </div>
-        <p className="text-text text-[15px]">{post.content}</p>
-        <div className="flex justify-start w-full">
+        <p className="text-text text-[15px] py-2">{post.content}</p>
+        <p className="border-b border-b-border pb-1 text-darker font-light text-[14px]">
+          {formatDateSlugPost(post.createdAt)}
+        </p>
+
+        <div className="flex justify-start w-full border-b border-b-border pb-2">
           {/* render comments */}
           <div className="flex items-center flex-1 group cursor-pointer">
             <div className="p-2 rounded-full group-hover:bg-primary/20 transition-all">
@@ -145,7 +157,7 @@ const PostSingle = ({ post, refetchPosts }: Props) => {
               ></MessageCircle>
             </div>
             <p className="text-darker text-[14px] font-light group-hover:text-primary transition-all">
-              {post._count.Comment}
+              {post._count.replies}
             </p>
           </div>
 

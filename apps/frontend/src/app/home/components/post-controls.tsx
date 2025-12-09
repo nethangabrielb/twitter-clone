@@ -13,16 +13,25 @@ import {
 
 type Props = {
   handleDelete: () => void;
+  settingsCn?: string;
+  buttonCn?: string;
 };
 
-export function CurrentUserPostDropdown({ handleDelete }: Readonly<Props>) {
+export function CurrentUserPostDropdown({
+  handleDelete,
+  settingsCn,
+  buttonCn,
+}: Readonly<Props>) {
   return (
     <DropdownMenu modal={false}>
-      <DropdownMenuTrigger asChild className="absolute top-0 right-0 m-3">
+      <DropdownMenuTrigger
+        asChild
+        className={`absolute top-0 right-0 m-3 ${settingsCn}`}
+      >
         <Button
           variant="outline"
           aria-label="Open menu"
-          className="h-fit! border-0 bg-transparent! hover:bg-primary/20! rounded-full w-fit! p-2! transition-all"
+          className={`h-fit! border-0 bg-transparent! hover:bg-primary/20! rounded-full w-fit! p-2! transition-all ${buttonCn}`}
         >
           <MoreHorizontalIcon className="text-neutral-500 bg-transparent!" />
         </Button>

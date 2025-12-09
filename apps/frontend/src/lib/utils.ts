@@ -6,6 +6,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatDate(date: Date) {
+export function formatDateSlugPost(date: Date) {
+  return format(date, "h:mm b . PP");
+}
+
+export function formatDateFeedPost(date: Date) {
   return format(date, "PP");
 }

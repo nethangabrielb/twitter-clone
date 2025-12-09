@@ -15,7 +15,7 @@ export function TooltipIcon({ children, content }: Readonly<Props>) {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <div className="p-3 rounded-full hover:bg-primary/10 transition-all">
+        <div className="rounded-full hover:bg-primary/10 transition-all p-2 cursor-pointer">
           {children}
         </div>
       </TooltipTrigger>

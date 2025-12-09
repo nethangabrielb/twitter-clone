@@ -1,7 +1,10 @@
 import { z } from "zod";
 
+import { replySchema } from "@/schemas/reply";
+
 const postSchema = z.object({
   id: z.number(),
+  replyId: z.number(),
   userId: z.number(),
   content: z.string(),
   createdAt: z.date(),
@@ -13,13 +16,14 @@ const postSchema = z.object({
   }),
   _count: z.object({
     Like: z.number(),
-    Comment: z.number(),
+    replies: z.number(),
   }),
   Like: z.array(
     z.object({
       userId: z.number(),
     }),
   ),
+  replies: z.array(replySchema),
 });
 
 export { postSchema };
