@@ -1,15 +1,9 @@
 "use client";
 
-import FeedPost from "@/app/home/components/feed-post";
 import { CurrentUserPostDropdown } from "@/app/home/components/post-controls";
 import PostSingle from "@/app/post/components/post";
-import CreateReply from "@/app/post/components/reply-form";
 import useUser from "@/stores/user.store";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import type {
-  QueryObserverResult,
-  RefetchOptions,
-} from "@tanstack/react-query";
 import { Heart, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 
@@ -38,8 +32,6 @@ type Props = {
 };
 
 const Reply = ({ reply, refetchPosts }: Props) => {
-  console.log(reply);
-
   const router = useRouter();
   const user = useUser((state) => state.user) as User;
   // Fetch the post the reply is replying to
@@ -130,22 +122,25 @@ const Reply = ({ reply, refetchPosts }: Props) => {
   };
 
   return (
-    <div className="flex flex-col gap-4 border-b border-b-border relative transition-all">
+    <div className="flex flex-col border-b border-b-border relative transition-all">
       <Activity mode={user.id === post?.userId ? "visible" : "hidden"}>
         <CurrentUserPostDropdown
           handleDelete={handleDelete}
         ></CurrentUserPostDropdown>
       </Activity>
       <Link
-        className="flex flex-col gap-2 w-full p-4 hover:bg-secondary/40"
+        className="flex flex-col gap-2 w-full p-4 pb-0! hover:bg-secondary/40"
         href={`/post/${post?.id}`}
       >
         <div className="flex items-center gap-2">
-          <img
-            src={post?.user.avatar}
-            alt="User icon"
-            className="rounded-full object-cover size-12 self-start"
-          />
+          <div className="self-start items-center flex flex-col">
+            <img
+              src={post?.user.avatar}
+              alt="User icon"
+              className="rounded-full object-cover size-12"
+            />
+            <div className="bg-neutral-600 w-[2px] h-[100px]"></div>
+          </div>
           <div className="flex flex-col">
             <div className="flex items-center gap-1">
               <p className="font-bold text-text space tracking-[0.2px] text-[18px]">
@@ -206,7 +201,7 @@ const Reply = ({ reply, refetchPosts }: Props) => {
       <PostSingle
         post={reply}
         refetchPosts={refetchPosts}
-        className="p-4"
+        className="p-4 pt-0!"
         settingsCn="m-0!"
         buttonCn="p-1!"
       ></PostSingle>

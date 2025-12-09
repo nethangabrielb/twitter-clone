@@ -117,6 +117,11 @@ const postRepository = {
               },
             },
           },
+          orderBy: {
+            Like: {
+              _count: 'desc',
+            },
+          },
         },
       },
     }),
