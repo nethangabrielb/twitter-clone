@@ -33,7 +33,7 @@ const Post = () => {
 
   const refetchPosts = async () => {
     await queryClient.refetchQueries({ queryKey: ["posts"] });
-    await queryClient.refetchQueries({ queryKey: ["post", params.id] });
+    await queryClient.refetchQueries({ queryKey: ["post"] });
   };
 
   useEffect(() => {

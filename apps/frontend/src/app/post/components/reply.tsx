@@ -179,7 +179,10 @@ const Reply = ({ reply, refetchPosts }: Props) => {
               {/* render likes */}
               <button
                 className="flex items-center flex-1 group cursor-pointer"
-                onClick={() => likeMutation.mutate()}
+                onClick={(e) => {
+                  e.preventDefault();
+                  likeMutation.mutate();
+                }}
               >
                 <div className="p-2 rounded-full group-hover:bg-red-500/20 transition-all bg-transparent group">
                   <Heart
