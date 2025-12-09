@@ -36,7 +36,7 @@ const UserRepository = {
             _count: {
               select: {
                 Like: true,
-                Comment: true,
+                replies: true,
               },
             },
           },

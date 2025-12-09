@@ -22,6 +22,7 @@ const postRepository = {
             avatar: true,
             username: true,
             name: true,
+            id: true,
           },
         },
         Like: {
@@ -85,6 +86,7 @@ const postRepository = {
             avatar: true,
             username: true,
             name: true,
+            id: true,
           },
         },
         Like: {

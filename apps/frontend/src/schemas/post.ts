@@ -13,6 +13,7 @@ const postSchema = z.object({
     avatar: z.string(),
     username: z.string(),
     name: z.string(),
+    id: z.number(),
   }),
   _count: z.object({
     Like: z.number(),
