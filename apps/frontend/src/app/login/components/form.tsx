@@ -10,7 +10,7 @@ import * as z from "zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import FormButton from "@/components/button";
+import { FormButton } from "@/components/button";
 import { InputSharp } from "@/components/input";
 
 export type Login = z.infer<typeof LoginSchema>;
@@ -35,6 +35,7 @@ const LoginForm = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
+        credentials: "include",
       });
       if (res) {
         const data = await res.json();

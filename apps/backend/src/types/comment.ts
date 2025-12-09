@@ -1,6 +1,6 @@
 interface CommentBody {
   userId: number;
-  postId: number;
+  replyId: number;
   content: string;
 }
 

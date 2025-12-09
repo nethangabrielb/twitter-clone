@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
-import { Toaster } from "sonner";
 
 import { Inter } from "next/font/google";
+
+import Sidebar from "@/components/sidebar";
+import { Toaster } from "@/components/ui/sonner";
 
 import QueryProvider from "@/providers/query-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
@@ -13,9 +15,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Next-Express Template",
-  description:
-    "Simple, modern opinionated monorepo template with Next.js and Express.js using TypeScript",
+  title: "Twitter",
+  description: "A twitter clone I made for learning purposes",
 };
 
 export default function RootLayout({
@@ -33,7 +34,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <QueryProvider>{children}</QueryProvider>
+          <QueryProvider>
+            <Sidebar>{children}</Sidebar>
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>

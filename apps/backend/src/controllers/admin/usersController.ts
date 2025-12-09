@@ -24,7 +24,16 @@ const userController = (() => {
   const getAllUsers = async (_req: Request, res: Response) => {
     try {
       if (_req.query.current) {
-        res.json({ status: 'success', data: _req.user });
+        const user: User = _req.user!;
+        const modifiedUser = {
+          id: user.id,
+          name: user.name,
+          username: user.username,
+          email: user.email,
+          avatar: user.avatar,
+          onboarded: user.onboarded,
+        };
+        res.json({ status: 'success', data: modifiedUser });
       } else {
         const users = await UserService.getAllUsers();
         res.json({ status: 'success', data: users });
@@ -41,8 +50,6 @@ const userController = (() => {
     req: Request<{ id: string }, object, Partial<RegistrationBody>>,
     res: Response
   ) => {
-    console.log(req.user);
-    console.log(req.params.id);
     try {
       // check if there is file
       if (req.file) {
