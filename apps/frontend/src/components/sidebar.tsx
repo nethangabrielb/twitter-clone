@@ -12,14 +12,15 @@ import { ActionButton } from "@/components/button";
 import Icon from "@/components/icon";
 import NavIcon from "@/components/navIcon";
 
-import userApi from "@/lib/api/user";
 import { cn } from "@/lib/utils";
+
+import { User } from "@/types/user";
 
 type Props = {
   children: ReactNode;
 };
 
-const links = [
+let links: Array<{ title: string; url: string }> = [
   {
     title: "Home",
     url: "/home",
@@ -52,6 +53,7 @@ const links = [
 
 const Sidebar = ({ children }: Props) => {
   const setUser = useUser((state) => state.setUser);
+  const user = useUser((state) => state.user) as User;
   const [visible, setVisible] = useState<boolean>(false);
   const path = usePathname();
   const { data } = useQuery({
@@ -96,6 +98,18 @@ const Sidebar = ({ children }: Props) => {
   useEffect(() => {
     renderSidebar(path);
   }, [path]);
+
+  useEffect(() => {
+    const updatedlinks: Array<{ title: string; url: string }> = links.map(
+      (link) => {
+        if (link.title === "Profile") {
+          link.url = `/profile/${user.id}`;
+        }
+        return link;
+      },
+    );
+    links = updatedlinks;
+  }, [user]);
 
   return (
     <div className={cn(visible && "flex justify-center", "h-full")}>
