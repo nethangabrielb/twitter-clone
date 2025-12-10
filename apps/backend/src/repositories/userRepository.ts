@@ -32,12 +32,61 @@ const UserRepository = {
         Post: {
           where: {
             deleted: false,
+            replyId: null,
           },
           include: {
             _count: {
               select: {
                 Like: true,
-                replies: true,
+                replies: {
+                  where: {
+                    deleted: false,
+                  },
+                },
+              },
+            },
+            user: {
+              select: {
+                avatar: true,
+                username: true,
+                name: true,
+                id: true,
+              },
+            },
+            Like: {
+              select: {
+                userId: true,
+              },
+            },
+            replies: {
+              include: {
+                _count: {
+                  select: {
+                    Like: true,
+                    replies: {
+                      where: {
+                        deleted: false,
+                      },
+                    },
+                  },
+                },
+                user: {
+                  select: {
+                    avatar: true,
+                    username: true,
+                    name: true,
+                  },
+                },
+                Like: {
+                  select: {
+                    userId: true,
+                  },
+                },
+              },
+              orderBy: {
+                Like: {
+                  _count: 'desc',
+                },
               },
             },
           },

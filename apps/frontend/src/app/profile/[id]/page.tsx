@@ -1,10 +1,15 @@
 "use client";
 
+import FeedPost from "@/app/home/components/feed-post";
+import { FeedControlBtn } from "@/app/home/page";
 import { useQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { Calendar } from "lucide-react";
 
 import { useEffect } from "react";
+import { useState } from "react";
+import { Activity } from "react";
 
 import Head from "next/head";
 import { useParams } from "next/navigation";
@@ -15,10 +20,14 @@ import { ActionButton } from "@/components/button";
 import { User } from "@/types/user";
 
 const Profile = () => {
+  const [feedType, setFeedType] = useState<"posts" | "replies" | "likes">(
+    "posts",
+  );
   const router = useRouter();
   const params = useParams();
+  const queryClient = useQueryClient();
   const id = params.id;
-  const { data: user } = useQuery({
+  const { data: user, refetch } = useQuery({
     queryKey: ["user", id],
     queryFn: async () => {
       const res = await fetch(
@@ -40,6 +49,13 @@ const Profile = () => {
     document.title = `${user?.name} (@${user?.username}) / Twitter Clone`;
   }, [user]);
 
+  const refetchPosts = async () => {
+    await queryClient.refetchQueries({ queryKey: ["post"] });
+    await queryClient.refetchQueries({ queryKey: ["posts"] });
+  };
+
+  console.log(user);
+
   return (
     <>
       <Head>
@@ -49,8 +65,8 @@ const Profile = () => {
           content="Home page of my attempt to make a clone of Twitter"
         />
       </Head>
-      <div className="lg:w-[600px] border-l border-r border-l-border border-r-border h-full relative">
-        <div className="flex backdrop-blur-lg top-0 w-full">
+      <div className="lg:w-[600px] h-full relative">
+        <div className="flex backdrop-blur-lg top-0 w-full border-x border-x-border">
           <div className="bg-transparent flex-1 p-2 border-b border-b-border font-bold flex items-center gap-8">
             <button
               className="p-2 rounded-full hover:bg-neutral-500/20 transition-all cursor-pointer"
@@ -79,9 +95,10 @@ const Profile = () => {
             </div>
           </div>
         </div>
-        <div className="flex flex-col h-[400px] relative">
+        {/* TOP SECTION - User Profile Information */}
+        <section className="flex flex-col h-[400px] relative">
           {/* cover photo */}
-          <div className="flex-1 h-[50%]">
+          <div className="flex-1 h-[50%] border-x border-x-border">
             <img
               src="/blue.jpg"
               alt="Default cover photo"
@@ -101,7 +118,7 @@ const Profile = () => {
           </div>
 
           {/* profile information */}
-          <div className="flex-1 p-4 relative">
+          <div className="flex-1 p-4 relative border-x border-x-border">
             <ActionButton className="hover:text-black absolute right-0 mr-4 bg-transparent border border-white text-white">
               Edit profile
             </ActionButton>
@@ -131,7 +148,29 @@ const Profile = () => {
               </p>
             </div>
           </div>
+        </section>
+        {/*SECTION - User Profile Post Feeds controls*/}
+        <div className="flex mt-6 border-x border-x-border">
+          <FeedControlBtn>Posts</FeedControlBtn>
+          <FeedControlBtn>Replies</FeedControlBtn>
+          <FeedControlBtn>Likes</FeedControlBtn>
         </div>
+
+        {/* Posts section */}
+        <section>
+          <Activity mode={feedType === "posts" ? "visible" : "hidden"}>
+            {user?.Post.map((post) => {
+              return (
+                <FeedPost
+                  post={post}
+                  refetchPosts={refetchPosts}
+                  key={post.id}
+                  refetch={refetch}
+                ></FeedPost>
+              );
+            })}
+          </Activity>
+        </section>
       </div>
     </>
   );
