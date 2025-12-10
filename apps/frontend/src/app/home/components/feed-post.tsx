@@ -103,7 +103,7 @@ const FeedPost = ({ post, refetch, refetchPosts }: Props) => {
   };
 
   return (
-    <div className="flex flex-col border-b border-b-border">
+    <div className="flex flex-col border-b border-b-border border-x border-x-border">
       <Link
         className="flex gap-4 p-4 relative hover:bg-secondary/40 transition-all"
         href={`/post/${post.id}`}
