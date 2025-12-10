@@ -8,6 +8,12 @@ const userSchema = z.object({
   password: z.string(),
   avatar: z.string(),
   onboarded: z.boolean(),
+  createdAt: z.date(),
+  _count: z.object({
+    Followers: z.number(),
+    Followings: z.number(),
+    Post: z.number(),
+  }),
 });
 
 export { userSchema };

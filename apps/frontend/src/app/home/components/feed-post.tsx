@@ -124,9 +124,12 @@ const FeedPost = ({ post, refetch, refetchPosts }: Props) => {
               {post.user.name}
             </p>
             <div className="flex items-center gap-1">
-              <p className="text-darker font-light text-[15px]">
+              <Link
+                className="text-darker font-light text-[15px] hover:underline"
+                href={`/profile/${post.user.id}`}
+              >
                 @{post.user.username}
-              </p>
+              </Link>
               <div className="text-darker font-light w-0.8 my-auto flex justify-center text-a items-center">
                 .
               </div>

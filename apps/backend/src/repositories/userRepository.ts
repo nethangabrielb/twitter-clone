@@ -26,6 +26,7 @@ const UserRepository = {
           select: {
             Followers: true,
             Followings: true,
+            Post: true,
           },
         },
         Post: {

@@ -1,16 +1,21 @@
 "use client";
 
-import useUser from "@/stores/user.store";
 import { useQuery } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { Calendar } from "lucide-react";
 
 import { useEffect } from "react";
 
 import Head from "next/head";
 import { useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+
+import { ActionButton } from "@/components/button";
 
 import { User } from "@/types/user";
 
 const Profile = () => {
+  const router = useRouter();
   const params = useParams();
   const id = params.id;
   const { data: user } = useQuery({
@@ -35,8 +40,6 @@ const Profile = () => {
     document.title = `${user?.name} (@${user?.username}) / Twitter Clone`;
   }, [user]);
 
-  console.log(user);
-
   return (
     <>
       <Head>
@@ -46,8 +49,89 @@ const Profile = () => {
           content="Home page of my attempt to make a clone of Twitter"
         />
       </Head>
-      <div>
-        <div className="flex flex-col"></div>
+      <div className="lg:w-[600px] border-l border-r border-l-border border-r-border h-full relative">
+        <div className="flex backdrop-blur-lg top-0 w-full">
+          <div className="bg-transparent flex-1 p-2 border-b border-b-border font-bold flex items-center gap-8">
+            <button
+              className="p-2 rounded-full hover:bg-neutral-500/20 transition-all cursor-pointer"
+              onClick={() => router.back()}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="m12 19-7-7 7-7" />
+                <path d="M19 12H5" />
+              </svg>
+            </button>
+            <div className="flex flex-col">
+              <h1>{user?.name}</h1>
+              <p className="text-darker font-light">
+                {user?._count.Post} posts
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col h-[400px] relative">
+          {/* cover photo */}
+          <div className="flex-1 h-[50%]">
+            <img
+              src="/blue.jpg"
+              alt="Default cover photo"
+              className="h-full w-full object-cover"
+            />
+          </div>
+
+          {/* avatar */}
+          <div className="absolute p-4 top-[28%]">
+            <div className="bg-black p-1 rounded-full">
+              <img
+                src={user?.avatar}
+                alt={`@${user?.username}'s avatar`}
+                className="size-[128px] object-cover rounded-full "
+              />
+            </div>
+          </div>
+
+          {/* profile information */}
+          <div className="flex-1 p-4 relative">
+            <ActionButton className="hover:text-black absolute right-0 mr-4 bg-transparent border border-white text-white">
+              Edit profile
+            </ActionButton>
+            <div className="mt-[64px]"></div>
+            <div className="flex flex-col items-start">
+              <p className="text-[22px] text-text font-bold">{user?.name}</p>
+              <p className="text-[15px] text-darker font-bold">
+                @{user?.username}
+              </p>
+            </div>
+            {user && (
+              <div className="flex items-center gap-2 my-4">
+                <Calendar size={18} className="text-darker"></Calendar>
+                <p className="text-darker ">
+                  Join on {format(user?.createdAt as Date, "LLLL yyyy")}
+                </p>
+              </div>
+            )}
+            <div className="flex gap-4">
+              <p className="text-darker">
+                <span className="text-white">{user?._count.Followers}</span>{" "}
+                followers
+              </p>
+              <p className="text-darker">
+                <span className="text-white">{user?._count.Followings}</span>{" "}
+                followers
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );
