@@ -90,6 +90,9 @@ const UserRepository = {
               },
             },
           },
+          orderBy: {
+            createdAt: 'desc',
+          },
         },
       },
     }),

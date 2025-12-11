@@ -27,9 +27,15 @@ type Props = {
     options?: RefetchOptions,
   ) => Promise<QueryObserverResult<any, Error>>;
   refetchPosts: () => void;
+  displayReplies?: boolean;
 };
 
-const FeedPost = ({ post, refetch, refetchPosts }: Props) => {
+const FeedPost = ({
+  post,
+  refetch,
+  refetchPosts,
+  displayReplies = true,
+}: Props) => {
   const user = useUser((state) => state.user) as User;
 
   // put likes in a state to use as source of truth
@@ -104,8 +110,95 @@ const FeedPost = ({ post, refetch, refetchPosts }: Props) => {
 
   return (
     <div className="flex flex-col border-b border-b-border border-x border-x-border">
+      {post?.reply && (
+        <Link
+          className={cn(
+            "flex gap-4 relative hover:bg-secondary/40 transition-all px-4 pt-4",
+          )}
+          href={`/post/${post.id}`}
+        >
+          <Activity mode={user.id === post.userId ? "visible" : "hidden"}>
+            <CurrentUserPostDropdown
+              handleDelete={handleDelete}
+            ></CurrentUserPostDropdown>
+          </Activity>
+          <div className="self-start items-center flex flex-col">
+            <img
+              src={post.user.avatar}
+              alt="User icon"
+              className="rounded-full object-cover size-12 min-w-[48px]!"
+            />
+            <div className="bg-neutral-600 w-[2px] h-[100px]"></div>
+          </div>
+
+          <div className="flex flex-col gap-2 w-full">
+            <div className="flex gap-1">
+              <p className="font-bold text-text space tracking-[0.2px] text-[18px]">
+                {post.reply.user.name}
+              </p>
+              <div className="flex items-center gap-1">
+                <Link
+                  className="text-darker font-light text-[15px] hover:underline"
+                  href={`/profile/${post.reply.user.id}`}
+                >
+                  @{post.user.username}
+                </Link>
+                <div className="text-darker font-light w-0.8 my-auto flex justify-center text-a items-center">
+                  .
+                </div>
+                <p className="text-darker font-light text-[14px]">
+                  {formatDateFeedPost(post.reply.createdAt)}
+                </p>
+              </div>
+            </div>
+            <p className="text-text text-[15px]">{post.reply.content}</p>
+            <div className="flex justify-between w-[60%] ">
+              {/* render comments */}
+              <div className="flex items-center group cursor-pointer">
+                <div className="p-2 rounded-full group-hover:bg-primary/20 transition-all">
+                  <MessageCircle
+                    size={20}
+                    className="stroke-darker text-darker font-light stroke-[1.2px] group-hover:stroke-primary! transition-all"
+                  ></MessageCircle>
+                </div>
+                <p className="text-darker text-[14px] font-light group-hover:text-primary transition-all">
+                  {post.reply._count.replies}
+                </p>
+              </div>
+
+              {/* render likes */}
+              <button
+                className="flex items-center group cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  likeMutation.mutate();
+                }}
+              >
+                <div className="p-2 rounded-full group-hover:bg-red-500/20 transition-all bg-transparent group">
+                  <Heart
+                    size={20}
+                    className={cn(
+                      "text-darker font-light stroke-[1.2px] group-hover:stroke-red-500! group-active:scale-150 duration-500",
+                      userHasLiked
+                        ? "fill-red-500 stroke-red-500!"
+                        : "stroke-darker",
+                    )}
+                  ></Heart>
+                </div>
+                <p className="text-darker text-[14px] font-light group-hover:text-red-500 transition-all">
+                  {optimisticLikes}
+                </p>
+              </button>
+            </div>
+          </div>
+        </Link>
+      )}
       <Link
-        className="flex gap-4 p-4 relative hover:bg-secondary/40 transition-all"
+        className={cn(
+          "flex gap-4 relative hover:bg-secondary/40 transition-all",
+          post?.replies?.length > 0 && displayReplies ? "px-4 pt-4" : "p-4",
+          post?.reply && "pt-0!",
+        )}
         href={`/post/${post.id}`}
       >
         <Activity mode={user.id === post.userId ? "visible" : "hidden"}>
@@ -113,11 +206,22 @@ const FeedPost = ({ post, refetch, refetchPosts }: Props) => {
             handleDelete={handleDelete}
           ></CurrentUserPostDropdown>
         </Activity>
-        <img
-          src={post.user.avatar}
-          alt="User icon"
-          className="rounded-full object-cover size-12 min-w-[48px]!"
-        />
+        {post?.replies?.length > 0 && displayReplies ? (
+          <div className="self-start items-center flex flex-col">
+            <img
+              src={post.user.avatar}
+              alt="User icon"
+              className="rounded-full object-cover size-12 min-w-[48px]!"
+            />
+            <div className="bg-neutral-600 w-[2px] h-[100px]"></div>
+          </div>
+        ) : (
+          <img
+            src={post.user.avatar}
+            alt="User icon"
+            className="rounded-full object-cover size-12 min-w-[48px]!"
+          />
+        )}
         <div className="flex flex-col gap-2 w-full">
           <div className="flex gap-1">
             <p className="font-bold text-text space tracking-[0.2px] text-[18px]">
@@ -179,6 +283,86 @@ const FeedPost = ({ post, refetch, refetchPosts }: Props) => {
           </div>
         </div>
       </Link>
+      {post?.replies?.length >= 1 && displayReplies && (
+        <Link
+          className="flex gap-4 px-4 pb-4 relative hover:bg-secondary/40 transition-all"
+          href={`/post/${post.replies[0].id}`}
+        >
+          <Activity
+            mode={user.id === post.replies[0].userId ? "visible" : "hidden"}
+          >
+            <CurrentUserPostDropdown
+              handleDelete={handleDelete}
+            ></CurrentUserPostDropdown>
+          </Activity>
+          <img
+            src={post.replies[0].user.avatar}
+            alt="User icon"
+            className="rounded-full object-cover size-12 min-w-[48px]!"
+          />
+
+          <div className="flex flex-col gap-2 w-full">
+            <div className="flex gap-1">
+              <p className="font-bold text-text space tracking-[0.2px] text-[18px]">
+                {post.replies[0].user.name}
+              </p>
+              <div className="flex items-center gap-1">
+                <Link
+                  className="text-darker font-light text-[15px] hover:underline"
+                  href={`/profile/${post.replies[0].user.id}`}
+                >
+                  @{post.replies[0].user.username}
+                </Link>
+                <div className="text-darker font-light w-0.8 my-auto flex justify-center text-a items-center">
+                  .
+                </div>
+                <p className="text-darker font-light text-[14px]">
+                  {formatDateFeedPost(post.replies[0].createdAt)}
+                </p>
+              </div>
+            </div>
+            <p className="text-text text-[15px]">{post.replies[0].content}</p>
+            <div className="flex justify-between w-[60%] ">
+              {/* render comments */}
+              <div className="flex items-center group cursor-pointer">
+                <div className="p-2 rounded-full group-hover:bg-primary/20 transition-all">
+                  <MessageCircle
+                    size={20}
+                    className="stroke-darker text-darker font-light stroke-[1.2px] group-hover:stroke-primary! transition-all"
+                  ></MessageCircle>
+                </div>
+                <p className="text-darker text-[14px] font-light group-hover:text-primary transition-all">
+                  {post.replies[0]._count.replies}
+                </p>
+              </div>
+
+              {/* render likes */}
+              <button
+                className="flex items-center group cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  likeMutation.mutate();
+                }}
+              >
+                <div className="p-2 rounded-full group-hover:bg-red-500/20 transition-all bg-transparent group">
+                  <Heart
+                    size={20}
+                    className={cn(
+                      "text-darker font-light stroke-[1.2px] group-hover:stroke-red-500! group-active:scale-150 duration-500",
+                      userHasLiked
+                        ? "fill-red-500 stroke-red-500!"
+                        : "stroke-darker",
+                    )}
+                  ></Heart>
+                </div>
+                <p className="text-darker text-[14px] font-light group-hover:text-red-500 transition-all">
+                  {optimisticLikes}
+                </p>
+              </button>
+            </div>
+          </div>
+        </Link>
+      )}
     </div>
   );
 };

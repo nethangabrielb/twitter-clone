@@ -186,6 +186,7 @@ const Profile = () => {
                   refetchPosts={refetchPosts}
                   key={post.id}
                   refetch={refetchUser}
+                  displayReplies={false}
                 ></FeedPost>
               );
             })}
