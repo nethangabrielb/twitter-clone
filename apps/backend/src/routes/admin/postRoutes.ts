@@ -12,4 +12,9 @@ postRouter.get('/:postId', postsController.getPost);
 postRouter.post('/', postsController.createPost);
 postRouter.delete('/:postId', postsController.deletePost);
 
+// user-made replies
+postRouter.get('/replies/users/:userId', postsController.getUserReplies);
+// user's liked-posts
+postRouter.get('/liked/users/:userId', postsController.getUserLiked);
+
 export default postRouter;
