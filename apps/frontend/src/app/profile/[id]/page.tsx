@@ -17,6 +17,9 @@ import { useRouter } from "next/navigation";
 
 import { ActionButton } from "@/components/button";
 
+import postApi from "@/lib/api/post";
+
+import { PostType } from "@/types/post";
 import { User } from "@/types/user";
 
 const Profile = () => {
@@ -27,7 +30,7 @@ const Profile = () => {
   const params = useParams();
   const queryClient = useQueryClient();
   const id = params.id;
-  const { data: user, refetch } = useQuery({
+  const { data: user, refetch: refetchUser } = useQuery({
     queryKey: ["user", id],
     queryFn: async () => {
       const res = await fetch(
@@ -45,6 +48,19 @@ const Profile = () => {
     },
   });
 
+  const { data: posts, refetch: refetchPost } = useQuery({
+    queryKey: ["posts", feedType],
+    queryFn: async () => {
+      if (feedType === "replies") {
+        const data = await postApi.getUserReplies(user ? user?.id : 0);
+        return data.data;
+      } else if (feedType === "likes") {
+        const data = await postApi.getUserLiked(user ? user?.id : 0);
+        return data.data;
+      }
+    },
+  });
+
   useEffect(() => {
     document.title = `${user?.name} (@${user?.username}) / Twitter Clone`;
   }, [user]);
@@ -53,8 +69,6 @@ const Profile = () => {
     await queryClient.refetchQueries({ queryKey: ["post"] });
     await queryClient.refetchQueries({ queryKey: ["posts"] });
   };
-
-  console.log(user);
 
   return (
     <>
@@ -151,9 +165,15 @@ const Profile = () => {
         </section>
         {/*SECTION - User Profile Post Feeds controls*/}
         <div className="flex mt-6 border-x border-x-border">
-          <FeedControlBtn>Posts</FeedControlBtn>
-          <FeedControlBtn>Replies</FeedControlBtn>
-          <FeedControlBtn>Likes</FeedControlBtn>
+          <FeedControlBtn handleClick={() => setFeedType("posts")}>
+            Posts
+          </FeedControlBtn>
+          <FeedControlBtn handleClick={() => setFeedType("replies")}>
+            Replies
+          </FeedControlBtn>
+          <FeedControlBtn handleClick={() => setFeedType("likes")}>
+            Likes
+          </FeedControlBtn>
         </div>
 
         {/* Posts section */}
@@ -165,10 +185,29 @@ const Profile = () => {
                   post={post}
                   refetchPosts={refetchPosts}
                   key={post.id}
-                  refetch={refetch}
+                  refetch={refetchUser}
                 ></FeedPost>
               );
             })}
+          </Activity>
+          <Activity
+            mode={
+              feedType === "replies" || feedType === "likes"
+                ? "visible"
+                : "hidden"
+            }
+          >
+            {posts &&
+              posts?.map((post: PostType) => {
+                return (
+                  <FeedPost
+                    post={post}
+                    refetchPosts={refetchPosts}
+                    key={post.id}
+                    refetch={refetchPost}
+                  ></FeedPost>
+                );
+              })}
           </Activity>
         </section>
       </div>

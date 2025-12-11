@@ -35,6 +35,7 @@ const Home = () => {
 
   const refetchPosts = async () => {
     await queryClient.refetchQueries({ queryKey: ["post"] });
+    await queryClient.refetchQueries({ queryKey: ["user"] });
     await queryClient.refetchQueries({ queryKey: ["posts"] });
   };
 
@@ -84,9 +85,18 @@ const Home = () => {
   );
 };
 
-export const FeedControlBtn = ({ children }: { children: string }) => {
+export const FeedControlBtn = ({
+  children,
+  handleClick,
+}: {
+  children: string;
+  handleClick?: () => void;
+}) => {
   return (
-    <button className="bg-transparent flex-1 p-4 hover:bg-neutral-900 border-b border-b-border ">
+    <button
+      className="bg-transparent flex-1 p-4 hover:bg-neutral-900 border-b border-b-border"
+      onClick={handleClick}
+    >
       {children}
     </button>
   );
