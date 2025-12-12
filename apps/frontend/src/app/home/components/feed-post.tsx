@@ -1,25 +1,11 @@
 "use client";
 
-import { CurrentUserPostDropdown } from "@/app/home/components/post-controls";
-import useUser from "@/stores/user.store";
-import {
-  QueryObserverResult,
-  RefetchOptions,
-  useMutation,
-} from "@tanstack/react-query";
-import { Heart, MessageCircle } from "lucide-react";
-import { toast } from "sonner";
+import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 
-import { Activity, startTransition, useOptimistic, useState } from "react";
-
-import Link from "next/link";
-
-import postApi from "@/lib/api/post";
-import { cn, formatDateFeedPost } from "@/lib/utils";
+import Post from "@/components/post-section";
 
 import { PostType } from "@/types/post";
 import { ReplyType } from "@/types/reply";
-import { User } from "@/types/user";
 
 type Props = {
   post: PostType | ReplyType;
@@ -36,332 +22,32 @@ const FeedPost = ({
   refetchPosts,
   displayReplies = true,
 }: Props) => {
-  const user = useUser((state) => state.user) as User;
-
-  // put likes in a state to use as source of truth
-  // for useOptimistic hooks
-  const [likes, setLikes] = useState(post?._count.Like);
-
-  // source of truth to determine if clicking the like button should either
-  // like or unlike a tweet by determining if current user has alr liked a post
-  const [userHasLiked, setUserHasLiked] = useState(
-    post?.Like[0]?.userId === user?.id,
-  );
-  const [optimisticLikes, addOptimisticLikes] = useOptimistic(
-    likes,
-    (currentLike: number, updatedLike: number) => currentLike + updatedLike,
-  );
-
-  // DELETE POST API INTERFACE
-  const postMutation = useMutation({
-    mutationFn: async () => {
-      const res = await postApi.deletePost(post.id);
-      return res;
-    },
-    onSuccess: (res) => {
-      if (res.status === "success") {
-        refetch();
-        toast.success(res.message, {
-          position: "top-center",
-          style: {
-            background: "#1d9bf0",
-            color: "white",
-            width: "fit-content",
-          },
-        });
-      } else {
-        toast.error(res.message);
-      }
-    },
-  });
-
-  // LIKE/UNLIKE POST API INTERFACE
-  const likeMutation = useMutation({
-    mutationFn: async () => {
-      if (userHasLiked) {
-        startTransition(() => {
-          addOptimisticLikes(-1);
-        });
-        const res = await postApi.unlikePost(post.id);
-        return res;
-      } else {
-        startTransition(() => {
-          addOptimisticLikes(1);
-        });
-        const res = await postApi.likePost(post.id);
-        return res;
-      }
-    },
-    onSuccess: (res) => {
-      refetchPosts();
-      if (res.message === "Post liked successfully") {
-        setLikes((prev) => prev + 1);
-        setUserHasLiked(true);
-      } else if (res.message === "Unlike success") {
-        setLikes((prev) => prev - 1);
-        setUserHasLiked(false);
-      }
-    },
-  });
-
-  const handleDelete = () => {
-    postMutation.mutate();
-  };
-
+  console.log(post);
   return (
     <div className="flex flex-col border-b border-b-border border-x border-x-border">
       {post?.reply && (
-        <Link
-          className={cn(
-            "flex gap-4 relative hover:bg-secondary/40 transition-all px-4 pt-4",
-          )}
-          href={`/post/${post.id}`}
-        >
-          <Activity mode={user.id === post.userId ? "visible" : "hidden"}>
-            <CurrentUserPostDropdown
-              handleDelete={handleDelete}
-            ></CurrentUserPostDropdown>
-          </Activity>
-          <div className="self-start items-center flex flex-col">
-            <img
-              src={post.user.avatar}
-              alt="User icon"
-              className="rounded-full object-cover size-12 min-w-[48px]!"
-            />
-            <div className="bg-neutral-600 w-[2px] h-[100px]"></div>
-          </div>
-
-          <div className="flex flex-col gap-2 w-full">
-            <div className="flex gap-1">
-              <p className="font-bold text-text space tracking-[0.2px] text-[18px]">
-                {post.reply.user.name}
-              </p>
-              <div className="flex items-center gap-1">
-                <Link
-                  className="text-darker font-light text-[15px] hover:underline"
-                  href={`/profile/${post.reply.user.id}`}
-                >
-                  @{post.user.username}
-                </Link>
-                <div className="text-darker font-light w-0.8 my-auto flex justify-center text-a items-center">
-                  .
-                </div>
-                <p className="text-darker font-light text-[14px]">
-                  {formatDateFeedPost(post.reply.createdAt)}
-                </p>
-              </div>
-            </div>
-            <p className="text-text text-[15px]">{post.reply.content}</p>
-            <div className="flex justify-between w-[60%] ">
-              {/* render comments */}
-              <div className="flex items-center group cursor-pointer">
-                <div className="p-2 rounded-full group-hover:bg-primary/20 transition-all">
-                  <MessageCircle
-                    size={20}
-                    className="stroke-darker text-darker font-light stroke-[1.2px] group-hover:stroke-primary! transition-all"
-                  ></MessageCircle>
-                </div>
-                <p className="text-darker text-[14px] font-light group-hover:text-primary transition-all">
-                  {post.reply._count.replies}
-                </p>
-              </div>
-
-              {/* render likes */}
-              <button
-                className="flex items-center group cursor-pointer"
-                onClick={(e) => {
-                  e.preventDefault();
-                  likeMutation.mutate();
-                }}
-              >
-                <div className="p-2 rounded-full group-hover:bg-red-500/20 transition-all bg-transparent group">
-                  <Heart
-                    size={20}
-                    className={cn(
-                      "text-darker font-light stroke-[1.2px] group-hover:stroke-red-500! group-active:scale-150 duration-500",
-                      userHasLiked
-                        ? "fill-red-500 stroke-red-500!"
-                        : "stroke-darker",
-                    )}
-                  ></Heart>
-                </div>
-                <p className="text-darker text-[14px] font-light group-hover:text-red-500 transition-all">
-                  {optimisticLikes}
-                </p>
-              </button>
-            </div>
-          </div>
-        </Link>
+        <Post
+          post={post?.reply}
+          refetch={refetch}
+          refetchPosts={refetchPosts}
+          displayReplies={displayReplies}
+        ></Post>
       )}
-      <Link
-        className={cn(
-          "flex gap-4 relative hover:bg-secondary/40 transition-all",
-          post?.replies?.length > 0 && displayReplies ? "px-4 pt-4" : "p-4",
-          post?.reply && "pt-0!",
-        )}
-        href={`/post/${post.id}`}
-      >
-        <Activity mode={user.id === post.userId ? "visible" : "hidden"}>
-          <CurrentUserPostDropdown
-            handleDelete={handleDelete}
-          ></CurrentUserPostDropdown>
-        </Activity>
-        {post?.replies?.length > 0 && displayReplies ? (
-          <div className="self-start items-center flex flex-col">
-            <img
-              src={post.user.avatar}
-              alt="User icon"
-              className="rounded-full object-cover size-12 min-w-[48px]!"
-            />
-            <div className="bg-neutral-600 w-[2px] h-[100px]"></div>
-          </div>
-        ) : (
-          <img
-            src={post.user.avatar}
-            alt="User icon"
-            className="rounded-full object-cover size-12 min-w-[48px]!"
-          />
-        )}
-        <div className="flex flex-col gap-2 w-full">
-          <div className="flex gap-1">
-            <p className="font-bold text-text space tracking-[0.2px] text-[18px]">
-              {post.user.name}
-            </p>
-            <div className="flex items-center gap-1">
-              <Link
-                className="text-darker font-light text-[15px] hover:underline"
-                href={`/profile/${post.user.id}`}
-              >
-                @{post.user.username}
-              </Link>
-              <div className="text-darker font-light w-0.8 my-auto flex justify-center text-a items-center">
-                .
-              </div>
-              <p className="text-darker font-light text-[14px]">
-                {formatDateFeedPost(post.createdAt)}
-              </p>
-            </div>
-          </div>
-          <p className="text-text text-[15px]">{post.content}</p>
-          <div className="flex justify-between w-[60%] ">
-            {/* render comments */}
-            <div className="flex items-center group cursor-pointer">
-              <div className="p-2 rounded-full group-hover:bg-primary/20 transition-all">
-                <MessageCircle
-                  size={20}
-                  className="stroke-darker text-darker font-light stroke-[1.2px] group-hover:stroke-primary! transition-all"
-                ></MessageCircle>
-              </div>
-              <p className="text-darker text-[14px] font-light group-hover:text-primary transition-all">
-                {post._count.replies}
-              </p>
-            </div>
-
-            {/* render likes */}
-            <button
-              className="flex items-center group cursor-pointer"
-              onClick={(e) => {
-                e.preventDefault();
-                likeMutation.mutate();
-              }}
-            >
-              <div className="p-2 rounded-full group-hover:bg-red-500/20 transition-all bg-transparent group">
-                <Heart
-                  size={20}
-                  className={cn(
-                    "text-darker font-light stroke-[1.2px] group-hover:stroke-red-500! group-active:scale-150 duration-500",
-                    userHasLiked
-                      ? "fill-red-500 stroke-red-500!"
-                      : "stroke-darker",
-                  )}
-                ></Heart>
-              </div>
-              <p className="text-darker text-[14px] font-light group-hover:text-red-500 transition-all">
-                {optimisticLikes}
-              </p>
-            </button>
-          </div>
-        </div>
-      </Link>
+      {/* add post here */}
+      <Post
+        post={post}
+        refetch={refetch}
+        refetchPosts={refetchPosts}
+        displayReplies={post?.replies?.length > 0 && displayReplies}
+      ></Post>
       {post?.replies?.length >= 1 && displayReplies && (
-        <Link
-          className="flex gap-4 px-4 pb-4 relative hover:bg-secondary/40 transition-all"
-          href={`/post/${post.replies[0].id}`}
-        >
-          <Activity
-            mode={user.id === post.replies[0].userId ? "visible" : "hidden"}
-          >
-            <CurrentUserPostDropdown
-              handleDelete={handleDelete}
-            ></CurrentUserPostDropdown>
-          </Activity>
-          <img
-            src={post.replies[0].user.avatar}
-            alt="User icon"
-            className="rounded-full object-cover size-12 min-w-[48px]!"
-          />
-
-          <div className="flex flex-col gap-2 w-full">
-            <div className="flex gap-1">
-              <p className="font-bold text-text space tracking-[0.2px] text-[18px]">
-                {post.replies[0].user.name}
-              </p>
-              <div className="flex items-center gap-1">
-                <Link
-                  className="text-darker font-light text-[15px] hover:underline"
-                  href={`/profile/${post.replies[0].user.id}`}
-                >
-                  @{post.replies[0].user.username}
-                </Link>
-                <div className="text-darker font-light w-0.8 my-auto flex justify-center text-a items-center">
-                  .
-                </div>
-                <p className="text-darker font-light text-[14px]">
-                  {formatDateFeedPost(post.replies[0].createdAt)}
-                </p>
-              </div>
-            </div>
-            <p className="text-text text-[15px]">{post.replies[0].content}</p>
-            <div className="flex justify-between w-[60%] ">
-              {/* render comments */}
-              <div className="flex items-center group cursor-pointer">
-                <div className="p-2 rounded-full group-hover:bg-primary/20 transition-all">
-                  <MessageCircle
-                    size={20}
-                    className="stroke-darker text-darker font-light stroke-[1.2px] group-hover:stroke-primary! transition-all"
-                  ></MessageCircle>
-                </div>
-                <p className="text-darker text-[14px] font-light group-hover:text-primary transition-all">
-                  {post.replies[0]._count.replies}
-                </p>
-              </div>
-
-              {/* render likes */}
-              <button
-                className="flex items-center group cursor-pointer"
-                onClick={(e) => {
-                  e.preventDefault();
-                  likeMutation.mutate();
-                }}
-              >
-                <div className="p-2 rounded-full group-hover:bg-red-500/20 transition-all bg-transparent group">
-                  <Heart
-                    size={20}
-                    className={cn(
-                      "text-darker font-light stroke-[1.2px] group-hover:stroke-red-500! group-active:scale-150 duration-500",
-                      userHasLiked
-                        ? "fill-red-500 stroke-red-500!"
-                        : "stroke-darker",
-                    )}
-                  ></Heart>
-                </div>
-                <p className="text-darker text-[14px] font-light group-hover:text-red-500 transition-all">
-                  {optimisticLikes}
-                </p>
-              </button>
-            </div>
-          </div>
-        </Link>
+        <Post
+          post={post?.replies[0]}
+          refetch={refetch}
+          refetchPosts={refetchPosts}
+          displayReplies={false}
+          isReply={true}
+        ></Post>
       )}
     </div>
   );
