@@ -76,6 +76,7 @@ const Home = () => {
                   key={post.id}
                   refetch={refetch}
                   refetchPosts={refetchPosts}
+                  displayReplies={true}
                 ></FeedPost>
               );
             })}

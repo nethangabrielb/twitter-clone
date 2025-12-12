@@ -70,6 +70,18 @@ const Profile = () => {
     await queryClient.refetchQueries({ queryKey: ["posts"] });
   };
 
+  const displayReplies = (post: PostType) => {
+    if (feedType === "replies") {
+      return true;
+    } else if (feedType === "likes") {
+      if (typeof post.replyId === "number") {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
+
   return (
     <>
       <Head>
@@ -206,6 +218,7 @@ const Profile = () => {
                     refetchPosts={refetchPosts}
                     key={post.id}
                     refetch={refetchPost}
+                    displayReplies={displayReplies(post)}
                   ></FeedPost>
                 );
               })}

@@ -1,0 +1,68 @@
+import { useMutation } from "@tanstack/react-query";
+
+import { startTransition, useOptimistic, useState } from "react";
+
+import postApi from "@/lib/api/post";
+
+import { PostType } from "@/types/post";
+import { ReplyType } from "@/types/reply";
+import { User } from "@/types/user";
+
+export const useLikes = (
+  post: PostType | ReplyType,
+  user: User,
+  refetchPosts: () => void,
+) => {
+  // put likes in a state to use as source of truth
+  // for useOptimistic hooks
+  const [likes, setLikes] = useState(post?._count.Like);
+
+  // source of truth to determine if clicking the like button should either
+  // like or unlike a tweet by determining if current user has alr liked a post
+  const [userHasLiked, setUserHasLiked] = useState(
+    post?.Like[0]?.userId === user?.id,
+  );
+  const [optimisticLikes, addOptimisticLikes] = useOptimistic(
+    likes,
+    (currentLike: number, updatedLike: number) => currentLike + updatedLike,
+  );
+
+  // LIKE/UNLIKE POST API INTERFACE
+  const likeMutation = useMutation({
+    mutationFn: async () => {
+      if (userHasLiked) {
+        startTransition(() => {
+          addOptimisticLikes(-1);
+        });
+        const res = await postApi.unlikePost(post.id);
+        return res;
+      } else {
+        startTransition(() => {
+          addOptimisticLikes(1);
+        });
+        const res = await postApi.likePost(post.id);
+        return res;
+      }
+    },
+    onSuccess: (res) => {
+      refetchPosts();
+      if (res.message === "Post liked successfully") {
+        setLikes((prev) => prev + 1);
+        setUserHasLiked(true);
+      } else if (res.message === "Unlike success") {
+        setLikes((prev) => prev - 1);
+        setUserHasLiked(false);
+      }
+    },
+  });
+
+  return {
+    likes,
+    setLikes,
+    userHasLiked,
+    setUserHasLiked,
+    optimisticLikes,
+    addOptimisticLikes,
+    likeMutation,
+  };
+};
