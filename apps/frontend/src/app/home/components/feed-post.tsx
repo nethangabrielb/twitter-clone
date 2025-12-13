@@ -22,7 +22,6 @@ const FeedPost = ({
   refetchPosts,
   displayReplies = true,
 }: Props) => {
-  console.log(post);
   return (
     <div className="flex flex-col border-b border-b-border border-x border-x-border">
       {post?.reply && (
@@ -46,7 +45,6 @@ const FeedPost = ({
           refetch={refetch}
           refetchPosts={refetchPosts}
           displayReplies={false}
-          isReply={true}
         ></Post>
       )}
     </div>

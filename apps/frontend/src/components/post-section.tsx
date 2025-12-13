@@ -27,21 +27,12 @@ type Props = {
     options?: RefetchOptions,
   ) => Promise<QueryObserverResult<any, Error>>;
   refetchPosts: () => void;
-  isReply?: boolean;
   displayReplies?: boolean;
 };
 
-const Post = ({
-  post,
-  refetch,
-  refetchPosts,
-  displayReplies,
-  isReply = false,
-}: Props) => {
+const Post = ({ post, refetch, refetchPosts, displayReplies }: Props) => {
   const user = useUser((state) => state.user) as User;
   const likesHook = useLikes(post, user, refetchPosts);
-
-  console.log(`${displayReplies} for post ${post.content}`);
 
   // DELETE POST API INTERFACE
   const postMutation = useMutation({
@@ -78,7 +69,7 @@ const Post = ({
       )}
       href={`/post/${post.id}`}
     >
-      <Activity mode={user.id === post.userId ? "visible" : "hidden"}>
+      <Activity mode={user?.id === post.userId ? "visible" : "hidden"}>
         <CurrentUserPostDropdown
           handleDelete={handleDelete}
         ></CurrentUserPostDropdown>
