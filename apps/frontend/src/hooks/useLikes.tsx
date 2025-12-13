@@ -20,7 +20,8 @@ export const useLikes = (
   // source of truth to determine if clicking the like button should either
   // like or unlike a tweet by determining if current user has alr liked a post
   const [userHasLiked, setUserHasLiked] = useState(
-    post?.Like[0]?.userId === user?.id,
+    post?.Like?.find((userId) => userId.userId === user?.id)?.userId ===
+      user?.id,
   );
   const [optimisticLikes, addOptimisticLikes] = useOptimistic(
     likes,
