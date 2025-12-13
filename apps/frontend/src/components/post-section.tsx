@@ -13,6 +13,8 @@ import { Activity } from "react";
 
 import Link from "next/link";
 
+import { ProfileHoverCard } from "@/components/profile-card-hover";
+
 import postApi from "@/lib/api/post";
 import { cn } from "@/lib/utils";
 import { formatDateFeedPost } from "@/lib/utils";
@@ -76,19 +78,11 @@ const Post = ({ post, refetch, refetchPosts, displayReplies }: Props) => {
       </Activity>
       {displayReplies ? (
         <div className="self-start items-center flex flex-col">
-          <img
-            src={post.user.avatar}
-            alt="User icon"
-            className="rounded-full object-cover size-12 min-w-[48px]!"
-          />
+          <ProfileHoverCard user={post.user}></ProfileHoverCard>
           <div className="bg-neutral-600 w-[2px] h-[100px] translate-y-2"></div>
         </div>
       ) : (
-        <img
-          src={post.user.avatar}
-          alt="User icon"
-          className="rounded-full object-cover size-12 min-w-[48px]!"
-        />
+        <ProfileHoverCard user={post.user}></ProfileHoverCard>
       )}
 
       <div className="flex flex-col gap-2 w-full">

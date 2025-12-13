@@ -7,6 +7,11 @@ export const userSchema = z.object({
   username: z.string(),
   name: z.string(),
   id: z.number(),
+  _count: z.object({
+    Followers: z.number(),
+    Followings: z.number(),
+    Post: z.number(),
+  }),
 });
 
 export const likeSchema = z.object({

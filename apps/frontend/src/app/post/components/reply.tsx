@@ -77,10 +77,10 @@ const Reply = ({ reply, refetchPosts }: Props) => {
     onSuccess: (res) => {
       refetchPosts();
       if (res.message === "Post liked successfully") {
-        setLikes((prev) => prev + 1);
+        setLikes((prev: number) => prev + 1);
         setUserHasLiked(true);
       } else if (res.message === "Unlike success") {
-        setLikes((prev) => prev - 1);
+        setLikes((prev: number) => prev - 1);
         setUserHasLiked(false);
       }
     },
