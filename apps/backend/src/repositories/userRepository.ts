@@ -51,6 +51,14 @@ const UserRepository = {
                 username: true,
                 name: true,
                 id: true,
+                createdAt: true,
+                _count: {
+                  select: {
+                    Followers: true,
+                    Followings: true,
+                    Post: true,
+                  },
+                },
               },
             },
             Like: {
