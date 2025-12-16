@@ -42,6 +42,7 @@ const authController = (() => {
     try {
       const token = await UserService.loginUser(req.body);
 
+      res.clearCookie('token', { httpOnly: true });
       res.cookie('token', token, {
         httpOnly: true,
         path: '/',

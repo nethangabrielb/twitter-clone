@@ -13,6 +13,8 @@ const UserService = {
     const newUser = await UserRepository.createNewUser({
       ...data,
       password: encryptedPassword,
+      avatar:
+        'https://bcezmxfxuctgrkiavycl.supabase.co/storage/v1/object/public/images/default.svg',
     });
 
     if (!newUser) {
