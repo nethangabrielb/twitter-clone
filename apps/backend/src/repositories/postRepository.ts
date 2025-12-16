@@ -22,6 +22,15 @@ const postRepository = {
             avatar: true,
             username: true,
             name: true,
+            id: true,
+            createdAt: true,
+            _count: {
+              select: {
+                Followers: true,
+                Followings: true,
+                Post: true,
+              },
+            },
           },
         },
         Like: {
@@ -46,6 +55,15 @@ const postRepository = {
                 avatar: true,
                 username: true,
                 name: true,
+                id: true,
+                createdAt: true,
+                _count: {
+                  select: {
+                    Followers: true,
+                    Followings: true,
+                    Post: true,
+                  },
+                },
               },
             },
             Like: {
@@ -85,6 +103,15 @@ const postRepository = {
             avatar: true,
             username: true,
             name: true,
+            id: true,
+            createdAt: true,
+            _count: {
+              select: {
+                Followers: true,
+                Followings: true,
+                Post: true,
+              },
+            },
           },
         },
         Like: {
@@ -109,6 +136,15 @@ const postRepository = {
                 avatar: true,
                 username: true,
                 name: true,
+                id: true,
+                createdAt: true,
+                _count: {
+                  select: {
+                    Followers: true,
+                    Followings: true,
+                    Post: true,
+                  },
+                },
               },
             },
             Like: {
@@ -120,6 +156,327 @@ const postRepository = {
           orderBy: {
             Like: {
               _count: 'desc',
+            },
+          },
+        },
+      },
+    }),
+  findRepliesByUserId: (id: number) =>
+    prisma.post.findMany({
+      where: {
+        replyId: {
+          not: null,
+        },
+        userId: id,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        _count: {
+          select: {
+            Like: true,
+            replies: {
+              where: {
+                deleted: false,
+              },
+            },
+          },
+        },
+        user: {
+          select: {
+            avatar: true,
+            username: true,
+            name: true,
+            id: true,
+            createdAt: true,
+            _count: {
+              select: {
+                Followers: true,
+                Followings: true,
+                Post: true,
+              },
+            },
+          },
+        },
+        Like: {
+          select: {
+            userId: true,
+          },
+        },
+        replies: {
+          include: {
+            _count: {
+              select: {
+                Like: true,
+                replies: {
+                  where: {
+                    deleted: false,
+                  },
+                },
+              },
+            },
+            user: {
+              select: {
+                avatar: true,
+                username: true,
+                name: true,
+                id: true,
+                createdAt: true,
+                _count: {
+                  select: {
+                    Followers: true,
+                    Followings: true,
+                    Post: true,
+                  },
+                },
+              },
+            },
+            Like: {
+              select: {
+                userId: true,
+              },
+            },
+          },
+          orderBy: {
+            Like: {
+              _count: 'desc',
+            },
+          },
+        },
+        reply: {
+          include: {
+            _count: {
+              select: {
+                Like: true,
+                replies: {
+                  where: {
+                    deleted: false,
+                  },
+                },
+              },
+            },
+            user: {
+              select: {
+                avatar: true,
+                username: true,
+                name: true,
+                id: true,
+                createdAt: true,
+                _count: {
+                  select: {
+                    Followers: true,
+                    Followings: true,
+                    Post: true,
+                  },
+                },
+              },
+            },
+            Like: {
+              select: {
+                userId: true,
+              },
+            },
+            replies: {
+              include: {
+                _count: {
+                  select: {
+                    Like: true,
+                    replies: {
+                      where: {
+                        deleted: false,
+                      },
+                    },
+                  },
+                },
+                user: {
+                  select: {
+                    avatar: true,
+                    username: true,
+                    name: true,
+                    id: true,
+                    createdAt: true,
+                    _count: {
+                      select: {
+                        Followers: true,
+                        Followings: true,
+                        Post: true,
+                      },
+                    },
+                  },
+                },
+                Like: {
+                  select: {
+                    userId: true,
+                  },
+                },
+              },
+              orderBy: {
+                Like: {
+                  _count: 'desc',
+                },
+              },
+            },
+          },
+        },
+      },
+    }),
+  findLikedPostsByUserId: (id: number) =>
+    prisma.post.findMany({
+      where: {
+        Like: {
+          some: {
+            userId: id,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        _count: {
+          select: {
+            Like: true,
+            replies: {
+              where: {
+                deleted: false,
+              },
+            },
+          },
+        },
+        user: {
+          select: {
+            avatar: true,
+            username: true,
+            name: true,
+            id: true,
+            createdAt: true,
+            _count: {
+              select: {
+                Followers: true,
+                Followings: true,
+                Post: true,
+              },
+            },
+          },
+        },
+        Like: {
+          select: {
+            userId: true,
+          },
+        },
+        replies: {
+          include: {
+            _count: {
+              select: {
+                Like: true,
+                replies: {
+                  where: {
+                    deleted: false,
+                  },
+                },
+              },
+            },
+            user: {
+              select: {
+                avatar: true,
+                username: true,
+                name: true,
+                id: true,
+                createdAt: true,
+                _count: {
+                  select: {
+                    Followers: true,
+                    Followings: true,
+                    Post: true,
+                  },
+                },
+              },
+            },
+            Like: {
+              select: {
+                userId: true,
+              },
+            },
+          },
+          orderBy: {
+            Like: {
+              _count: 'desc',
+            },
+          },
+        },
+        reply: {
+          include: {
+            _count: {
+              select: {
+                Like: true,
+                replies: {
+                  where: {
+                    deleted: false,
+                  },
+                },
+              },
+            },
+            user: {
+              select: {
+                avatar: true,
+                username: true,
+                name: true,
+                id: true,
+                createdAt: true,
+                _count: {
+                  select: {
+                    Followers: true,
+                    Followings: true,
+                    Post: true,
+                  },
+                },
+              },
+            },
+            Like: {
+              select: {
+                userId: true,
+              },
+            },
+            replies: {
+              include: {
+                _count: {
+                  select: {
+                    Like: true,
+                    replies: {
+                      where: {
+                        deleted: false,
+                      },
+                    },
+                  },
+                },
+                user: {
+                  select: {
+                    avatar: true,
+                    username: true,
+                    name: true,
+                    id: true,
+                    createdAt: true,
+                    _count: {
+                      select: {
+                        Followers: true,
+                        Followings: true,
+                        Post: true,
+                      },
+                    },
+                  },
+                },
+                Like: {
+                  select: {
+                    userId: true,
+                  },
+                },
+              },
+              orderBy: {
+                Like: {
+                  _count: 'desc',
+                },
+              },
             },
           },
         },

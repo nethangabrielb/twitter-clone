@@ -26,19 +26,80 @@ const UserRepository = {
           select: {
             Followers: true,
             Followings: true,
+            Post: true,
           },
         },
         Post: {
           where: {
             deleted: false,
+            replyId: null,
           },
           include: {
             _count: {
               select: {
                 Like: true,
-                Comment: true,
+                replies: {
+                  where: {
+                    deleted: false,
+                  },
+                },
               },
             },
+            user: {
+              select: {
+                avatar: true,
+                username: true,
+                name: true,
+                id: true,
+                createdAt: true,
+                _count: {
+                  select: {
+                    Followers: true,
+                    Followings: true,
+                    Post: true,
+                  },
+                },
+              },
+            },
+            Like: {
+              select: {
+                userId: true,
+              },
+            },
+            replies: {
+              include: {
+                _count: {
+                  select: {
+                    Like: true,
+                    replies: {
+                      where: {
+                        deleted: false,
+                      },
+                    },
+                  },
+                },
+                user: {
+                  select: {
+                    avatar: true,
+                    username: true,
+                    name: true,
+                  },
+                },
+                Like: {
+                  select: {
+                    userId: true,
+                  },
+                },
+              },
+              orderBy: {
+                Like: {
+                  _count: 'desc',
+                },
+              },
+            },
+          },
+          orderBy: {
+            createdAt: 'desc',
           },
         },
       },

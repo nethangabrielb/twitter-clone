@@ -181,7 +181,6 @@ const ConfirmForm = ({ user }: Props) => {
           <div className="mt-2"></div>
           <FormButton
             outline={false}
-            type="register"
             className="p-3"
             disabled={mutation.isPending}
           >

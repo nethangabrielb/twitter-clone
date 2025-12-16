@@ -24,7 +24,7 @@ const userController = (() => {
   const getAllUsers = async (_req: Request, res: Response) => {
     try {
       if (_req.query.current) {
-        const user: User = _req.user!;
+        const user: User = _req.user as User;
         const modifiedUser = {
           id: user.id,
           name: user.name,

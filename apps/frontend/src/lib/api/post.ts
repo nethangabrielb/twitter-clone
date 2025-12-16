@@ -98,7 +98,49 @@ const postApi = (() => {
     return data;
   };
 
-  return { getPosts, getPost, createPost, deletePost, likePost, unlikePost };
+  const getUserReplies = async (userId: number) => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API}/api/posts/replies/users/${userId}`,
+      {
+        credentials: "include",
+      },
+    );
+
+    if (!res.ok) {
+      throw new Error("There was an error processing the request.");
+    }
+    const data = await res.json();
+
+    return data;
+  };
+
+  const getUserLiked = async (userId: number) => {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API}/api/posts/liked/users/${userId}`,
+      {
+        credentials: "include",
+      },
+    );
+    console.log(res);
+    if (!res.ok) {
+      throw new Error("There was an error processing this request.");
+    }
+    const data = await res.json();
+    console.log(data);
+
+    return data;
+  };
+
+  return {
+    getPosts,
+    getPost,
+    createPost,
+    deletePost,
+    likePost,
+    unlikePost,
+    getUserReplies,
+    getUserLiked,
+  };
 })();
 
 export default postApi;

@@ -89,7 +89,7 @@ const Post = () => {
             <>
               <Reply reply={post} refetchPosts={refetchPosts}></Reply>
               <CreateReply postId={post.id} refetch={refetch}></CreateReply>
-              {post?.replies.map((reply) => {
+              {post?.replies.map((reply: ReplyType) => {
                 return (
                   <FeedPost
                     post={reply as ReplyType}
@@ -112,7 +112,7 @@ const Post = () => {
                   refetch={refetch}
                   postId={Number(params.id)}
                 ></CreateReply>
-                {post?.replies.map((reply) => {
+                {post?.replies.map((reply: ReplyType) => {
                   return (
                     <FeedPost
                       post={reply as ReplyType}

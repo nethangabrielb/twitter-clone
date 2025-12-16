@@ -16,6 +16,8 @@ import {
 
 import { useRouter } from "next/navigation";
 
+import { ProfileHoverCard } from "@/components/profile-card-hover";
+
 import postApi from "@/lib/api/post";
 import { cn, formatDateSlugPost } from "@/lib/utils";
 
@@ -98,10 +100,10 @@ const PostSingle = ({
     onSuccess: (res) => {
       refetchPosts();
       if (res.message === "Post liked successfully") {
-        setLikes((prev) => prev + 1);
+        setLikes((prev: number) => prev + 1);
         setUserHasLiked(true);
       } else if (res.message === "Unlike success") {
-        setLikes((prev) => prev - 1);
+        setLikes((prev: number) => prev - 1);
         setUserHasLiked(false);
       }
     },
@@ -128,11 +130,7 @@ const PostSingle = ({
       </Activity>
       <div className="flex flex-col gap-2 w-full">
         <div className="flex items-center gap-2">
-          <img
-            src={post.user.avatar}
-            alt="User icon"
-            className="rounded-full object-cover size-12"
-          />
+          {user && <ProfileHoverCard user={post.user}></ProfileHoverCard>}
           <div className="flex flex-col">
             <p className="font-bold text-text space tracking-[0.2px] text-[18px]">
               {post.user.name}

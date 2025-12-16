@@ -51,6 +51,20 @@ const postService = {
   deletePost: async (postId: number) => {
     return postRepository.deleteById(postId);
   },
+  getUserReplies: async (userId: number) => {
+    const posts = await postRepository.findRepliesByUserId(userId);
+    if (!posts) {
+      throw new Error('There was a problem fetching replies');
+    }
+    return posts;
+  },
+  getUserLiked: async (userId: number) => {
+    const posts = await postRepository.findLikedPostsByUserId(userId);
+    if (!posts) {
+      throw new Error('There was a problem fetching liked posts');
+    }
+    return posts;
+  },
 };
 
 export default postService;

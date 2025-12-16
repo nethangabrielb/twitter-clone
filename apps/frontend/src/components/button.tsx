@@ -69,7 +69,7 @@ const FormButton = ({
         `${className} rounded-3xl border-muted-foreground  h-fit`,
       )}
       variant={outline ? "outline" : "default"}
-      onClick={() => clickHandler(type)}
+      onClick={() => type !== null && clickHandler(type)}
       disabled={disabled}
     >
       {icon && (
