@@ -3,12 +3,14 @@ import { Router } from 'express';
 import passport from 'passport';
 
 import authController from '../../controllers/guest/authController';
+import { authMiddleware } from '../../middlewares/authMiddleware';
 import { validateRegistration } from '../../validators/user/register';
 
 const authRouter = Router();
 
 authRouter.post('/register', validateRegistration, authController.register);
 authRouter.post('/login', authController.login);
+authRouter.post('/logout', authMiddleware, authController.logout);
 
 authRouter.get('/login/google', passport.authenticate('google'));
 authRouter.get(

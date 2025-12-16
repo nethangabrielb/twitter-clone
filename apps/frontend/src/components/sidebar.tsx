@@ -2,16 +2,21 @@
 
 import useUser from "@/stores/user.store";
 import { useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 import { Activity, ReactNode, useEffect, useState } from "react";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import { ActionButton } from "@/components/button";
 import Icon from "@/components/icon";
 import NavIcon from "@/components/navIcon";
+import { LogoutDropdown } from "@/components/ui/logout-dropdown";
 
+import { authApi } from "@/lib/api/auth";
 import { cn } from "@/lib/utils";
 
 import { User } from "@/types/user";
@@ -52,6 +57,7 @@ let links: Array<{ title: string; url: string }> = [
 ];
 
 const Sidebar = ({ children }: Props) => {
+  const router = useRouter();
   const setUser = useUser((state) => state.setUser);
   const user = useUser((state) => state.user) as User;
   const [visible, setVisible] = useState<boolean>(false);
@@ -73,6 +79,19 @@ const Sidebar = ({ children }: Props) => {
       const user = data.data;
       setUser(user);
       return user;
+    },
+  });
+  const mutation = useMutation({
+    mutationFn: async () => {
+      const data = await authApi.logout();
+      return data;
+    },
+    onSuccess: (data) => {
+      if (data.status === "success") {
+        router.push("/");
+      } else {
+        toast.error("Error logging out", { description: data.message });
+      }
     },
   });
 
@@ -111,12 +130,16 @@ const Sidebar = ({ children }: Props) => {
     links = updatedlinks;
   }, [user]);
 
+  const logOut = () => {
+    mutation.mutate();
+  };
+
   return (
     <div className={cn(visible && "flex justify-center", "h-full")}>
       <Activity mode={visible ? "visible" : "hidden"}>
         <div className="gap-[8px] lg:w-[300px] relative">
-          <div className="flex flex-col gap-[8px] px-8 py-4 lg:w-[300px] h-full fixed">
-            <div className="pl-3 pb-3">
+          <div className="flex flex-col gap-[8px] py-4 lg:w-[300px] h-full fixed">
+            <div className=" pb-3 px-8">
               <Icon width={36} height={36} alt="Twitter Icon"></Icon>
             </div>
             {links.map((link) => {
@@ -124,30 +147,17 @@ const Sidebar = ({ children }: Props) => {
                 <Link
                   href={link.url}
                   key={crypto.randomUUID()}
-                  className="text-lg flex items-center gap-6 w-fit hover:bg-muted transition-all p-3 rounded-4xl"
+                  className="text-lg flex items-center gap-6 w-fit hover:bg-muted transition-all p-3 rounded-4xl px-8 "
                 >
                   <NavIcon title={link.title}></NavIcon>
                   {link.title}
                 </Link>
               );
             })}
-            <ActionButton className="bg-primary text-white p-3! hover:brightness-90 hover:bg-primary!">
+            <ActionButton className="bg-primary text-white py-3! mx-8! hover:brightness-90 hover:bg-primary!">
               Tweet
             </ActionButton>
-            <div className="mt-auto flex items-center gap-4">
-              <img
-                src={data?.avatar}
-                alt="User avatar"
-                loading="eager"
-                className="size-[48px] min-w-[48px]! rounded-full object-cover"
-              />
-              <div className="flex flex-col">
-                <p className="text-[15px] text-text font-bold">{data?.name}</p>
-                <p className="text-[15px] text-darker font-bold">
-                  @{data?.username}
-                </p>
-              </div>
-            </div>
+            <LogoutDropdown data={data} logoutHandler={logOut}></LogoutDropdown>
           </div>
         </div>
       </Activity>

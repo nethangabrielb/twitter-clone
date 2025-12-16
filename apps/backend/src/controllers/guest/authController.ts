@@ -60,6 +60,21 @@ const authController = (() => {
     }
   };
 
+  const logout = async (req: Request, res: Response) => {
+    try {
+      res.clearCookie('token', { httpOnly: true });
+      res.status(200).json({
+        status: 'success',
+        message: 'Log out success!',
+      });
+    } catch (err: unknown) {
+      res.status(err instanceof Error ? 400 : 500).json({
+        status: 'error',
+        message: err instanceof Error ? err.message : GENERIC_ERROR_MESSAGE,
+      });
+    }
+  };
+
   const redirect = (req: Request, res: Response) => {
     // create a token for the user
     if (req.user) {
@@ -70,7 +85,7 @@ const authController = (() => {
     }
   };
 
-  return { register, login, redirect };
+  return { register, login, logout, redirect };
 })();
 
 export default authController;

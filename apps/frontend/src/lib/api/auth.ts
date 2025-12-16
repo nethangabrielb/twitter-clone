@@ -26,7 +26,21 @@ const authApi = (() => {
     }
   };
 
-  return { googleAuth, checkPropertyUnique };
+  const logout = async () => {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API}/api/auth/logout`, {
+      method: "POST",
+      credentials: "include",
+    });
+
+    if (!res.ok) {
+      throw new Error("Error logging out.");
+    }
+
+    const data = await res.json();
+    return data;
+  };
+
+  return { googleAuth, checkPropertyUnique, logout };
 })();
 
 export { authApi };
