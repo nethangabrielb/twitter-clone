@@ -40,7 +40,8 @@ const LoginForm = () => {
       if (res) {
         const data = await res.json();
         if (data.status === "success") {
-          router.push("/home");
+          router.replace("/home");
+          router.refresh();
         } else {
           setError("username", { type: "custom", message: data.message });
           setError("password", { type: "custom", message: data.message });

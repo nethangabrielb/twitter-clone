@@ -7,6 +7,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 
 import Head from "next/head";
+import { useRouter } from "next/navigation";
 
 import { Spinner } from "@/components/ui/spinner";
 
@@ -15,6 +16,8 @@ import postApi from "@/lib/api/post";
 import { PostType } from "@/types/post";
 
 const Home = () => {
+  const router = useRouter();
+
   // POSTS FEED CONTENT QUERY
   const {
     data: posts,
@@ -38,6 +41,13 @@ const Home = () => {
     await queryClient.refetchQueries({ queryKey: ["user"] });
     await queryClient.refetchQueries({ queryKey: ["posts"] });
   };
+
+  useEffect(() => {
+    const refetchUser = async () => {
+      await queryClient.refetchQueries({ queryKey: ["user"] });
+    };
+    refetchUser();
+  }, []);
 
   return (
     <>
