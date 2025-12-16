@@ -90,7 +90,7 @@ const ActionButton = ({
   return (
     <Button
       className={`hover:!bg-foreground bg-foreground text-background
-        ${className} rounded-3xl border-muted-foreground  h-fit`}
+        ${className} rounded-3xl border-muted-foreground h-fit`}
       onClick={onClick}
       disabled={disabled}
       type={type}

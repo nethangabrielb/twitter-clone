@@ -21,7 +21,7 @@ export function ProfileHoverCard({ user }: { user: User }) {
           <AvatarImage src={user.avatar} alt={`${user.username}'s avatar`} />
         </Avatar>
       </HoverCardTrigger>
-      <HoverCardContent className="w-80">
+      <HoverCardContent className="w-80 shadow-xl shadow-secondary bg-background">
         <div className="flex flex-col justify-between">
           <Link className="cursor-pointer" href={`/profile/${user.id}`}>
             <Avatar className="size-[72px]! mb-4">
