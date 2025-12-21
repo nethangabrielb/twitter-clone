@@ -2,6 +2,8 @@
 
 import { MoreHorizontalIcon, Pin } from "lucide-react";
 
+import React from "react";
+
 import DeleteDialog from "@/components/delete-dialog";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,6 +29,7 @@ export function CurrentUserPostDropdown({
       <DropdownMenuTrigger
         asChild
         className={`absolute top-0 right-0 m-3 ${settingsCn}`}
+        onClick={(e) => e.preventDefault()}
       >
         <Button
           variant="outline"

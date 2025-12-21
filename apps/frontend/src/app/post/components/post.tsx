@@ -14,6 +14,7 @@ import {
   useState,
 } from "react";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import { ProfileHoverCard } from "@/components/profile-card-hover";
@@ -135,9 +136,12 @@ const PostSingle = ({
             <p className="font-bold text-text space tracking-[0.2px] text-[18px]">
               {post.user.name}
             </p>
-            <p className="text-darker font-light text-[15px]">
+            <Link
+              className="text-darker font-light text-[15px] hover:underline"
+              href={`/profile/${post.user.id}`}
+            >
               @{post.user.username}
-            </p>
+            </Link>
           </div>
         </div>
         <p className="text-text text-[15px] py-2">{post.content}</p>

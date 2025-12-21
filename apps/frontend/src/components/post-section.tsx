@@ -9,7 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Heart, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 
-import { Activity } from "react";
+import React, { Activity } from "react";
 
 import Link from "next/link";
 
