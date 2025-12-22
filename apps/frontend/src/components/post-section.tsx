@@ -6,6 +6,7 @@ import type {
   RefetchOptions,
 } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { Heart, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 
@@ -33,6 +34,7 @@ type Props = {
 };
 
 const Post = ({ post, refetch, refetchPosts, displayReplies }: Props) => {
+  const queryClient = useQueryClient();
   const user = useUser((state) => state.user) as User;
   const likesHook = useLikes(post, user, refetchPosts);
 
@@ -42,9 +44,10 @@ const Post = ({ post, refetch, refetchPosts, displayReplies }: Props) => {
       const res = await postApi.deletePost(post.id);
       return res;
     },
-    onSuccess: (res) => {
+    onSuccess: async (res) => {
       if (res.status === "success") {
         refetch();
+        await queryClient.refetchQueries({ queryKey: ["user"] });
         toast.success(res.message, {
           position: "top-center",
           style: {
@@ -64,88 +67,106 @@ const Post = ({ post, refetch, refetchPosts, displayReplies }: Props) => {
   };
 
   return (
-    <Link
-      className={cn(
-        "flex gap-4 relative hover:bg-secondary/40 transition-all",
-        displayReplies && post?.replies?.length > 0 ? "pt-4 px-4" : "p-4",
-      )}
-      href={`/post/${post.id}`}
-    >
-      <Activity mode={user?.id === post.userId ? "visible" : "hidden"}>
-        <CurrentUserPostDropdown
-          handleDelete={handleDelete}
-        ></CurrentUserPostDropdown>
-      </Activity>
-      {displayReplies ? (
-        <div className="self-start items-center flex flex-col">
-          <ProfileHoverCard user={post.user}></ProfileHoverCard>
-          <div className="bg-neutral-600 w-[2px] h-[100px] translate-y-2"></div>
+    <>
+      {post.deleted ? (
+        <div
+          className={cn(
+            "flex flex-col relative transition-all",
+            displayReplies && post?.replies?.length > 0 ? "pt-4 px-4" : "p-4",
+          )}
+        >
+          <p className="bg-secondary w-full p-4 text-center py-8 border border-border rounded-md">
+            This tweet has been deleted by the user
+          </p>
+          <div className="w-[48px] flex justify-center">
+            <div className="bg-neutral-600 w-[2px] h-[50px] translate-y-2"></div>
+          </div>
         </div>
       ) : (
-        <ProfileHoverCard user={post.user}></ProfileHoverCard>
+        <Link
+          className={cn(
+            "flex gap-4 relative hover:bg-secondary/40 transition-all",
+            displayReplies && post?.replies?.length > 0 ? "pt-4 px-4" : "p-4",
+          )}
+          href={`/post/${post.id}`}
+        >
+          <Activity mode={user?.id === post.userId ? "visible" : "hidden"}>
+            <CurrentUserPostDropdown
+              handleDelete={handleDelete}
+            ></CurrentUserPostDropdown>
+          </Activity>
+          {displayReplies ? (
+            <div className="self-start items-center flex flex-col">
+              <ProfileHoverCard user={post.user}></ProfileHoverCard>
+              <div className="bg-neutral-600 w-[2px] h-[100px] translate-y-2"></div>
+            </div>
+          ) : (
+            <ProfileHoverCard user={post.user}></ProfileHoverCard>
+          )}
+
+          <div className="flex flex-col gap-2 w-full">
+            <div className="flex gap-1">
+              <p className="font-bold text-text space tracking-[0.2px] text-[18px]">
+                {post.user.name}
+              </p>
+              <div className="flex items-center gap-1">
+                <Link
+                  className="text-darker font-light text-[15px] hover:underline"
+                  href={`/profile/${post.user.id}`}
+                >
+                  @{post.user.username}
+                </Link>
+                <div className="text-darker font-light w-0.8 my-auto flex justify-center text-a items-center">
+                  .
+                </div>
+                <p className="text-darker font-light text-[14px]">
+                  {formatDateFeedPost(post.createdAt)}
+                </p>
+              </div>
+            </div>
+            <p className="text-text text-[15px]">{post.content}</p>
+            <div className="flex justify-between w-[60%] ">
+              {/* render comments */}
+              <div className="flex items-center group cursor-pointer">
+                <div className="p-2 rounded-full group-hover:bg-primary/20 transition-all">
+                  <MessageCircle
+                    size={20}
+                    className="stroke-darker text-darker font-light stroke-[1.2px] group-hover:stroke-primary! transition-all"
+                  ></MessageCircle>
+                </div>
+                <p className="text-darker text-[14px] font-light group-hover:text-primary transition-all">
+                  {post._count.replies}
+                </p>
+              </div>
+
+              {/* render likes */}
+              <button
+                className="flex items-center group cursor-pointer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  likesHook.likeMutation.mutate();
+                }}
+              >
+                <div className="p-2 rounded-full group-hover:bg-red-500/20 transition-all bg-transparent group">
+                  <Heart
+                    size={20}
+                    className={cn(
+                      "text-darker font-light stroke-[1.2px] group-hover:stroke-red-500! group-active:scale-150 duration-500",
+                      likesHook.userHasLiked
+                        ? "fill-red-500 stroke-red-500!"
+                        : "stroke-darker",
+                    )}
+                  ></Heart>
+                </div>
+                <p className="text-darker text-[14px] font-light group-hover:text-red-500 transition-all">
+                  {likesHook.optimisticLikes}
+                </p>
+              </button>
+            </div>
+          </div>
+        </Link>
       )}
-
-      <div className="flex flex-col gap-2 w-full">
-        <div className="flex gap-1">
-          <p className="font-bold text-text space tracking-[0.2px] text-[18px]">
-            {post.user.name}
-          </p>
-          <div className="flex items-center gap-1">
-            <Link
-              className="text-darker font-light text-[15px] hover:underline"
-              href={`/profile/${post.user.id}`}
-            >
-              @{post.user.username}
-            </Link>
-            <div className="text-darker font-light w-0.8 my-auto flex justify-center text-a items-center">
-              .
-            </div>
-            <p className="text-darker font-light text-[14px]">
-              {formatDateFeedPost(post.createdAt)}
-            </p>
-          </div>
-        </div>
-        <p className="text-text text-[15px]">{post.content}</p>
-        <div className="flex justify-between w-[60%] ">
-          {/* render comments */}
-          <div className="flex items-center group cursor-pointer">
-            <div className="p-2 rounded-full group-hover:bg-primary/20 transition-all">
-              <MessageCircle
-                size={20}
-                className="stroke-darker text-darker font-light stroke-[1.2px] group-hover:stroke-primary! transition-all"
-              ></MessageCircle>
-            </div>
-            <p className="text-darker text-[14px] font-light group-hover:text-primary transition-all">
-              {post._count.replies}
-            </p>
-          </div>
-
-          {/* render likes */}
-          <button
-            className="flex items-center group cursor-pointer"
-            onClick={(e) => {
-              e.preventDefault();
-              likesHook.likeMutation.mutate();
-            }}
-          >
-            <div className="p-2 rounded-full group-hover:bg-red-500/20 transition-all bg-transparent group">
-              <Heart
-                size={20}
-                className={cn(
-                  "text-darker font-light stroke-[1.2px] group-hover:stroke-red-500! group-active:scale-150 duration-500",
-                  likesHook.userHasLiked
-                    ? "fill-red-500 stroke-red-500!"
-                    : "stroke-darker",
-                )}
-              ></Heart>
-            </div>
-            <p className="text-darker text-[14px] font-light group-hover:text-red-500 transition-all">
-              {likesHook.optimisticLikes}
-            </p>
-          </button>
-        </div>
-      </div>
-    </Link>
+    </>
   );
 };
 

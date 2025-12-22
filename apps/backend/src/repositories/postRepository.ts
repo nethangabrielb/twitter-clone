@@ -39,6 +39,9 @@ const postRepository = {
           },
         },
         replies: {
+          where: {
+            deleted: false,
+          },
           include: {
             _count: {
               select: {
@@ -120,6 +123,9 @@ const postRepository = {
           },
         },
         replies: {
+          where: {
+            deleted: false,
+          },
           include: {
             _count: {
               select: {
@@ -168,6 +174,7 @@ const postRepository = {
           not: null,
         },
         userId: id,
+        deleted: false,
       },
       orderBy: {
         createdAt: 'desc',

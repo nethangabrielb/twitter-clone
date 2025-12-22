@@ -124,91 +124,113 @@ const Reply = ({ reply, refetchPosts }: Props) => {
   };
 
   return (
-    <div className="flex flex-col border-b border-b-border relative transition-all">
-      <Activity mode={user.id === post?.userId ? "visible" : "hidden"}>
-        <CurrentUserPostDropdown
-          handleDelete={handleDelete}
-        ></CurrentUserPostDropdown>
-      </Activity>
-      <Link
-        className="flex flex-col gap-2 w-full p-4 pb-0! hover:bg-secondary/40"
-        href={`/post/${post?.id}`}
-      >
-        <div className="flex items-center gap-2">
-          <div className="self-start items-center flex flex-col">
-            {post?.user && (
-              <ProfileHoverCard user={post?.user}></ProfileHoverCard>
-            )}
-            <div className="bg-neutral-600 w-[2px] h-[100px]"></div>
-          </div>
-          <div className="flex flex-col">
-            <div className="flex items-center gap-1">
-              <p className="font-bold text-text space tracking-[0.2px] text-[18px]">
-                {post?.user.name}
-              </p>
-              <Link
-                className="text-darker font-light text-[15px] hover:underline"
-                href={`/profile/${post?.user.id}`}
-              >
-                @{post?.user.username}
-              </Link>
-              <div className="text-darker font-light w-0.8 my-auto flex justify-center text-a items-center">
-                .
-              </div>
-              <p className="text-darker font-light text-[14px]">
-                {post && formatDateFeedPost(post?.createdAt)}
-              </p>
+    <>
+      {post?.deleted ? (
+        <>
+          <div className={cn("flex flex-col relative transition-all p-4")}>
+            <p className="bg-secondary w-full p-4 text-center py-8 border border-border rounded-md">
+              This tweet has been deleted by the user
+            </p>
+            <div className="w-[48px] flex justify-center">
+              <div className="bg-neutral-600 w-[2px] h-[50px] translate-y-2"></div>
             </div>
-            <p className="text-text text-[15px] py-2">{post?.content}</p>
-            <div className="flex justify-start w-full pb-2">
-              {/* render comments */}
-              <div className="flex items-center flex-1 group cursor-pointer">
-                <div className="p-2 rounded-full group-hover:bg-primary/20 transition-all">
-                  <MessageCircle
-                    size={20}
-                    className="stroke-darker text-darker font-light stroke-[1.2px] group-hover:stroke-primary! transition-all"
-                  ></MessageCircle>
-                </div>
-                <p className="text-darker text-[14px] font-light group-hover:text-primary transition-all">
-                  {post?._count.replies}
-                </p>
+          </div>
+          <PostSingle
+            post={reply}
+            refetchPosts={refetchPosts}
+            className="p-4 pt-0!"
+            settingsCn="m-0!"
+            buttonCn="p-1!"
+          ></PostSingle>
+        </>
+      ) : (
+        <div className="flex flex-col border-b border-b-border relative transition-all">
+          <Activity mode={user.id === post?.userId ? "visible" : "hidden"}>
+            <CurrentUserPostDropdown
+              handleDelete={handleDelete}
+            ></CurrentUserPostDropdown>
+          </Activity>
+          <Link
+            className="flex flex-col gap-2 w-full p-4 pb-0! hover:bg-secondary/40"
+            href={`/post/${post?.id}`}
+          >
+            <div className="flex items-center gap-2">
+              <div className="self-start items-center flex flex-col">
+                {post?.user && (
+                  <ProfileHoverCard user={post?.user}></ProfileHoverCard>
+                )}
+                <div className="bg-neutral-600 w-[2px] h-[100px]"></div>
               </div>
+              <div className="flex flex-col">
+                <div className="flex items-center gap-1">
+                  <p className="font-bold text-text space tracking-[0.2px] text-[18px]">
+                    {post?.user.name}
+                  </p>
+                  <Link
+                    className="text-darker font-light text-[15px] hover:underline"
+                    href={`/profile/${post?.user.id}`}
+                  >
+                    @{post?.user.username}
+                  </Link>
+                  <div className="text-darker font-light w-0.8 my-auto flex justify-center text-a items-center">
+                    .
+                  </div>
+                  <p className="text-darker font-light text-[14px]">
+                    {post && formatDateFeedPost(post?.createdAt)}
+                  </p>
+                </div>
+                <p className="text-text text-[15px] py-2">{post?.content}</p>
+                <div className="flex justify-start w-full pb-2">
+                  {/* render comments */}
+                  <div className="flex items-center flex-1 group cursor-pointer">
+                    <div className="p-2 rounded-full group-hover:bg-primary/20 transition-all">
+                      <MessageCircle
+                        size={20}
+                        className="stroke-darker text-darker font-light stroke-[1.2px] group-hover:stroke-primary! transition-all"
+                      ></MessageCircle>
+                    </div>
+                    <p className="text-darker text-[14px] font-light group-hover:text-primary transition-all">
+                      {post?._count.replies}
+                    </p>
+                  </div>
 
-              {/* render likes */}
-              <button
-                className="flex items-center flex-1 group cursor-pointer"
-                onClick={(e) => {
-                  e.preventDefault();
-                  likeMutation.mutate();
-                }}
-              >
-                <div className="p-2 rounded-full group-hover:bg-red-500/20 transition-all bg-transparent group">
-                  <Heart
-                    size={20}
-                    className={cn(
-                      "text-darker font-light stroke-[1.2px] group-hover:stroke-red-500! group-active:scale-150 duration-500",
-                      userHasLiked
-                        ? "fill-red-500 stroke-red-500!"
-                        : "stroke-darker",
-                    )}
-                  ></Heart>
+                  {/* render likes */}
+                  <button
+                    className="flex items-center flex-1 group cursor-pointer"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      likeMutation.mutate();
+                    }}
+                  >
+                    <div className="p-2 rounded-full group-hover:bg-red-500/20 transition-all bg-transparent group">
+                      <Heart
+                        size={20}
+                        className={cn(
+                          "text-darker font-light stroke-[1.2px] group-hover:stroke-red-500! group-active:scale-150 duration-500",
+                          userHasLiked
+                            ? "fill-red-500 stroke-red-500!"
+                            : "stroke-darker",
+                        )}
+                      ></Heart>
+                    </div>
+                    <p className="text-darker text-[14px] font-light group-hover:text-red-500 transition-all">
+                      {optimisticLikes}
+                    </p>
+                  </button>
                 </div>
-                <p className="text-darker text-[14px] font-light group-hover:text-red-500 transition-all">
-                  {optimisticLikes}
-                </p>
-              </button>
+              </div>
             </div>
-          </div>
+          </Link>
+          <PostSingle
+            post={reply}
+            refetchPosts={refetchPosts}
+            className="p-4 pt-0!"
+            settingsCn="m-0!"
+            buttonCn="p-1!"
+          ></PostSingle>
         </div>
-      </Link>
-      <PostSingle
-        post={reply}
-        refetchPosts={refetchPosts}
-        className="p-4 pt-0!"
-        settingsCn="m-0!"
-        buttonCn="p-1!"
-      ></PostSingle>
-    </div>
+      )}
+    </>
   );
 };
 
