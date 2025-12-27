@@ -18,7 +18,16 @@ const commentsController = (() => {
         replyId: Number(req.body.replyId),
         content: req.body.content,
       };
+
       const comment = await commentService.createComment(data);
+
+      if (comment === 'deleted') {
+        res.json({
+          status: 'deleted',
+          message:
+            'The post you are replying to has been deleted. You cannot reply to this post.',
+        });
+      }
 
       res.json({
         status: 'success',

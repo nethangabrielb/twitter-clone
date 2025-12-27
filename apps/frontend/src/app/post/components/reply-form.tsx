@@ -9,11 +9,14 @@ import {
   RefetchOptions,
   useMutation,
 } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { Image, Smile } from "lucide-react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 import { Activity, useState } from "react";
+
+import { useRouter } from "next/navigation";
 
 import { ActionButton } from "@/components/button";
 import { TooltipIcon } from "@/components/tool-tip-icon";
@@ -33,6 +36,8 @@ type Props = {
 };
 
 const CreateReply = ({ refetch, postId, className }: Props) => {
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const [displayIndicator, setDisplayIndicator] = useState(false);
   const [dashOffset, setDashOffset] = useState(565.48);
   const [progressValue, setProgressValue] = useState(0);
@@ -61,7 +66,8 @@ const CreateReply = ({ refetch, postId, className }: Props) => {
       const res = await commentApi.createComment(values);
       return res;
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
+      console.log(data);
       if (data.status === "success") {
         resetField("content");
         toast.success(data.message, {
@@ -72,6 +78,10 @@ const CreateReply = ({ refetch, postId, className }: Props) => {
             width: "fit-content",
           },
         });
+      } else if (data.status === "deleted") {
+        toast.error(data.message);
+        await queryClient.refetchQueries({ queryKey: ["post", "posts"] });
+        router.back();
       } else {
         toast.error(data.message);
       }
