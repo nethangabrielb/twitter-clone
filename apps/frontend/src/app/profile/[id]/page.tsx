@@ -2,6 +2,7 @@
 
 import FeedPost from "@/app/home/components/feed-post";
 import { FeedControlBtn } from "@/app/home/page";
+import useUser from "@/stores/user.store";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { Calendar } from "lucide-react";
@@ -19,6 +20,7 @@ import { PostType } from "@/types/post";
 import { User } from "@/types/user";
 
 const Profile = () => {
+  const currentUser = useUser((state) => state.user) as User;
   const [feedType, setFeedType] = useState<"posts" | "replies" | "likes">(
     "posts",
   );
@@ -123,7 +125,7 @@ const Profile = () => {
           <div className="flex-1 h-[50%] border-x border-x-border">
             <img
               src="/blue.jpg"
-              alt="Default cover photo"
+              alt="Default profile cover"
               className="h-full w-full object-cover"
             />
           </div>
@@ -141,9 +143,15 @@ const Profile = () => {
 
           {/* profile information */}
           <div className="flex-1 p-4 relative border-x border-x-border">
-            <ActionButton className="hover:text-black absolute right-0 mr-4 bg-transparent border border-white text-white">
-              Edit profile
-            </ActionButton>
+            {currentUser.id === user?.id ? (
+              <ActionButton className="hover:bg-primary! absolute right-0 mr-4 bg-primary text-white">
+                Edit profile
+              </ActionButton>
+            ) : (
+              <ActionButton className="hover:bg-primary! absolute right-0 mr-4 bg-primary text-white">
+                Follow
+              </ActionButton>
+            )}
             <div className="mt-[64px]"></div>
             <div className="flex flex-col items-start">
               <p className="text-[22px] text-text font-bold">{user?.name}</p>

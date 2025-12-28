@@ -1,8 +1,12 @@
+import useUser from "@/stores/user.store";
 import { format } from "date-fns";
 import { Calendar } from "lucide-react";
 
+import { Activity } from "react";
+
 import Link from "next/link";
 
+import { ActionButton } from "@/components/button";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
   HoverCard,
@@ -12,8 +16,8 @@ import {
 
 import { User } from "@/types/user";
 
-export function ProfileHoverCard({ user }: { user: User }) {
-  console.log(user);
+export function ProfileHoverCard({ user }: Readonly<{ user: User }>) {
+  const currentUser = useUser((state) => state.user) as User;
   return (
     <HoverCard>
       <HoverCardTrigger asChild>
@@ -21,7 +25,13 @@ export function ProfileHoverCard({ user }: { user: User }) {
           <AvatarImage src={user.avatar} alt={`${user.username}'s avatar`} />
         </Avatar>
       </HoverCardTrigger>
-      <HoverCardContent className="w-80 shadow-xl shadow-secondary bg-background">
+      <HoverCardContent className="w-80 shadow-xl shadow-secondary bg-background relative">
+        <Activity mode={currentUser.id === user?.id ? "hidden" : "visible"}>
+          <ActionButton className="hover:bg-primary! absolute right-0 mr-4 bg-primary text-white">
+            Follow
+          </ActionButton>
+        </Activity>
+
         <div className="flex flex-col justify-between">
           <Link className="cursor-pointer" href={`/profile/${user.id}`}>
             <Avatar className="size-[72px]! mb-4">
@@ -45,7 +55,7 @@ export function ProfileHoverCard({ user }: { user: User }) {
               <div className="flex items-center gap-2 my-4">
                 <Calendar size={18} className="text-darker"></Calendar>
                 <p className="text-darker ">
-                  Join on {format(user?.createdAt as Date, "LLLL yyyy")}
+                  Joined on {format(user?.createdAt, "LLLL yyyy")}
                 </p>
               </div>
             )}
