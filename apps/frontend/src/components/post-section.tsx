@@ -104,7 +104,7 @@ const Post = ({ post, refetch, refetchPosts, displayReplies }: Props) => {
             <ProfileHoverCard user={post.user}></ProfileHoverCard>
           )}
 
-          <div className="flex flex-col gap-2 w-full">
+          <div className="flex flex-col gap-2 w-full min-w-0">
             <div className="flex gap-1">
               <p className="font-bold text-text space tracking-[0.2px] text-[18px]">
                 {post.user.name}
@@ -124,7 +124,9 @@ const Post = ({ post, refetch, refetchPosts, displayReplies }: Props) => {
                 </p>
               </div>
             </div>
-            <p className="text-text text-[15px]">{post.content}</p>
+            <p className="text-text text-[15px] whitespace-normal break-words">
+              {post.content}
+            </p>
             <div className="flex justify-between w-[60%] ">
               {/* render comments */}
               <div className="flex items-center group cursor-pointer">
