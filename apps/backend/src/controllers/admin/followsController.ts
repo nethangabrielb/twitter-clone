@@ -25,18 +25,40 @@ const followsController = (() => {
     }
   };
 
-  const getFollows = async (
+  const getFollowers = async (
     req: Request<{ userId: string }, object, object>,
     res: Response
   ) => {
     try {
-      const follow = await FollowService.getUserFollows(
+      const follow = await FollowService.getUserFollowers(
         Number(req.params.userId)
       );
 
       res.status(200).json({
         status: 'success',
-        message: 'Follow success',
+        message: 'User followers fetched successfully',
+        data: follow,
+      });
+    } catch (err: unknown) {
+      res.json({
+        status: 'error',
+        message: err instanceof Error ? err.message : GENERIC_ERROR_MESSAGE,
+      });
+    }
+  };
+
+  const getFollowings = async (
+    req: Request<{ userId: string }, object, object>,
+    res: Response
+  ) => {
+    try {
+      const follow = await FollowService.getUserFollowings(
+        Number(req.params.userId)
+      );
+
+      res.status(200).json({
+        status: 'success',
+        message: 'User followings fetched successfully',
         data: follow,
       });
     } catch (err: unknown) {
@@ -66,7 +88,7 @@ const followsController = (() => {
     }
   };
 
-  return { createFollow, getFollows, deleteFollow };
+  return { createFollow, getFollowers, getFollowings, deleteFollow };
 })();
 
 export default followsController;
