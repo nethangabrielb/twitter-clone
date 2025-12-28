@@ -2,18 +2,14 @@
 
 import FeedPost from "@/app/home/components/feed-post";
 import { FeedControlBtn } from "@/app/home/page";
-import { useQuery } from "@tanstack/react-query";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { Calendar } from "lucide-react";
 
-import { useEffect } from "react";
-import { useState } from "react";
-import { Activity } from "react";
+import { Activity, useEffect, useState } from "react";
 
 import Head from "next/head";
-import { useParams } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import { ActionButton } from "@/components/button";
 
