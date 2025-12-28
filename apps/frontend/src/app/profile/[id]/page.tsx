@@ -10,6 +10,7 @@ import { Calendar } from "lucide-react";
 import { Activity, useEffect, useState } from "react";
 
 import Head from "next/head";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 
 import { ActionButton } from "@/components/button";
@@ -168,14 +169,20 @@ const Profile = () => {
               </div>
             )}
             <div className="flex gap-4">
-              <p className="text-darker">
+              <Link
+                className="text-darker hover:underline"
+                href={`/profile/${user?.id}/followers`}
+              >
                 <span className="text-white">{user?._count.Followings}</span>{" "}
                 Followers
-              </p>
-              <p className="text-darker">
+              </Link>
+              <Link
+                className="text-darker hover:underline"
+                href={`/profile/${user?.id}/followings`}
+              >
                 <span className="text-white">{user?._count.Followers}</span>{" "}
                 Followings
-              </p>
+              </Link>
             </div>
           </div>
         </section>
