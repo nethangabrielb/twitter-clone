@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
 
 import postApi from "@/lib/api/post";
+import { cn } from "@/lib/utils";
 
 import { PostType } from "@/types/post";
 
@@ -99,16 +100,20 @@ const Home = () => {
 export const FeedControlBtn = ({
   children,
   handleClick,
+  isActive = false,
 }: {
   children: string;
   handleClick?: () => void;
+  isActive?: boolean;
 }) => {
   return (
     <button
       className="bg-transparent flex-1 p-4 hover:bg-neutral-900 border-b border-b-border"
       onClick={handleClick}
     >
-      {children}
+      <span className={cn(isActive && "border-b-2 border-b-primary")}>
+        {children}
+      </span>
     </button>
   );
 };

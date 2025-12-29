@@ -33,3 +33,5 @@ const followApi = (() => {
 
   return { getFollowers, getFollowings };
 })();
+
+export default followApi;

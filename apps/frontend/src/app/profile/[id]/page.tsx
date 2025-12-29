@@ -21,6 +21,8 @@ import { PostType } from "@/types/post";
 import { User } from "@/types/user";
 
 const Profile = () => {
+  const setVisitedUser = useUser((state) => state.setVisitedUser);
+  const visitedUser = useUser((state) => state.visitedUser);
   const currentUser = useUser((state) => state.user) as User;
   const [feedType, setFeedType] = useState<"posts" | "replies" | "likes">(
     "posts",
@@ -43,6 +45,7 @@ const Profile = () => {
         throw new Error("Error fetching from the server.");
       }
       const data = await res.json();
+      setVisitedUser(data.data);
       return data.data as User;
     },
   });
@@ -80,6 +83,8 @@ const Profile = () => {
       }
     }
   };
+
+  console.log(visitedUser);
 
   return (
     <>
