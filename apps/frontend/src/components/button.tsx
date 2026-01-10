@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -24,6 +24,7 @@ type ActionButtonProps = {
   className?: string;
   disabled?: boolean;
   type?: "submit";
+  hoverText?: string;
   onClick?: () => void;
 };
 
@@ -86,7 +87,9 @@ const ActionButton = ({
   onClick,
   disabled,
   type,
+  hoverText,
 }: ActionButtonProps) => {
+  const [btnText, setBtnText] = useState<string | undefined>(children);
   return (
     <Button
       className={`hover:!bg-foreground bg-foreground text-background
@@ -94,8 +97,14 @@ const ActionButton = ({
       onClick={onClick}
       disabled={disabled}
       type={type}
+      onMouseEnter={() => {
+        if (hoverText) {
+          setBtnText(hoverText);
+        }
+      }}
+      onMouseLeave={() => setBtnText(children)}
     >
-      {children}
+      {btnText}
     </Button>
   );
 };

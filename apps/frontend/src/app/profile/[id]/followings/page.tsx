@@ -18,6 +18,7 @@ import { User } from "@/types/user";
 const FollowingsIndex = () => {
   const router = useRouter();
   const visitedUser = useUser((state) => state.visitedUser) as User;
+  const currentUser = useUser((state) => state.user) as User;
   const params = useParams();
   const { data: followings } = useQuery({
     queryKey: [params.id],
@@ -44,7 +45,7 @@ const FollowingsIndex = () => {
       </Head>
       <div className="lg:w-[600px] h-full relative border-l border-r border-l-border border-r-border">
         <div className="flex backdrop-blur-lg absolute top-0 w-full flex-col border-b border-b-border">
-          <div className="bg-transparent flex-1 p-4 font-bold flex items-center gap-8">
+          <div className="bg-transparent flex-1 p-2 font-bold flex items-center gap-8">
             <button
               className="p-2 rounded-full hover:bg-neutral-500/20 transition-all cursor-pointer"
               onClick={() => router.push(`/profile/${visitedUser?.id}`)}
@@ -87,7 +88,7 @@ const FollowingsIndex = () => {
         </div>
         <div className="mt-[136.2px]"></div>
 
-        <main className="p-4">
+        <main className="p-4 gap-4">
           {followings?.map((follow: { following: FollowType }) => {
             return (
               <Follows
