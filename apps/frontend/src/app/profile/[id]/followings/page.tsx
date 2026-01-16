@@ -10,7 +10,10 @@ import { useEffect } from "react";
 import Head from "next/head";
 import { useParams, useRouter } from "next/navigation";
 
+import { ActionButton } from "@/components/button";
+
 import followApi from "@/lib/api/follow";
+import { isFollowing } from "@/lib/utils";
 
 import { FollowType } from "@/types/follow";
 import { User } from "@/types/user";
@@ -31,7 +34,7 @@ const FollowingsIndex = () => {
   });
 
   useEffect(() => {
-    document.title = `Twitter / User Followings`;
+    document.title = `Twitter / @${visitedUser.username} Followings`;
   }, [params.id]);
 
   return (
@@ -88,13 +91,32 @@ const FollowingsIndex = () => {
         </div>
         <div className="mt-[136.2px]"></div>
 
-        <main className="p-4 gap-4">
+        <main className="p-4 flex flex-col gap-4">
           {followings?.map((follow: { following: FollowType }) => {
+            const isUserFollowing = isFollowing(
+              currentUser?.followings,
+              follow?.following?.id,
+            );
+            console.log(isUserFollowing);
             return (
-              <Follows
-                follow={follow.following}
+              <div
                 key={crypto.randomUUID()}
-              ></Follows>
+                className="flex items-center justify-between"
+              >
+                <Follows follow={follow?.following}></Follows>
+                {follow?.following?.id === currentUser.id ? (
+                  <></>
+                ) : isUserFollowing ? (
+                  <ActionButton
+                    className="bg-background border border-white text-white hover:border-red-500 hover:bg-red-500/10! hover:text-red-500 transition-all"
+                    hoverText="Unfollow"
+                  >
+                    Following
+                  </ActionButton>
+                ) : (
+                  <ActionButton>Follow back</ActionButton>
+                )}
+              </div>
             );
           })}
         </main>

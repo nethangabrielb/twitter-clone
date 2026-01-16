@@ -34,7 +34,7 @@ const FollowersIndex = () => {
   });
 
   useEffect(() => {
-    document.title = `Twitter / User Followers`;
+    document.title = `Twitter / @${visitedUser.username}'s Followers`;
   }, [params.id]);
 
   return (
@@ -102,7 +102,9 @@ const FollowersIndex = () => {
                 className="flex items-center justify-between"
               >
                 <Follows follow={follow?.follower}></Follows>
-                {isUserFollowing ? (
+                {follow?.follower?.id === currentUser?.id ? (
+                  <></>
+                ) : isUserFollowing ? (
                   <ActionButton
                     className="bg-background border border-white text-white hover:border-red-500 hover:bg-red-500/10! hover:text-red-500 transition-all"
                     hoverText="Unfollow"

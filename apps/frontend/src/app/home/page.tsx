@@ -7,7 +7,6 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 
 import Head from "next/head";
-import { useRouter } from "next/navigation";
 
 import { Spinner } from "@/components/ui/spinner";
 
@@ -17,8 +16,6 @@ import { cn } from "@/lib/utils";
 import { PostType } from "@/types/post";
 
 const Home = () => {
-  const router = useRouter();
-
   // POSTS FEED CONTENT QUERY
   const {
     data: posts,
