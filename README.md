@@ -20,7 +20,7 @@
 
 ## 📖 About the Project
 
-Chirper is a fullstack Twitter/X-inspired social media application that replicates the core social experience: composing posts, following users, liking and replying to content, sending direct messages in real time, and receiving live notifications — all inside a responsive, dark/light-mode UI.
+Chirper is a fullstack Twitter/X-inspired social media application that replicates the core social experience: composing posts, following users, liking and replying to content, sending direct messages in real time, and receiving live notifications — all inside a responsive UI.
 
 The project is structured as a **pnpm monorepo** with three workspaces: a Node.js/Express backend, a Next.js 16 frontend, and a shared TypeScript types package consumed by both ends.
 
