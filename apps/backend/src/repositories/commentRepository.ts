@@ -1,5 +1,5 @@
-import { prisma } from '../prisma/client.js';
-import { CommentBody } from '../types/comment.js';
+import { prisma } from '../prisma/client.ts';
+import { CommentBody } from '../types/comment.ts';
 
 const commentRepository = {
   create: (data: CommentBody) => prisma.post.create({ data }),

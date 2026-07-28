@@ -4,7 +4,7 @@ import cookie from 'cookie';
 import jwt from 'jsonwebtoken';
 import { Socket } from 'socket.io';
 
-import type { User } from '../types/user.js';
+import type { User } from '../types/user.ts';
 
 export const authMiddleware = async (
   req: Request,

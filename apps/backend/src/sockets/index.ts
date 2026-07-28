@@ -1,12 +1,12 @@
 import { ChatMessage } from '@twitter-clone/shared';
 import { Server, Socket } from 'socket.io';
 
-import { isSocketValid } from '../middlewares/authMiddleware.js';
-import notificationRepository from '../repositories/notificationRepository.js';
-import messageService from '../services/messageService.js';
-import roomService from '../services/roomService.js';
-import { User } from '../types/user.js';
-import { validateEventSender } from '../utils/validateEventSender.js';
+import { isSocketValid } from '../middlewares/authMiddleware.ts';
+import notificationRepository from '../repositories/notificationRepository.ts';
+import messageService from '../services/messageService.ts';
+import roomService from '../services/roomService.ts';
+import { User } from '../types/user.ts';
+import { validateEventSender } from '../utils/validateEventSender.ts';
 
 export const initSocket = (io: Server) => {
   io.use((socket, next) => {

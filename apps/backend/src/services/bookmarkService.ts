@@ -1,4 +1,4 @@
-import bookmarkRepository from '../repositories/bookmarkRepository.js';
+import bookmarkRepository from '../repositories/bookmarkRepository.ts';
 
 const bookmarkService = {
   create: async (userId: number, postId: number) => {

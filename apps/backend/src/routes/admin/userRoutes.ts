@@ -2,8 +2,8 @@ import { Router } from 'express';
 
 import multer from 'multer';
 
-import userController from '../../controllers/admin/usersController.js';
-import { authMiddleware } from '../../middlewares/authMiddleware.js';
+import userController from '../../controllers/admin/usersController.ts';
+import { authMiddleware } from '../../middlewares/authMiddleware.ts';
 
 const upload = multer();
 

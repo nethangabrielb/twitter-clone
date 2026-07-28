@@ -2,9 +2,9 @@ import { Request, Response } from 'express';
 
 import type { BookmarkBody } from '@twitter-clone/shared';
 
-import bookmarkService from '../../services/bookmarkService.js';
-import { User } from '../../types/user.js';
-import { GENERIC_ERROR_MESSAGE } from '../../utils/errorMessage.js';
+import bookmarkService from '../../services/bookmarkService.ts';
+import { User } from '../../types/user.ts';
+import { GENERIC_ERROR_MESSAGE } from '../../utils/errorMessage.ts';
 
 const bookmarkController = (() => {
   const createBookmark = async (

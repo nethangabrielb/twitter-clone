@@ -1,4 +1,4 @@
-import { prisma } from '../prisma/client.js';
+import { prisma } from '../prisma/client.ts';
 
 const bookmarkRepository = {
   create: (userId: number, postId: number) =>

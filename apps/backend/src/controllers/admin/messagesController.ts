@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 
-import messageService from '../../services/messageService.js';
-import { User } from '../../types/user.js';
-import { GENERIC_ERROR_MESSAGE } from '../../utils/errorMessage.js';
+import messageService from '../../services/messageService.ts';
+import { User } from '../../types/user.ts';
+import { GENERIC_ERROR_MESSAGE } from '../../utils/errorMessage.ts';
 
 const messageController = (() => {
   const getMessages = async (

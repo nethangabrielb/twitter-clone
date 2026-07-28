@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import bcrypt from 'bcryptjs';
 
-import { prisma } from '../prisma/client.js';
+import { prisma } from '../prisma/client.ts';
 
 async function main() {
   const usernameSet = new Set();

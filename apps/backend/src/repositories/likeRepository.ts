@@ -1,5 +1,5 @@
-import { prisma } from '../prisma/client.js';
-import { PostLike } from '../types/like.js';
+import { prisma } from '../prisma/client.ts';
+import { PostLike } from '../types/like.ts';
 
 const postLikeRepository = {
   create: (data: PostLike) => prisma.postLike.create({ data }),

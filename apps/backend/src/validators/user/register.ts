@@ -2,12 +2,12 @@ import { NextFunction, Request, Response } from 'express';
 
 import { validationResult } from 'express-validator';
 
-import type { RegistrationBody } from '../../types/auth.js';
-import confirmPassword from '../rules/confirmPassword.js';
-import email from '../rules/email.js';
-import name from '../rules/name.js';
-import password from '../rules/password.js';
-import username from '../rules/username.js';
+import type { RegistrationBody } from '../../types/auth.ts';
+import confirmPassword from '../rules/confirmPassword.ts';
+import email from '../rules/email.ts';
+import name from '../rules/name.ts';
+import password from '../rules/password.ts';
+import username from '../rules/username.ts';
 
 const registrationRules = [name, username, email, password, confirmPassword];
 

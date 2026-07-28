@@ -1,8 +1,8 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-import UserRepository from '../repositories/userRepository.js';
-import type { LoginBody, RegistrationBody } from '../types/auth.js';
+import UserRepository from '../repositories/userRepository.ts';
+import type { LoginBody, RegistrationBody } from '../types/auth.ts';
 
 const LOGIN_ERR_MESSAGE = 'Invalid username or password. Please try again.';
 

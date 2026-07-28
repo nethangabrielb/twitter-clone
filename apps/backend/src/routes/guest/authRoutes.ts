@@ -2,9 +2,9 @@ import { Router } from 'express';
 
 import passport from 'passport';
 
-import authController from '../../controllers/guest/authController.js';
-import { authMiddleware } from '../../middlewares/authMiddleware.js';
-import { validateRegistration } from '../../validators/user/register.js';
+import authController from '../../controllers/guest/authController.ts';
+import { authMiddleware } from '../../middlewares/authMiddleware.ts';
+import { validateRegistration } from '../../validators/user/register.ts';
 
 const authRouter = Router();
 

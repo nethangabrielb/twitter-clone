@@ -2,10 +2,10 @@ import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oidc';
 import { generateUsername } from 'unique-username-generator';
 
-import { prisma } from '../prisma/client.js';
-import UserRepository from '../repositories/userRepository.js';
-import type { GoogleProfile, VerifyCallback } from '../types/auth.js';
-import { User } from '../types/user.js';
+import { prisma } from '../prisma/client.ts';
+import UserRepository from '../repositories/userRepository.ts';
+import type { GoogleProfile, VerifyCallback } from '../types/auth.ts';
+import { User } from '../types/user.ts';
 
 passport.use(
   new GoogleStrategy(

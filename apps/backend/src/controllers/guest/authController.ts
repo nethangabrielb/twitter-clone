@@ -4,10 +4,10 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 
-import UserRepository from '../../repositories/userRepository.js';
-import UserService from '../../services/userService.js';
-import type { LoginBody, RegistrationBody } from '../../types/auth.js';
-import { User } from '../../types/user.js';
+import UserRepository from '../../repositories/userRepository.ts';
+import UserService from '../../services/userService.ts';
+import type { LoginBody, RegistrationBody } from '../../types/auth.ts';
+import { User } from '../../types/user.ts';
 
 const GENERIC_ERROR_MESSAGE = 'An unknown error occurred';
 

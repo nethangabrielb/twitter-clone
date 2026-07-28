@@ -2,7 +2,7 @@ import { Router } from 'express';
 
 import multer from 'multer';
 
-import postsController from '../../controllers/admin/postsController.js';
+import postsController from '../../controllers/admin/postsController.ts';
 
 const upload = multer();
 

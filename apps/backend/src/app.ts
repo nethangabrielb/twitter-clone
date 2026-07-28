@@ -9,22 +9,22 @@ import { createServer } from 'node:http';
 import passport from 'passport';
 import { Server } from 'socket.io';
 
-import './config/passport.js';
+import './config/passport.ts';
 import {
   authMiddleware,
   guestAuthMiddleware,
-} from './middlewares/authMiddleware.js';
-import bookmarkRouter from './routes/admin/bookmarkRoutes.js';
-import commentRouter from './routes/admin/commentRoutes.js';
-import followRouter from './routes/admin/followRoutes.js';
-import likesRouter from './routes/admin/likeRoutes.js';
-import messageRouter from './routes/admin/messageRoutes.js';
-import notificationRouter from './routes/admin/notificationRoutes.js';
-import postRouter from './routes/admin/postRoutes.js';
-import roomRouter from './routes/admin/roomRoutes.js';
-import userRouter from './routes/admin/userRoutes.js';
-import authRouter from './routes/guest/authRoutes.js';
-import { initSocket } from './sockets/index.js';
+} from './middlewares/authMiddleware.ts';
+import bookmarkRouter from './routes/admin/bookmarkRoutes.ts';
+import commentRouter from './routes/admin/commentRoutes.ts';
+import followRouter from './routes/admin/followRoutes.ts';
+import likesRouter from './routes/admin/likeRoutes.ts';
+import messageRouter from './routes/admin/messageRoutes.ts';
+import notificationRouter from './routes/admin/notificationRoutes.ts';
+import postRouter from './routes/admin/postRoutes.ts';
+import roomRouter from './routes/admin/roomRoutes.ts';
+import userRouter from './routes/admin/userRoutes.ts';
+import authRouter from './routes/guest/authRoutes.ts';
+import { initSocket } from './sockets/index.ts';
 
 dotenv.config();
 

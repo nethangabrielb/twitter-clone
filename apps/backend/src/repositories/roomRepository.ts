@@ -1,7 +1,7 @@
 import { Room } from '@twitter-clone/shared';
 
-import { prisma } from '../prisma/client.js';
-import { User } from '../types/user.js';
+import { prisma } from '../prisma/client.ts';
+import { User } from '../types/user.ts';
 
 const roomRepository = {
   create: async (data: Room) =>

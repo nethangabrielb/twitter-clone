@@ -1,6 +1,6 @@
-import followRepository from '../repositories/followRepository.js';
-import type { Follow } from '../types/follow.js';
-import type { User } from '../types/user.js';
+import followRepository from '../repositories/followRepository.ts';
+import type { Follow } from '../types/follow.ts';
+import type { User } from '../types/user.ts';
 
 const FollowService = {
   createNewFollow: async (follow: Follow) => {

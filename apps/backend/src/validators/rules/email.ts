@@ -1,6 +1,6 @@
 import { body } from 'express-validator';
 
-import { prisma } from '../../prisma/client.js';
+import { prisma } from '../../prisma/client.ts';
 
 export default body('email')
   .exists()
