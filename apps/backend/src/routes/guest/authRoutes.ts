@@ -4,12 +4,21 @@ import passport from 'passport';
 
 import authController from '../../controllers/guest/authController.ts';
 import { authMiddleware } from '../../middlewares/authMiddleware.ts';
+import {
+  loginRateLimiter,
+  registerRateLimiter,
+} from '../../middlewares/rateLimiters.ts';
 import { validateRegistration } from '../../validators/user/register.ts';
 
 const authRouter = Router();
 
-authRouter.post('/register', validateRegistration, authController.register);
-authRouter.post('/login', authController.login);
+authRouter.post(
+  '/register',
+  registerRateLimiter,
+  validateRegistration,
+  authController.register
+);
+authRouter.post('/login', loginRateLimiter, authController.login);
 authRouter.post('/logout', authMiddleware, authController.logout);
 
 authRouter.get('/login/google', passport.authenticate('google'));

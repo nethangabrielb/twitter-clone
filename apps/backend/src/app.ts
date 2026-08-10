@@ -51,6 +51,11 @@ const io = new Server(httpServer, {
   },
 });
 
+// Heroku terminates TLS and proxies requests; trust the first hop so
+// req.ip reflects the real client for rate limiting (and req.protocol
+// reflects X-Forwarded-Proto).
+app.set('trust proxy', 1);
+
 app.use(compression());
 
 initSocket(io);

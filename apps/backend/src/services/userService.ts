@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+import { Prisma } from '../../generated/prisma/client.js';
 import UserRepository from '../repositories/userRepository.ts';
 import type { LoginBody, RegistrationBody } from '../types/auth.ts';
 
@@ -10,17 +11,27 @@ const UserService = {
   createNewUser: async (data: RegistrationBody) => {
     const encryptedPassword = await bcrypt.hash(data.password, 10);
 
-    const newUser = await UserRepository.createNewUser({
-      ...data,
-      password: encryptedPassword,
-      avatar:
-        'https://bcezmxfxuctgrkiavycl.supabase.co/storage/v1/object/public/images/default-avatar.jpg',
-    });
+    try {
+      const newUser = await UserRepository.createNewUser({
+        ...data,
+        password: encryptedPassword,
+        avatar:
+          'https://bcezmxfxuctgrkiavycl.supabase.co/storage/v1/object/public/images/default-avatar.jpg',
+      });
 
-    if (!newUser) {
-      throw new Error('There was an unexpected error creating the account.');
+      if (!newUser) {
+        throw new Error('There was an unexpected error creating the account.');
+      }
+      return newUser;
+    } catch (err: unknown) {
+      if (
+        err instanceof Prisma.PrismaClientKnownRequestError &&
+        err.code === 'P2002'
+      ) {
+        throw new Error('Username or email already taken');
+      }
+      throw err;
     }
-    return newUser;
   },
   loginUser: async (data: LoginBody) => {
     // check if username exists
