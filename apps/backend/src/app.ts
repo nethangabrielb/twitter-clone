@@ -14,6 +14,7 @@ import {
   authMiddleware,
   guestAuthMiddleware,
 } from './middlewares/authMiddleware.ts';
+import { errorHandler } from './middlewares/errorHandler.ts';
 import bookmarkRouter from './routes/admin/bookmarkRoutes.ts';
 import commentRouter from './routes/admin/commentRoutes.ts';
 import followRouter from './routes/admin/followRoutes.ts';
@@ -92,6 +93,9 @@ app.use('/api/rooms', roomRouter);
 app.use('/api/messages', messageRouter);
 app.use('/api/bookmarks', bookmarkRouter);
 app.use('/api/notifications', notificationRouter);
+
+// must be registered after all routes
+app.use(errorHandler);
 
 const PORT = process.env.PORT! || 5000;
 

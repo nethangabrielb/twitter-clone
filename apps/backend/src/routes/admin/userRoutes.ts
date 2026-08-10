@@ -1,14 +1,11 @@
 import { Router } from 'express';
 
-import multer from 'multer';
-
 import userController from '../../controllers/admin/usersController.ts';
 import {
   authMiddleware,
   guestAuthMiddleware,
 } from '../../middlewares/authMiddleware.ts';
-
-const upload = multer();
+import { upload } from '../../middlewares/upload.ts';
 
 const userRouter = Router();
 

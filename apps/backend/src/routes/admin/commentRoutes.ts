@@ -1,10 +1,8 @@
 import { Router } from 'express';
 
-import multer from 'multer';
-
 import commentsController from '../../controllers/admin/commentsController.ts';
+import { upload } from '../../middlewares/upload.ts';
 
-const upload = multer();
 const commentRouter = Router();
 
 commentRouter.get('/:commentId', commentsController.getComment);

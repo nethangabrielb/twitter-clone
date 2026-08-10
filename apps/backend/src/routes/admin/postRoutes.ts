@@ -1,10 +1,7 @@
 import { Router } from 'express';
 
-import multer from 'multer';
-
 import postsController from '../../controllers/admin/postsController.ts';
-
-const upload = multer();
+import { upload } from '../../middlewares/upload.ts';
 
 const postRouter = Router();
 
