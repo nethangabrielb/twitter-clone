@@ -25,7 +25,7 @@ const validateRegistration = [
     if (!errors.isEmpty()) {
       const errorsArr = errors.array({ onlyFirstError: true });
       return res.json({
-        status: 'success',
+        status: 'error',
         data: errorsArr.map(err => err.msg),
         message: 'Error validating form input',
       });

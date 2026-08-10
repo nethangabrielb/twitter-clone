@@ -25,7 +25,7 @@ const commentsController = (() => {
       );
 
       if (comment === 'deleted') {
-        res.json({
+        return res.json({
           status: 'deleted',
           message:
             'The post you are replying to has been deleted. You cannot reply to this post.',

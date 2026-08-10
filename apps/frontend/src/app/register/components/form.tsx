@@ -56,11 +56,13 @@ const RegisterForm = () => {
       if (res) {
         const data = await res.json();
         if (data.status === "success") {
+          toast.success("Registered successfully", {
+            description: "You may login now with your new account",
+          });
           router.push("/login");
+        } else if (data.status === "error") {
+          toast.error(data.message);
         }
-        toast.success("Registered successfully", {
-          description: "You may login now with your new account",
-        });
       } else {
         toast.error(
           "There was a problem sending a request to the server. Please try again",
