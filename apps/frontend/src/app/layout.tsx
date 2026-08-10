@@ -6,6 +6,7 @@ import { Inter } from "next/font/google";
 import Sidebar from "@/components/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 
+import HealthGate from "@/providers/health-gate";
 import QueryProvider from "@/providers/query-provider";
 import SocketProvider from "@/providers/socket-provider";
 import { ThemeProvider } from "@/providers/theme-provider";
@@ -42,13 +43,15 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <QueryProvider>
-            <UserProvider>
-              <SocketProvider>
-                <Sidebar>{children}</Sidebar>
-              </SocketProvider>
-            </UserProvider>
-          </QueryProvider>
+          <HealthGate>
+            <QueryProvider>
+              <UserProvider>
+                <SocketProvider>
+                  <Sidebar>{children}</Sidebar>
+                </SocketProvider>
+              </UserProvider>
+            </QueryProvider>
+          </HealthGate>
         </ThemeProvider>
       </body>
     </html>
