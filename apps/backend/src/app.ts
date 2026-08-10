@@ -28,6 +28,14 @@ import { initSocket } from './sockets/index.ts';
 
 dotenv.config();
 
+process.on('unhandledRejection', (reason) => {
+  console.error('[process] unhandledRejection:', reason);
+});
+
+process.on('uncaughtException', (error) => {
+  console.error('[process] uncaughtException:', error);
+});
+
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {

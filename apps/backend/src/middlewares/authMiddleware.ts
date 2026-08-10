@@ -61,16 +61,23 @@ export const guestAuthMiddleware = (
   next();
 };
 
-export const isSocketValid = (socket: Socket): boolean => {
-  const cookies = cookie.parseCookie(socket.handshake.headers.cookie ?? '');
-  const token = cookies.token as string;
+export const isSocketValid = (
+  socket: Socket,
+  next: (err?: Error) => void
+) => {
+  try {
+    const cookies = cookie.parseCookie(socket.handshake.headers.cookie ?? '');
+    const token = cookies.token as string;
 
-  const isValid = jwt.verify(token, process.env.JWT_SECRET!) as User;
+    if (!token) {
+      return next(new Error('invalid token'));
+    }
 
-  if (isValid) {
-    socket.data.userId = isValid.id;
-    return true;
-  } else {
-    return false;
+    const payload = jwt.verify(token, process.env.JWT_SECRET!) as User;
+
+    socket.data.userId = payload.id;
+    next();
+  } catch {
+    next(new Error('invalid token'));
   }
 };

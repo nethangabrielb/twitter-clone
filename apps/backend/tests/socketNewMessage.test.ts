@@ -26,6 +26,7 @@ vi.mock('../src/repositories/notificationRepository.ts', () => ({
   default: { create: vi.fn(), findAll: vi.fn() },
 }));
 
+import notificationRepository from '../src/repositories/notificationRepository.ts';
 import { initSocket } from '../src/sockets/index.ts';
 
 const AUTH_USER = 7;
@@ -51,6 +52,7 @@ const setup = () => {
   const eventHandlers: Record<string, (...args: never[]) => void> = {};
   const emitToRoom = vi.fn();
   const broadcastEmit = vi.fn();
+  const emit = vi.fn();
   const socket = {
     data: { userId: AUTH_USER },
     on: vi.fn((event: string, handler: (...args: never[]) => void) => {
@@ -58,6 +60,7 @@ const setup = () => {
     }),
     to: vi.fn(() => ({ emit: emitToRoom })),
     broadcast: { emit: broadcastEmit },
+    emit,
     join: vi.fn(),
     leave: vi.fn(),
   };
@@ -67,6 +70,8 @@ const setup = () => {
 
   return { eventHandlers, emitToRoom, broadcastEmit, socket };
 };
+
+const notificationUser = { id: AUTH_USER, name: 'Alice', username: 'alice' };
 
 describe('socket newMessage handler', () => {
   it('uses the socket authenticated user as the sender, ignoring a spoofed payload senderId', async () => {
@@ -122,6 +127,21 @@ describe('socket newMessage handler', () => {
     expect(callback).not.toHaveBeenCalled();
     expect(emitToRoom).not.toHaveBeenCalled();
   });
+
+  it('does not crash when sendMessage resolves null (DB error) — clean error instead of a TypeError', async () => {
+    sendMessageMock.mockResolvedValue(null);
+    const { eventHandlers, emitToRoom, broadcastEmit } = setup();
+    const callback = vi.fn();
+
+    await eventHandlers['newMessage'](payload, AUTH_USER, callback);
+
+    expect(callback).toHaveBeenCalledWith({
+      success: false,
+      message: 'There was an error sending the message.',
+    });
+    expect(emitToRoom).not.toHaveBeenCalled();
+    expect(broadcastEmit).not.toHaveBeenCalled();
+  });
 });
 
 describe('socket joinRoom/leaveRoom handlers', () => {
@@ -174,5 +194,92 @@ describe('socket joinRoom/leaveRoom handlers', () => {
 
     expect(socket.leave).not.toHaveBeenCalled();
     expect(callback).not.toHaveBeenCalled();
+  });
+
+  it('emits a socketError and error ack when the room lookup throws (DB error) — joinRoom stays up', async () => {
+    getRoomForUserMock.mockRejectedValue(new Error('database unavailable'));
+    const { eventHandlers, socket } = setup();
+    const callback = vi.fn();
+
+    await eventHandlers['joinRoom']('5', AUTH_USER, callback);
+
+    expect(socket.join).not.toHaveBeenCalled();
+    expect(callback).toHaveBeenCalledWith({
+      status: 'error',
+      message: 'database unavailable',
+    });
+    expect(socket.emit).toHaveBeenCalledWith('socketError', {
+      event: 'joinRoom',
+      message: 'database unavailable',
+    });
+  });
+
+  it('emits a socketError and error ack when the room lookup throws (DB error) — leaveRoom stays up', async () => {
+    getRoomForUserMock.mockRejectedValue(new Error('database unavailable'));
+    const { eventHandlers, socket } = setup();
+    const callback = vi.fn();
+
+    await eventHandlers['leaveRoom']('5', AUTH_USER, callback);
+
+    expect(socket.leave).not.toHaveBeenCalled();
+    expect(callback).toHaveBeenCalledWith({
+      status: 'error',
+      message: 'database unavailable',
+    });
+    expect(socket.emit).toHaveBeenCalledWith('socketError', {
+      event: 'leaveRoom',
+      message: 'database unavailable',
+    });
+  });
+});
+
+describe('socket notification handler', () => {
+  it('broadcasts the notification to other clients on success', async () => {
+    notificationRepository.create.mockResolvedValue({
+      id: 1,
+      senderId: AUTH_USER,
+      receiverId: OTHER_USER,
+      content: 'Alice (@alice) followed you',
+    });
+    const { eventHandlers, broadcastEmit } = setup();
+
+    await eventHandlers['notification'](notificationUser, OTHER_USER, 'follow');
+
+    expect(notificationRepository.create).toHaveBeenCalledWith(
+      expect.objectContaining({ senderId: AUTH_USER, receiverId: OTHER_USER })
+    );
+    expect(broadcastEmit).toHaveBeenCalledWith(
+      'notification',
+      OTHER_USER,
+      expect.any(Object)
+    );
+  });
+
+  it('emits a socketError instead of crashing when the notification insert throws (DB error)', async () => {
+    notificationRepository.create.mockRejectedValue(
+      new Error('database unavailable')
+    );
+    const { eventHandlers, socket, broadcastEmit } = setup();
+
+    await eventHandlers['notification'](notificationUser, OTHER_USER, 'follow');
+
+    expect(socket.emit).toHaveBeenCalledWith('socketError', {
+      event: 'notification',
+      message: 'database unavailable',
+    });
+    expect(broadcastEmit).not.toHaveBeenCalled();
+  });
+
+  it('does not create a notification when the sender argument does not match the socket user', async () => {
+    const { eventHandlers, broadcastEmit } = setup();
+
+    await eventHandlers['notification'](
+      { id: SPOOFED_USER, name: 'Mallory', username: 'mallory' },
+      OTHER_USER,
+      'follow'
+    );
+
+    expect(notificationRepository.create).not.toHaveBeenCalled();
+    expect(broadcastEmit).not.toHaveBeenCalled();
   });
 });

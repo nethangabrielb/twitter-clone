@@ -8,14 +8,20 @@ import roomService from '../services/roomService.ts';
 import { User } from '../types/user.ts';
 import { validateEventSender } from '../utils/validateEventSender.ts';
 
+const handleSocketError = (
+  socket: Socket,
+  event: string,
+  err: unknown,
+  callback?: (response: Record<string, unknown>) => void
+) => {
+  const message = err instanceof Error ? err.message : 'Internal socket error.';
+  console.error(`[socket] error in '${event}' handler:`, err);
+  socket.emit('socketError', { event, message });
+  callback?.({ status: 'error', message });
+};
+
 export const initSocket = (io: Server) => {
-  io.use((socket, next) => {
-    if (isSocketValid(socket)) {
-      next();
-    } else {
-      next(new Error('Invalid connection attempt.'));
-    }
-  });
+  io.use(isSocketValid);
 
   io.on('connection', (socket: Socket) => {
     socket.on(
@@ -35,12 +41,17 @@ export const initSocket = (io: Server) => {
             data
           );
 
+          if (!message || message.roomId == null) {
+            throw new Error('There was an error sending the message.');
+          }
+
           callback({ success: true, message });
 
           socket.to(String(message.roomId)).emit('newMessage', message);
 
           socket.broadcast.emit('newMessageNotification', message.receiverId);
         } catch (err: unknown) {
+          console.error(`[socket] error in 'newMessage' handler:`, err);
           callback({
             success: false,
             message:
@@ -54,15 +65,25 @@ export const initSocket = (io: Server) => {
     socket.on(
       'joinRoom',
       async (roomId: string, senderId: number, callback) => {
-        if (validateEventSender(senderId, socket.data.userId)) {
+        if (!validateEventSender(senderId, socket.data.userId)) {
+          console.log('Invalid socket event.');
+          return;
+        }
+
+        try {
           // getRoomForUser returns the room only if the sender is a member.
-          const room = await roomService.getRoomForUser(senderId, Number(roomId));
+          const room = await roomService.getRoomForUser(
+            senderId,
+            Number(roomId)
+          );
           if (room) {
             socket.join(roomId);
             callback({ status: 'ok' });
           } else {
             console.log('User is not a part of the room.');
           }
+        } catch (err: unknown) {
+          handleSocketError(socket, 'joinRoom', err, callback);
         }
       }
     );
@@ -70,14 +91,24 @@ export const initSocket = (io: Server) => {
     socket.on(
       'leaveRoom',
       async (roomId: string, senderId: number, callback) => {
-        if (validateEventSender(senderId, socket.data.userId)) {
-          const room = await roomService.getRoomForUser(senderId, Number(roomId));
+        if (!validateEventSender(senderId, socket.data.userId)) {
+          console.log('Invalid socket event.');
+          return;
+        }
+
+        try {
+          const room = await roomService.getRoomForUser(
+            senderId,
+            Number(roomId)
+          );
           if (room) {
             socket.leave(roomId);
             callback({ status: 'ok' });
           } else {
             console.log('User is not a part of the room.');
           }
+        } catch (err: unknown) {
+          handleSocketError(socket, 'leaveRoom', err, callback);
         }
       }
     );
@@ -91,7 +122,12 @@ export const initSocket = (io: Server) => {
         postId?: number,
         postContent?: string
       ) => {
-        if (validateEventSender(user?.id, socket.data.userId)) {
+        if (!validateEventSender(user?.id, socket.data.userId)) {
+          console.log('Invalid socket event.');
+          return;
+        }
+
+        try {
           let content: string = '';
           if (type === 'reply') {
             content = `${user.name} (@${user.username}) replied to your post`;
@@ -112,6 +148,8 @@ export const initSocket = (io: Server) => {
           if (notification) {
             socket.broadcast.emit('notification', receiverId, notification);
           }
+        } catch (err: unknown) {
+          handleSocketError(socket, 'notification', err);
         }
       }
     );
