@@ -6,6 +6,14 @@ import roomService from './roomService.ts';
 const messageService = {
   createMessage: (message: ChatMessage) => messageRepository.create(message),
   sendMessage: async (senderId: number, data: ChatMessage) => {
+    const content = typeof data?.content === 'string' ? data.content.trim() : '';
+    if (!content) {
+      throw new Error('Message cannot be empty.');
+    }
+    if (content.length > 1000) {
+      throw new Error('Message cannot exceed 1000 characters.');
+    }
+
     const roomId = Number(data.roomId);
     if (Number.isNaN(roomId)) {
       throw new Error('Invalid room.');
@@ -31,6 +39,7 @@ const messageService = {
 
     const message = await messageRepository.create({
       ...data,
+      content,
       senderId,
       receiverId,
       roomId: room.id,

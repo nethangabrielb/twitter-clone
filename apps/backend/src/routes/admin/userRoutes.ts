@@ -6,6 +6,7 @@ import {
   guestAuthMiddleware,
 } from '../../middlewares/authMiddleware.ts';
 import { upload } from '../../middlewares/upload.ts';
+import { validateUpdateUser } from '../../validators/user/updateUser.ts';
 
 const userRouter = Router();
 
@@ -20,6 +21,7 @@ userRouter.get('/:id', userController.getUser);
 userRouter.put(
   '/:id',
   upload.fields([{ name: 'avatar' }, { name: 'cover' }]),
+  validateUpdateUser,
   userController.updateUser
 );
 userRouter.delete('/:id', userController.deleteUser);
