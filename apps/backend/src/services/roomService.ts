@@ -25,6 +25,12 @@ const roomService = {
     }
     return rooms;
   },
+  // Shared membership helper: returns the room (with its users) only if the
+  // given user is a member, otherwise null. Used by the messages REST
+  // controller and the socket newMessage/joinRoom/leaveRoom handlers.
+  getRoomForUser: async (userId: number, roomId: number) => {
+    return roomRepository.findByIdForUser(roomId, userId);
+  },
 };
 
 export default roomService;

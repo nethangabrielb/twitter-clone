@@ -39,6 +39,27 @@ const roomRepository = {
         },
       },
     }),
+  findByIdForUser: async (roomId: number, userId: number) =>
+    await prisma.room.findFirst({
+      where: {
+        id: roomId,
+        users: {
+          some: {
+            id: userId,
+          },
+        },
+      },
+      include: {
+        users: {
+          select: {
+            id: true,
+            name: true,
+            username: true,
+            avatar: true,
+          },
+        },
+      },
+    }),
   findByUsers: async (users: User[]) =>
     await prisma.room.findFirst({
       where: {

@@ -21,42 +21,47 @@ export const initSocket = (io: Server) => {
     socket.on(
       'newMessage',
       async (data: ChatMessage, senderId: number, callback) => {
-        if (validateEventSender(senderId, socket.data.userId)) {
-          const message = await messageService.createMessage(data);
-          if (message) {
-            callback({
-              success: true,
-              message,
-            });
-          }
+        if (!validateEventSender(senderId, socket.data.userId)) {
+          console.log('Invalid socket event.');
+          return;
+        }
+
+        try {
+          // senderId is derived from the authenticated socket user (and the
+          // receiver is validated against the room's members) inside
+          // messageService.sendMessage — the client payload is never trusted.
+          const message = await messageService.sendMessage(
+            socket.data.userId,
+            data
+          );
+
+          callback({ success: true, message });
 
           socket.to(String(message.roomId)).emit('newMessage', message);
-          
+
           socket.broadcast.emit('newMessageNotification', message.receiverId);
-        } else {
-          console.log('Invalid socket event.');
+        } catch (err: unknown) {
+          callback({
+            success: false,
+            message:
+              err instanceof Error
+                ? err.message
+                : 'There was an error sending the message.',
+          });
         }
       }
     );
-
     socket.on(
       'joinRoom',
       async (roomId: string, senderId: number, callback) => {
         if (validateEventSender(senderId, socket.data.userId)) {
-          // Check if this user is among the users associated in the room
-          const rooms = await roomService.getUserRooms(senderId);
-          if (rooms) {
-            const roomToJoin = rooms.find(
-              room =>
-                room.id === Number(roomId) &&
-                room.users.some(user => user?.id === senderId)
-            );
-            if (roomToJoin) {
-              socket.join(roomId);
-              callback({ status: 'ok' });
-            } else {
-              console.log('User is not a part of the room.');
-            }
+          // getRoomForUser returns the room only if the sender is a member.
+          const room = await roomService.getRoomForUser(senderId, Number(roomId));
+          if (room) {
+            socket.join(roomId);
+            callback({ status: 'ok' });
+          } else {
+            console.log('User is not a part of the room.');
           }
         }
       }
@@ -66,20 +71,12 @@ export const initSocket = (io: Server) => {
       'leaveRoom',
       async (roomId: string, senderId: number, callback) => {
         if (validateEventSender(senderId, socket.data.userId)) {
-          // Check if this user is among the users associated in the room
-          const rooms = await roomService.getUserRooms(senderId);
-          if (rooms) {
-            const roomToJoin = rooms.find(
-              room =>
-                room.id === Number(roomId) &&
-                room.users.some(user => user?.id === senderId)
-            );
-            if (roomToJoin) {
-              socket.leave(roomId);
-              callback({ status: 'ok' });
-            } else {
-              console.log('User is not a part of the room.');
-            }
+          const room = await roomService.getRoomForUser(senderId, Number(roomId));
+          if (room) {
+            socket.leave(roomId);
+            callback({ status: 'ok' });
+          } else {
+            console.log('User is not a part of the room.');
           }
         }
       }

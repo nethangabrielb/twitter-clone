@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 
 import messageService from '../../services/messageService.ts';
+import roomService from '../../services/roomService.ts';
 import { User } from '../../types/user.ts';
 import { GENERIC_ERROR_MESSAGE } from '../../utils/errorMessage.ts';
 
@@ -19,9 +20,17 @@ const messageController = (() => {
         });
       }
 
-      const messages = await messageService.getByRoomId(
-        Number(req.params.roomId)
-      );
+      const roomId = Number(req.params.roomId);
+      const room = await roomService.getRoomForUser(user.id, roomId);
+
+      if (!room) {
+        return res.status(403).json({
+          error: 'Forbidden',
+          message: 'Unauthorized access.',
+        });
+      }
+
+      const messages = await messageService.getByRoomId(roomId);
 
       res.json({
         status: 'success',
@@ -40,9 +49,18 @@ const messageController = (() => {
     res: Response
   ) => {
     try {
-      const messages = await messageService.patchMessagesUnreadStatus(
-        Number(req.params.roomId)
-      );
+      const user = req.user as User;
+      const roomId = Number(req.params.roomId);
+      const room = await roomService.getRoomForUser(user.id, roomId);
+
+      if (!room) {
+        return res.status(403).json({
+          error: 'Forbidden',
+          message: 'Unauthorized access.',
+        });
+      }
+
+      const messages = await messageService.patchMessagesUnreadStatus(roomId);
 
       res.json({
         status: 'success',
