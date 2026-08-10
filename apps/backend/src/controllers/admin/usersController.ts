@@ -221,6 +221,12 @@ const userController = (() => {
 
   const deleteUser = async (req: Request<{ id: string }>, res: Response) => {
     try {
+      const reqUser = req.user as User;
+
+      if (Number(req.params.id) !== reqUser.id) {
+        throw new Error('You are unauthorized to perform this action.');
+      }
+
       await UserService.deleteUser(Number(req.params.id));
       res.json({ status: 'success', message: 'User deleted' });
     } catch (err: unknown) {

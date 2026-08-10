@@ -44,6 +44,13 @@ const followRepository = {
       },
     });
   },
+  findById: async (followId: number) => {
+    return prisma.follow.findUnique({
+      where: {
+        id: followId,
+      },
+    });
+  },
 };
 
 export default followRepository;

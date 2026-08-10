@@ -11,7 +11,13 @@ const postsController = (() => {
     res: Response
   ) => {
     try {
-      const newPost = await postService.createPost(req.body, req.file ?? null);
+      const user = req.user as User;
+
+      // always derive the author from the authenticated session,
+      // never trust a userId sent by the client
+      const post = { ...req.body, userId: user.id };
+
+      const newPost = await postService.createPost(post, req.file ?? null);
 
       res.json({
         status: 'success',
@@ -116,6 +122,15 @@ const postsController = (() => {
     res: Response
   ) => {
     try {
+      const user = req.user as User;
+      const postAuthorId = await postService.getPostAuthorId(
+        Number(req.params.postId)
+      );
+
+      if (postAuthorId !== user.id) {
+        throw new Error('You are unauthorized to perform this action.');
+      }
+
       await postService.deletePost(Number(req.params.postId));
 
       res.json({

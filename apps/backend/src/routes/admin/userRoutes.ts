@@ -3,7 +3,10 @@ import { Router } from 'express';
 import multer from 'multer';
 
 import userController from '../../controllers/admin/usersController.ts';
-import { authMiddleware } from '../../middlewares/authMiddleware.ts';
+import {
+  authMiddleware,
+  guestAuthMiddleware,
+} from '../../middlewares/authMiddleware.ts';
 
 const upload = multer();
 
@@ -13,6 +16,7 @@ const userRouter = Router();
 userRouter.get('/availability', userController.getAvailability);
 
 userRouter.use(authMiddleware);
+userRouter.use(guestAuthMiddleware);
 
 userRouter.get('/', userController.getAllUsers);
 userRouter.get('/:id', userController.getUser);

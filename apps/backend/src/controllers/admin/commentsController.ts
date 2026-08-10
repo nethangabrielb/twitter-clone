@@ -71,6 +71,15 @@ const commentsController = (() => {
     res: Response
   ) => {
     try {
+      const user = req.user as User;
+      const comment = await commentService.getComment(
+        Number(req.params.commentId)
+      );
+
+      if (comment.userId !== user.id) {
+        throw new Error('You are unauthorized to perform this action.');
+      }
+
       await commentService.deleteComment(Number(req.params.commentId));
 
       res.json({

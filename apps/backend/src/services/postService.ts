@@ -81,6 +81,13 @@ const postService = {
   deletePost: async (postId: number) => {
     return postRepository.deleteById(postId);
   },
+  getPostAuthorId: async (postId: number) => {
+    const post = await postRepository.findAuthorId(postId);
+    if (!post) {
+      throw new Error('There was a problem fetching the post');
+    }
+    return post.userId;
+  },
   getUserReplies: async (userId: number) => {
     const posts = await postRepository.findRepliesByUserId(userId);
     if (!posts) {

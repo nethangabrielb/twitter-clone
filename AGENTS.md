@@ -268,12 +268,16 @@ Root (`package.json`):
 - `pnpm dev` — run `frontend` and `backend` in parallel.
 - `pnpm frontend` — frontend dev only.
 - `pnpm backend` — backend dev only.
-- `pnpm test` — **no tests exist** (placeholder `echo` error).
+- `pnpm test` — delegates to the backend Vitest suite (`pnpm --filter backend test`).
 - `pnpm lint` / `pnpm typecheck` — not defined at root; run per app.
 
 Backend (`apps/backend/package.json`):
 - `pnpm dev` — `tsx watch ./src/app.ts`.
-- `pnpm typecheck` — `tsc --noEmit`.
+- `pnpm test` — `vitest run` (tests live in `apps/backend/tests/`, config in
+  `vitest.config.ts`, env in `tests/setup.ts`). Unit tests mock the service
+  layer with `vi.mock`/`vi.hoisted`; ownership/actor logic is asserted at the
+  controller level.
+- `pnpm typecheck` — `tsc --noEmit` (only covers `src`, not `tests/`).
 - `pnpm lint` — `pnpm eslint .`.
 - `pnpm build` — `tsc` (used by the Dockerfile).
 - `pnpm seed:users`, `pnpm seed:social`, `pnpm delete:seed` —
@@ -292,4 +296,5 @@ Frontend (`apps/frontend/package.json`):
 Notes:
 - Backend ESM requires explicit `.ts` extensions on relative imports
   (e.g. `./middlewares/authMiddleware.ts`). Preserve this convention.
-- No test framework is configured anywhere in the repo.
+- Backend unit tests use Vitest (see commands above); the frontend has no
+  test setup.

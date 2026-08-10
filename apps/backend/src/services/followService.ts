@@ -49,6 +49,13 @@ const FollowService = {
   deleteFollow: async (followId: number) => {
     return followRepository.deleteById(followId);
   },
+  getFollowById: async (followId: number) => {
+    const follow = await followRepository.findById(followId);
+    if (!follow) {
+      throw new Error('Follow not found');
+    }
+    return follow;
+  },
 };
 
 export default FollowService;

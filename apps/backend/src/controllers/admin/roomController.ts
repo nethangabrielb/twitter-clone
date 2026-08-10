@@ -30,6 +30,15 @@ const roomController = (() => {
         });
       }
 
+      const users = (req.body.users ?? []) as Array<{ id?: number | string }>;
+
+      if (!users.some(user => Number(user?.id) === authUserId)) {
+        return res.status(403).json({
+          status: 'error',
+          message: 'You are unauthorized to perform this action.',
+        });
+      }
+
       const room = await roomService.createRoom(req.body);
 
       res.json({

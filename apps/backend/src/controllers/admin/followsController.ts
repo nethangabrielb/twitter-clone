@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 
 import FollowService from '../../services/followService.ts';
 import type { Follow } from '../../types/follow.ts';
+import type { User } from '../../types/user.ts';
 import { GENERIC_ERROR_MESSAGE } from '../../utils/errorMessage.ts';
 
 const followsController = (() => {
@@ -10,7 +11,10 @@ const followsController = (() => {
     res: Response
   ) => {
     try {
-      if (req.body.followerId === req.body.followingId) {
+      const user = req.user as User;
+      const followingId = Number(req.body.followingId);
+
+      if (followingId === user.id) {
         res.status(400).json({
           status: 'error',
           message: 'A user cannot follow itself',
@@ -18,7 +22,12 @@ const followsController = (() => {
         return;
       }
 
-      const follow = await FollowService.createNewFollow(req.body);
+      // always derive the follower from the authenticated session,
+      // never trust a followerId sent by the client
+      const follow = await FollowService.createNewFollow({
+        followerId: user.id,
+        followingId,
+      });
       res.json({
         status: 'success',
         message: 'Follow success',
@@ -81,6 +90,15 @@ const followsController = (() => {
     res: Response
   ) => {
     try {
+      const user = req.user as User;
+      const follow = await FollowService.getFollowById(
+        Number(req.params.followId)
+      );
+
+      if (follow.followerId !== user.id) {
+        throw new Error('You are unauthorized to perform this action.');
+      }
+
       await FollowService.deleteFollow(Number(req.params.followId));
 
       res.json({

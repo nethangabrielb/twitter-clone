@@ -1078,6 +1078,8 @@ const postRepository = {
         bookmarks: true,
       },
     }),
+  findAuthorId: (id: number) =>
+    prisma.post.findUnique({ where: { id }, select: { userId: true } }),
   deleteById: (id: number) =>
     prisma.post.update({ where: { id }, data: { deleted: true } }),
 };

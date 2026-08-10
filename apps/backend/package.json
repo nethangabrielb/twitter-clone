@@ -5,7 +5,7 @@
   "main": "app.ts",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest run",
     "dev": "tsx watch ./src/app.ts",
     "typecheck": "tsc --noEmit",
     "lint": "pnpm eslint .",
@@ -59,6 +59,7 @@
     "prisma": "^6.16.2",
     "tsx": "^4.20.6",
     "typescript": "^5.9.2",
-    "typescript-eslint": "^8.44.1"
+    "typescript-eslint": "^8.44.1",
+    "vitest": "^4.1.10"
   }
 }
