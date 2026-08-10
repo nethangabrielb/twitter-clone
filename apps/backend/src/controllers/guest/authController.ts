@@ -70,7 +70,9 @@ const authController = (() => {
           _count: { Followers: 0, Followings: 0, Post: 0 },
         };
 
-        const token = jwt.sign(guest, process.env.JWT_SECRET!);
+        const token = jwt.sign(guest, process.env.JWT_SECRET!, {
+          expiresIn: '14d',
+        });
 
         res.clearCookie('token', clearTokenCookieOptions);
         res.cookie('token', token, tokenCookieOptions);
@@ -135,7 +137,13 @@ const authController = (() => {
       return res.json({ authorized: false });
     }
 
-    const payload = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    let payload: JwtPayload;
+
+    try {
+      payload = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    } catch {
+      return res.json({ authorized: false });
+    }
 
     const user: User = payload as User;
 

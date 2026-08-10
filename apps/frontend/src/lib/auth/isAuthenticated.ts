@@ -8,16 +8,20 @@ const isAuthenticated = async (request: NextRequest) => {
     return { authorized: false };
   }
 
-  const res = await fetch(`${process.env.BACKEND_URL}/api/auth/user`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${value}`,
-    },
-  });
+  try {
+    const res = await fetch(`${process.env.BACKEND_URL}/api/auth/user`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${value}`,
+      },
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  return data;
+    return data;
+  } catch {
+    return { authorized: false };
+  }
 };
 
 export default isAuthenticated;

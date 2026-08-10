@@ -36,7 +36,9 @@ const UserService = {
     }
 
     // create new token
-    const token = jwt.sign(user, process.env.JWT_SECRET!);
+    const token = jwt.sign(user, process.env.JWT_SECRET!, {
+      expiresIn: '14d',
+    });
 
     // return token
     return token;
